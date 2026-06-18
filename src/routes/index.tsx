@@ -1,5 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Home, Gamepad2, Music, User, Settings } from "lucide-react";
+import {
+  Home, Gamepad2, Music, User, Settings,
+  Megaphone, Pencil, Brain, Lightbulb, Globe2, BookOpen,
+  Palette, Shapes, Crown, PawPrint, HelpCircle, Smartphone, Trophy,
+} from "lucide-react";
+import type { ReactNode } from "react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -13,34 +18,33 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-type Tile = { title: string; emoji: string; color: string };
+type Tile = { title: string; icon: ReactNode; color: string };
+
+const ICON_PROPS = { className: "size-12", strokeWidth: 2.25 } as const;
 
 const tiles: Tile[] = [
-  { title: "Phonics\nWorld", emoji: "📣", color: "tile-green" },
-  { title: "Scribble\n& Trace", emoji: "✏️", color: "tile-yellow" },
-  { title: "Brain\nQuiz", emoji: "🧠", color: "tile-pink" },
-  { title: "Smart\nLearning", emoji: "💡", color: "tile-mustard" },
-  { title: "Explore\nthe World", emoji: "🌍", color: "tile-blue" },
-  { title: "Story\nTime", emoji: "📖", color: "tile-orange" },
-  { title: "Know the\nColors", emoji: "🎨", color: "tile-orange" },
-  { title: "Shapes", emoji: "🔷", color: "tile-teal" },
-  { title: "Coloring\nWorld", emoji: "🖍️", color: "tile-grey" },
-  { title: "Animal\nKingdom", emoji: "🦁", color: "tile-teal" },
-  { title: "Games", emoji: "🎮", color: "tile-red" },
-  { title: "Quiz", emoji: "❓", color: "tile-magenta" },
-  { title: "Fun\nphone", emoji: "📱", color: "tile-coral" },
-  { title: "Rewards", emoji: "🏆", color: "tile-mustard" },
+  { title: "Phonics\nWorld",   icon: <Megaphone {...ICON_PROPS} />,  color: "tile-green" },
+  { title: "Scribble\n& Trace",icon: <Pencil {...ICON_PROPS} />,     color: "tile-yellow" },
+  { title: "Brain\nQuiz",      icon: <Brain {...ICON_PROPS} />,      color: "tile-pink" },
+  { title: "Smart\nLearning",  icon: <Lightbulb {...ICON_PROPS} />,  color: "tile-mustard" },
+  { title: "Explore\nthe World", icon: <Globe2 {...ICON_PROPS} />,   color: "tile-blue" },
+  { title: "Story\nTime",      icon: <BookOpen {...ICON_PROPS} />,   color: "tile-orange" },
+  { title: "Know the\nColors", icon: <Palette {...ICON_PROPS} />,    color: "tile-orange" },
+  { title: "Shapes",           icon: <Shapes {...ICON_PROPS} />,     color: "tile-teal" },
+  { title: "Coloring\nWorld",  icon: <Crown {...ICON_PROPS} />,      color: "tile-grey" },
+  { title: "Animal\nKingdom",  icon: <PawPrint {...ICON_PROPS} />,   color: "tile-teal" },
+  { title: "Games",            icon: <Gamepad2 {...ICON_PROPS} />,   color: "tile-red" },
+  { title: "Quiz",             icon: <HelpCircle {...ICON_PROPS} />, color: "tile-magenta" },
+  { title: "Fun\nphone",       icon: <Smartphone {...ICON_PROPS} />, color: "tile-coral" },
+  { title: "Rewards",          icon: <Trophy {...ICON_PROPS} />,     color: "tile-mustard" },
 ];
 
 function Index() {
   return (
     <div className="mx-auto flex min-h-screen max-w-md flex-col">
       {/* Header */}
-      <header className="flex items-center justify-between px-5 pt-6 pb-4">
-        <div className="flex items-center gap-2">
-          <span className="text-3xl drop-shadow-sm" aria-hidden>🐻</span>
-          <span className="text-3xl -ml-3 drop-shadow-sm" aria-hidden>🐻</span>
-        </div>
+      <header className="flex items-center justify-between px-5 pt-6 pb-5">
+        <span className="text-6xl drop-shadow-md leading-none" aria-hidden>🐻</span>
         <h1 className="melly-title">
           <span style={{ color: "#ff6b6b" }}>M</span>
           <span style={{ color: "#ffb347" }}>e</span>
@@ -58,16 +62,16 @@ function Index() {
           aria-label="Settings"
           className="rounded-full p-1 text-slate-600 transition hover:rotate-45"
         >
-          <Settings className="size-7" />
+          <Settings className="size-8" />
         </button>
       </header>
 
       {/* Grid */}
-      <main className="grid flex-1 grid-cols-2 gap-3 px-4 pb-28">
+      <main className="grid flex-1 grid-cols-2 gap-4 px-4 pb-28">
         {tiles.map((t) => (
-          <button key={t.title} className={`tile ${t.color}`}>
-            <span className="whitespace-pre-line">{t.title}</span>
-            <span className="tile-emoji" aria-hidden>{t.emoji}</span>
+          <button key={t.title} className={`tile tile-vertical ${t.color}`}>
+            <span className="tile-icon" aria-hidden>{t.icon}</span>
+            <span className="tile-label whitespace-pre-line">{t.title}</span>
           </button>
         ))}
       </main>
@@ -85,11 +89,11 @@ function Index() {
 
 function NavItem({
   icon, label, color, active,
-}: { icon: React.ReactNode; label: string; color: string; active?: boolean }) {
+}: { icon: ReactNode; label: string; color: string; active?: boolean }) {
   return (
     <button className="flex flex-col items-center gap-1" style={{ color }}>
       <span className={active ? "drop-shadow-sm" : "opacity-80"}>{icon}</span>
-      <span className="text-xs font-bold" style={{ color }}>{label}</span>
+      <span className="text-sm font-bold" style={{ color }}>{label}</span>
     </button>
   );
 }
