@@ -1,10 +1,22 @@
 import { createFileRoute } from "@tanstack/react-router";
-import {
-  Home, Gamepad2, Music, User, Settings,
-  Megaphone, Pencil, Brain, Lightbulb, Globe2, BookOpen,
-  Palette, Shapes, Crown, PawPrint, HelpCircle, Smartphone, Trophy,
-} from "lucide-react";
+import { Home, Gamepad2, Music, User, Settings } from "lucide-react";
 import type { ReactNode } from "react";
+
+import phonics from "@/assets/icons/phonics.png";
+import scribble from "@/assets/icons/scribble.png";
+import brain from "@/assets/icons/brain.png";
+import smart from "@/assets/icons/smart.png";
+import explore from "@/assets/icons/explore.png";
+import story from "@/assets/icons/story.png";
+import colors from "@/assets/icons/colors.png";
+import shapes from "@/assets/icons/shapes.png";
+import coloring from "@/assets/icons/coloring.png";
+import animals from "@/assets/icons/animals.png";
+import games from "@/assets/icons/games.png";
+import quiz from "@/assets/icons/quiz.png";
+import phone from "@/assets/icons/phone.png";
+import rewards from "@/assets/icons/rewards.png";
+import bear from "@/assets/icons/bear.png";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -18,34 +30,31 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-type Tile = { title: string; icon: ReactNode; color: string };
-
-const ICON_PROPS = { className: "size-12", strokeWidth: 2.25 } as const;
+type Tile = { title: string; img: string; color: string };
 
 const tiles: Tile[] = [
-  { title: "Phonics\nWorld",   icon: <Megaphone {...ICON_PROPS} />,  color: "tile-green" },
-  { title: "Scribble\n& Trace",icon: <Pencil {...ICON_PROPS} />,     color: "tile-yellow" },
-  { title: "Brain\nQuiz",      icon: <Brain {...ICON_PROPS} />,      color: "tile-pink" },
-  { title: "Smart\nLearning",  icon: <Lightbulb {...ICON_PROPS} />,  color: "tile-mustard" },
-  { title: "Explore\nthe World", icon: <Globe2 {...ICON_PROPS} />,   color: "tile-blue" },
-  { title: "Story\nTime",      icon: <BookOpen {...ICON_PROPS} />,   color: "tile-orange" },
-  { title: "Know the\nColors", icon: <Palette {...ICON_PROPS} />,    color: "tile-orange" },
-  { title: "Shapes",           icon: <Shapes {...ICON_PROPS} />,     color: "tile-teal" },
-  { title: "Coloring\nWorld",  icon: <Crown {...ICON_PROPS} />,      color: "tile-grey" },
-  { title: "Animal\nKingdom",  icon: <PawPrint {...ICON_PROPS} />,   color: "tile-teal" },
-  { title: "Games",            icon: <Gamepad2 {...ICON_PROPS} />,   color: "tile-red" },
-  { title: "Quiz",             icon: <HelpCircle {...ICON_PROPS} />, color: "tile-magenta" },
-  { title: "Fun\nphone",       icon: <Smartphone {...ICON_PROPS} />, color: "tile-coral" },
-  { title: "Rewards",          icon: <Trophy {...ICON_PROPS} />,     color: "tile-mustard" },
+  { title: "Phonics\nWorld",     img: phonics,  color: "tile-green" },
+  { title: "Scribble\n& Trace",  img: scribble, color: "tile-yellow" },
+  { title: "Brain\nQuiz",        img: brain,    color: "tile-pink" },
+  { title: "Smart\nLearning",    img: smart,    color: "tile-mustard" },
+  { title: "Explore\nthe World", img: explore,  color: "tile-blue" },
+  { title: "Story\nTime",        img: story,    color: "tile-orange" },
+  { title: "Know the\nColors",   img: colors,   color: "tile-orange" },
+  { title: "Shapes",             img: shapes,   color: "tile-teal" },
+  { title: "Coloring\nWorld",    img: coloring, color: "tile-grey" },
+  { title: "Animal\nKingdom",    img: animals,  color: "tile-teal" },
+  { title: "Games",              img: games,    color: "tile-red" },
+  { title: "Quiz",               img: quiz,     color: "tile-magenta" },
+  { title: "Fun\nphone",         img: phone,    color: "tile-coral" },
+  { title: "Rewards",            img: rewards,  color: "tile-mustard" },
 ];
 
 function Index() {
   return (
     <div className="mx-auto flex min-h-screen max-w-md flex-col">
-      {/* Header */}
       <header className="flex items-center justify-between px-5 pt-6 pb-5">
-        <span className="text-6xl drop-shadow-md leading-none" aria-hidden>🐻</span>
-        <h1 className="melly-title">
+        <img src={bear} alt="Bear mascot" width={96} height={96} className="size-24 drop-shadow-lg" />
+        <h1 className="melly-title text-center leading-tight">
           <span style={{ color: "#ff6b6b" }}>M</span>
           <span style={{ color: "#ffb347" }}>e</span>
           <span style={{ color: "#ffd23f" }}>l</span>
@@ -58,25 +67,20 @@ function Index() {
           <span style={{ color: "#4ac6e8" }}>T</span>
           <span style={{ color: "#b78ce8" }}>V</span>
         </h1>
-        <button
-          aria-label="Settings"
-          className="rounded-full p-1 text-slate-600 transition hover:rotate-45"
-        >
+        <button aria-label="Settings" className="rounded-full p-1 text-slate-600 transition hover:rotate-45">
           <Settings className="size-8" />
         </button>
       </header>
 
-      {/* Grid */}
       <main className="grid flex-1 grid-cols-2 gap-4 px-4 pb-28">
         {tiles.map((t) => (
-          <button key={t.title} className={`tile tile-vertical ${t.color}`}>
-            <span className="tile-icon" aria-hidden>{t.icon}</span>
+          <button key={t.title} className={`tile tile-horizontal ${t.color}`}>
             <span className="tile-label whitespace-pre-line">{t.title}</span>
+            <img src={t.img} alt="" width={96} height={96} loading="lazy" className="tile-img" />
           </button>
         ))}
       </main>
 
-      {/* Bottom nav */}
       <nav className="bottom-nav fixed inset-x-0 bottom-0 mx-auto flex max-w-md items-center justify-around px-6 py-3">
         <NavItem icon={<Home className="size-7" />} label="Home" color="#4ac6e8" active />
         <NavItem icon={<Gamepad2 className="size-7" />} label="Games" color="#f5b73a" />
@@ -87,9 +91,7 @@ function Index() {
   );
 }
 
-function NavItem({
-  icon, label, color, active,
-}: { icon: ReactNode; label: string; color: string; active?: boolean }) {
+function NavItem({ icon, label, color, active }: { icon: ReactNode; label: string; color: string; active?: boolean }) {
   return (
     <button className="flex flex-col items-center gap-1" style={{ color }}>
       <span className={active ? "drop-shadow-sm" : "opacity-80"}>{icon}</span>
