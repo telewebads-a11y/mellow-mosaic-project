@@ -138,11 +138,13 @@
   }
 
   body {
-    background: linear-gradient(180deg, #fcd9e8 0%, #e8d4f5 50%, #d4e8fc 100%);
+    background: url('/src/assets/bg-clouds.jpg') center top / cover no-repeat fixed,
+                linear-gradient(180deg, #cfeaff 0%, #e8f6ff 50%, #d8f0d8 100%);
     color: var(--color-foreground);
     font-family: 'Baloo 2', 'Comic Sans MS', system-ui, sans-serif;
     min-height: 100vh;
   }
+
 }
 
 /* Melly Kids TV — playful clay theme */
