@@ -189,12 +189,14 @@
 }
 
 .tile-img {
-  width: 70px;
-  height: 70px;
+  width: 72px;
+  height: 72px;
+  min-width: 72px;
   object-fit: contain;
   filter: drop-shadow(0 3px 3px rgba(0,0,0,0.22));
   flex-shrink: 0;
 }
+
 
 .tile:hover { transform: translateY(-2px); }
 .tile:active { transform: translateY(2px); }
