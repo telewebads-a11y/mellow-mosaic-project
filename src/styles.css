@@ -138,7 +138,68 @@
   }
 
   body {
-    background-color: var(--color-background);
+    background: linear-gradient(180deg, #fcd9e8 0%, #e8d4f5 50%, #d4e8fc 100%);
     color: var(--color-foreground);
+    font-family: 'Baloo 2', 'Comic Sans MS', system-ui, sans-serif;
+    min-height: 100vh;
   }
+}
+
+/* Melly Kids TV — playful clay theme */
+.melly-title {
+  font-family: 'Fredoka', 'Baloo 2', system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 2rem;
+  letter-spacing: 0.02em;
+}
+
+.tile {
+  position: relative;
+  border-radius: 1.5rem;
+  padding: 1rem 1.1rem;
+  min-height: 92px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.05rem;
+  line-height: 1.1;
+  box-shadow:
+    inset 0 -6px 0 rgba(0, 0, 0, 0.12),
+    inset 0 3px 0 rgba(255, 255, 255, 0.35),
+    0 6px 0 rgba(0, 0, 0, 0.08),
+    0 10px 20px -8px rgba(0, 0, 0, 0.25);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  cursor: pointer;
+  text-align: left;
+  border: none;
+}
+.tile:hover { transform: translateY(-2px); }
+.tile:active { transform: translateY(2px); }
+
+.tile-emoji {
+  font-size: 2rem;
+  filter: drop-shadow(0 2px 2px rgba(0,0,0,0.2));
+  flex-shrink: 0;
+}
+
+.tile-green   { background: linear-gradient(180deg, #5ec98a, #3fae6c); }
+.tile-yellow  { background: linear-gradient(180deg, #ffd76a, #f5b73a); }
+.tile-pink    { background: linear-gradient(180deg, #d96cb0, #b94a92); }
+.tile-orange  { background: linear-gradient(180deg, #ff9a5a, #ee7a3a); }
+.tile-blue    { background: linear-gradient(180deg, #6cc6e8, #4aa6cf); }
+.tile-purple  { background: linear-gradient(180deg, #b78ce8, #9466d4); }
+.tile-coral   { background: linear-gradient(180deg, #ff8a7a, #ec6a5a); }
+.tile-teal    { background: linear-gradient(180deg, #4fc6b9, #2fa89a); }
+.tile-grey    { background: linear-gradient(180deg, #cdd1d6, #a8aeb6); }
+.tile-red     { background: linear-gradient(180deg, #ff7a6e, #e8554a); }
+.tile-magenta { background: linear-gradient(180deg, #c468c0, #a248a2); }
+.tile-mustard { background: linear-gradient(180deg, #e8b85a, #c8983a); }
+
+.bottom-nav {
+  background: #fff;
+  border-radius: 1.5rem 1.5rem 0 0;
+  box-shadow: 0 -8px 24px -8px rgba(0,0,0,0.15);
 }
