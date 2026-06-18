@@ -203,6 +203,16 @@
 .tile:hover { transform: translateY(-2px); }
 .tile:active { transform: translateY(2px); }
 
+@keyframes bearBounce {
+  0%, 100% { transform: translateY(0) rotate(-3deg); }
+  50%      { transform: translateY(-8px) rotate(3deg); }
+}
+.bear-bounce {
+  animation: bearBounce 2.4s ease-in-out infinite;
+  transform-origin: center bottom;
+}
+
+
 
 .tile-green   { background: linear-gradient(180deg, #5ec98a, #3fae6c); }
 .tile-yellow  { background: linear-gradient(180deg, #ffd76a, #f5b73a); }
