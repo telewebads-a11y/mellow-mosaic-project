@@ -17,6 +17,7 @@ import quiz from "@/assets/icons/quiz.png";
 import phone from "@/assets/icons/phone.png";
 import rewards from "@/assets/icons/rewards.png";
 import bear from "@/assets/icons/bear.png";
+import bgClouds from "@/assets/bg-clouds.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -51,7 +52,13 @@ const tiles: Tile[] = [
 
 function Index() {
   return (
-    <div className="mx-auto flex min-h-screen max-w-md flex-col">
+    <div className="relative mx-auto flex min-h-screen max-w-md flex-col">
+      <div
+        aria-hidden
+        className="pointer-events-none fixed inset-0 -z-10 bg-cover bg-top bg-no-repeat"
+        style={{ backgroundImage: `url(${bgClouds})` }}
+      />
+      <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 bg-white/35" />
       <header className="flex items-center justify-between px-5 pt-6 pb-5">
         <img src={bear} alt="Bear mascot" width={96} height={96} className="size-24 drop-shadow-lg" />
         <h1 className="melly-title text-center leading-tight">
