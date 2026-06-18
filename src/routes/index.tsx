@@ -17,6 +17,7 @@ import quiz from "@/assets/icons/quiz.png";
 import phone from "@/assets/icons/phone.png";
 import rewards from "@/assets/icons/rewards.png";
 import bear from "@/assets/icons/bear.png";
+import bgClouds from "@/assets/bg-clouds.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
