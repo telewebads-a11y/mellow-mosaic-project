@@ -75,14 +75,14 @@ function BrainQuiz() {
           <button
             key={i}
             className={`tile ${t.color} flex-col items-center justify-center text-center`}
-            style={{ minHeight: 168 }}
+            style={{ minHeight: 200 }}
           >
             <span
               className="melly-title icon-wiggle leading-none drop-shadow-lg"
               style={{
-                fontSize: "2.4rem",
+                fontSize: "4.8rem",
                 animationDelay: `${i * 0.15}s`,
-                textShadow: "0 3px 0 rgba(0,0,0,0.18)",
+                textShadow: "0 4px 0 rgba(0,0,0,0.2)",
                 ...t.iconStyle,
               }}
               aria-hidden
