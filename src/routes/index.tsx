@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Home, Gamepad2, Music, User, Palette, Trees, Waves, Rainbow, Rocket, Check } from "lucide-react";
+import { Home, Gamepad2, Music, User, Palette, Trees, Waves, Rainbow, Rocket, Check, Settings } from "lucide-react";
 import { useState, type ReactNode } from "react";
 
 import phonics from "@/assets/icons/phonics.png";
@@ -16,6 +16,9 @@ import games from "@/assets/icons/games.png";
 import quiz from "@/assets/icons/quiz.png";
 import phone from "@/assets/icons/phone.png";
 import rewards from "@/assets/icons/rewards.png";
+import numbers from "@/assets/icons/numbers.png";
+import abc from "@/assets/icons/abc.png";
+import drawing from "@/assets/icons/drawing.png";
 import bearFace from "@/assets/icons/bear-face.png";
 import bgJungle from "@/assets/bg-clouds.jpg";
 import bgOcean from "@/assets/bg-ocean.jpg";
@@ -37,13 +40,16 @@ export const Route = createFileRoute("/")({
 type Tile = { title: string; img: string; color: string };
 
 const tiles: Tile[] = [
+  { title: "Number\nWorld",      img: numbers,  color: "tile-blue" },
+  { title: "ABC\nWorld",         img: abc,      color: "tile-pink" },
   { title: "Phonics\nWorld",     img: phonics,  color: "tile-green" },
   { title: "Scribble\n& Trace",  img: scribble, color: "tile-yellow" },
+  { title: "Drawing",            img: drawing,  color: "tile-coral" },
   { title: "Brain\nQuiz",        img: brain,    color: "tile-pink" },
   { title: "Smart\nLearning",    img: smart,    color: "tile-mustard" },
   { title: "Explore\nthe World", img: explore,  color: "tile-blue" },
   { title: "Story\nTime",        img: story,    color: "tile-orange" },
-  { title: "Know the\nColors",   img: colors,   color: "tile-orange" },
+  { title: "Coloring\nWorld",    img: colors,   color: "tile-orange" },
   { title: "Shapes",             img: shapes,   color: "tile-teal" },
   { title: "Coloring\nWorld",    img: coloring, color: "tile-grey" },
   { title: "Animal\nKingdom",    img: animals,  color: "tile-teal" },
