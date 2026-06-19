@@ -144,8 +144,8 @@ function AbcWorld() {
             <button
               key={it.letter}
               onClick={() => setActiveIdx(i)}
-              className="num-cell aspect-square"
-              style={{ background: COLORS[i % COLORS.length], fontSize: "1.6rem" }}
+              className="num-cell cell-anim aspect-square"
+              style={{ background: COLORS[i % COLORS.length], fontSize: "1.6rem", animationDelay: `${(i % 10) * 0.12}s` }}
               aria-label={`Letter ${it.letter}`}
             >
               {it.letter}
