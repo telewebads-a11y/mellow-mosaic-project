@@ -48,9 +48,12 @@ function speak(text: string) {
   if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
   window.speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(text);
-  u.rate = 0.9; u.pitch = 1.3;
+  u.rate = 0.95; u.pitch = 1.3;
   window.speechSynthesis.speak(u);
 }
+
+const MILESTONE_STEPS = [20, 50, 100];
+
 
 // Non-overlapping scatter positions around the edges, avoiding the center
 // (where the big number, mic and next buttons live).
