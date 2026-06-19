@@ -98,7 +98,7 @@ function NumberWorld() {
   const [milestone, setMilestone] = useState<number | null>(null);
 
   useEffect(() => {
-    if (active !== null) speak(`${active}. ${spell(active)}`);
+    if (active !== null) speak(spell(active));
   }, [active]);
 
   useEffect(() => {
@@ -115,13 +115,14 @@ function NumberWorld() {
   const next = () => {
     setActive((n) => {
       if (n === null) return 1;
-      if (n % 10 === 0) {
+      if (MILESTONE_STEPS.includes(n)) {
         setMilestone(n);
         return n;
       }
       return n >= 100 ? 1 : n + 1;
     });
   };
+
   const continueAfterMilestone = () => {
     const m = milestone;
     setMilestone(null);
