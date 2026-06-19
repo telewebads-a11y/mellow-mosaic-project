@@ -37,7 +37,7 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-type Tile = { title: string; img: string; color: string };
+type Tile = { title: string; img: string; color: string; to?: string };
 
 const tiles: Tile[] = [
   { title: "Number\nWorld",      img: numbers,  color: "tile-blue" },
