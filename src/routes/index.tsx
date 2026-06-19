@@ -102,51 +102,60 @@ function Index() {
           <span style={{ color: "#4ac6e8" }}>T</span>
           <span style={{ color: "#b78ce8" }}>V</span>
         </h1>
-        <div className="relative">
+        <div className="flex flex-col items-end gap-2">
+          <div className="relative">
+            <button
+              aria-label="Change theme"
+              onClick={() => setPickerOpen((v) => !v)}
+              className="flex size-11 items-center justify-center rounded-full bg-white/90 text-slate-700 shadow-md ring-2 ring-white transition hover:scale-105"
+              style={{ color: activeTheme.tint }}
+            >
+              <Palette className="size-6" />
+            </button>
+            {pickerOpen && (
+              <>
+                <div
+                  className="fixed inset-0 z-10"
+                  onClick={() => setPickerOpen(false)}
+                  aria-hidden
+                />
+                <div className="absolute right-0 top-14 z-20 w-44 rounded-2xl bg-white p-2 shadow-xl ring-1 ring-black/5">
+                  <p className="px-2 pb-1 pt-1 text-xs font-bold uppercase tracking-wide text-slate-400">
+                    Theme
+                  </p>
+                  {themes.map((t) => {
+                    const active = t.id === themeId;
+                    return (
+                      <button
+                        key={t.id}
+                        onClick={() => {
+                          setThemeId(t.id);
+                          setPickerOpen(false);
+                        }}
+                        className="flex w-full items-center gap-3 rounded-xl px-2 py-2 text-left text-sm font-bold text-slate-700 transition hover:bg-slate-100"
+                      >
+                        <span
+                          className="flex size-9 items-center justify-center rounded-full text-white"
+                          style={{ background: t.tint }}
+                        >
+                          {t.icon}
+                        </span>
+                        <span className="flex-1">{t.label}</span>
+                        {active && <Check className="size-4 text-emerald-500" />}
+                      </button>
+                    );
+                  })}
+                </div>
+              </>
+            )}
+          </div>
           <button
-            aria-label="Change theme"
-            onClick={() => setPickerOpen((v) => !v)}
-            className="flex size-11 items-center justify-center rounded-full bg-white/90 text-slate-700 shadow-md ring-2 ring-white transition hover:scale-105"
+            aria-label="Settings"
+            className="flex size-11 items-center justify-center rounded-full bg-white/90 shadow-md ring-2 ring-white transition hover:scale-105"
             style={{ color: activeTheme.tint }}
           >
-            <Palette className="size-6" />
+            <Settings className="size-6" />
           </button>
-          {pickerOpen && (
-            <>
-              <div
-                className="fixed inset-0 z-10"
-                onClick={() => setPickerOpen(false)}
-                aria-hidden
-              />
-              <div className="absolute right-0 top-14 z-20 w-44 rounded-2xl bg-white p-2 shadow-xl ring-1 ring-black/5">
-                <p className="px-2 pb-1 pt-1 text-xs font-bold uppercase tracking-wide text-slate-400">
-                  Theme
-                </p>
-                {themes.map((t) => {
-                  const active = t.id === themeId;
-                  return (
-                    <button
-                      key={t.id}
-                      onClick={() => {
-                        setThemeId(t.id);
-                        setPickerOpen(false);
-                      }}
-                      className="flex w-full items-center gap-3 rounded-xl px-2 py-2 text-left text-sm font-bold text-slate-700 transition hover:bg-slate-100"
-                    >
-                      <span
-                        className="flex size-9 items-center justify-center rounded-full text-white"
-                        style={{ background: t.tint }}
-                      >
-                        {t.icon}
-                      </span>
-                      <span className="flex-1">{t.label}</span>
-                      {active && <Check className="size-4 text-emerald-500" />}
-                    </button>
-                  );
-                })}
-              </div>
-            </>
-          )}
         </div>
       </header>
 
