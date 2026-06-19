@@ -257,6 +257,16 @@
   transition: transform 0.1s ease;
 }
 .num-cell:active { transform: translateY(2px); }
+.cell-anim { animation: cellPop 2.4s ease-in-out infinite; }
+@keyframes cellPop {
+  0%, 100% { transform: translateY(0) scale(1) rotate(0deg); }
+  50%      { transform: translateY(-3px) scale(1.06) rotate(-2deg); }
+}
+.center-pill {
+  font-family: 'Fredoka', 'Baloo 2', system-ui, sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
 .big-num {
   font-family: 'Fredoka', 'Baloo 2', system-ui, sans-serif;
   font-weight: 700;
