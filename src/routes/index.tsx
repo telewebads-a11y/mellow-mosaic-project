@@ -41,7 +41,7 @@ type Tile = { title: string; img: string; color: string; to?: string };
 
 const tiles: Tile[] = [
   { title: "Number\nWorld",      img: numbers,  color: "tile-blue", to: "/number-world" },
-  { title: "ABC\nWorld",         img: abc,      color: "tile-pink" },
+  { title: "ABC\nWorld",         img: abc,      color: "tile-pink", to: "/abc-world" },
   { title: "Phonics\nWorld",     img: phonics,  color: "tile-green" },
   { title: "Scribble\n& Trace",  img: scribble, color: "tile-yellow" },
   { title: "Drawing",            img: drawing,  color: "tile-coral" },

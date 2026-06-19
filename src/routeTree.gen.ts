@@ -10,11 +10,17 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as NumberWorldRouteImport } from './routes/number-world'
+import { Route as AbcWorldRouteImport } from './routes/abc-world'
 import { Route as IndexRouteImport } from './routes/index'
 
 const NumberWorldRoute = NumberWorldRouteImport.update({
   id: '/number-world',
   path: '/number-world',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AbcWorldRoute = AbcWorldRouteImport.update({
+  id: '/abc-world',
+  path: '/abc-world',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -25,27 +31,31 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/abc-world': typeof AbcWorldRoute
   '/number-world': typeof NumberWorldRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/abc-world': typeof AbcWorldRoute
   '/number-world': typeof NumberWorldRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/abc-world': typeof AbcWorldRoute
   '/number-world': typeof NumberWorldRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/number-world'
+  fullPaths: '/' | '/abc-world' | '/number-world'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/number-world'
-  id: '__root__' | '/' | '/number-world'
+  to: '/' | '/abc-world' | '/number-world'
+  id: '__root__' | '/' | '/abc-world' | '/number-world'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AbcWorldRoute: typeof AbcWorldRoute
   NumberWorldRoute: typeof NumberWorldRoute
 }
 
@@ -56,6 +66,13 @@ declare module '@tanstack/react-router' {
       path: '/number-world'
       fullPath: '/number-world'
       preLoaderRoute: typeof NumberWorldRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/abc-world': {
+      id: '/abc-world'
+      path: '/abc-world'
+      fullPath: '/abc-world'
+      preLoaderRoute: typeof AbcWorldRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -70,6 +87,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AbcWorldRoute: AbcWorldRoute,
   NumberWorldRoute: NumberWorldRoute,
 }
 export const routeTree = rootRouteImport
