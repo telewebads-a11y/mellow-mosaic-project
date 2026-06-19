@@ -210,7 +210,7 @@ function AbcWorld() {
                 <span className="eye" style={{ top: "22%", left: "58%" }}><span className="pupil" /></span>
               </div>
               <div className="mt-1 text-6xl drop-shadow">{active.emoji}</div>
-              <div className="mt-2 rounded-full bg-white/90 px-5 py-1.5 text-xl font-extrabold tracking-wide text-slate-700 shadow ring-2 ring-white">
+              <div className="mt-2 rounded-full bg-white/90 px-5 py-1.5 text-2xl tracking-wide text-slate-700 shadow ring-2 ring-white center-pill">
                 {active.letter} for {active.word.toUpperCase()}
               </div>
             </div>
