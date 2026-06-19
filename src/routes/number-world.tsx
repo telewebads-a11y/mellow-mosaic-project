@@ -161,10 +161,24 @@ function NumberWorld() {
             style={{ height: "min(82vh, 640px)" }}
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Title top-center */}
-            <div className="absolute inset-x-0 top-2 z-20 flex justify-center pointer-events-none">
-              <span className="nw-title" style={{ fontSize: "1.25rem" }}>Number World</span>
+            {/* Title top-center — colorful rainbow */}
+            <div className="absolute inset-x-0 top-3 z-20 flex justify-center pointer-events-none">
+              <span
+                className="nw-title"
+                style={{
+                  fontSize: "2rem",
+                  background: "linear-gradient(90deg,#ef4444,#fb923c,#facc15,#22c55e,#3b82f6,#a855f7)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                  WebkitTextStroke: "1.5px #fff",
+                  filter: "drop-shadow(2px 3px 0 rgba(0,0,0,0.15))",
+                }}
+              >
+                Number World
+              </span>
             </div>
+
 
             {/* Bear mascot top-left */}
             <img src={bearFace} alt="" width={64} height={64} className="bear-bounce absolute left-2 top-2 z-20 drop-shadow-lg" />
