@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as ScribbleTraceRouteImport } from './routes/scribble-trace'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as NumberWorldRouteImport } from './routes/number-world'
 import { Route as AbcWorldRouteImport } from './routes/abc-world'
@@ -18,6 +19,11 @@ import { Route as IndexRouteImport } from './routes/index'
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ScribbleTraceRoute = ScribbleTraceRouteImport.update({
+  id: '/scribble-trace',
+  path: '/scribble-trace',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProfileRoute = ProfileRouteImport.update({
@@ -46,6 +52,7 @@ export interface FileRoutesByFullPath {
   '/abc-world': typeof AbcWorldRoute
   '/number-world': typeof NumberWorldRoute
   '/profile': typeof ProfileRoute
+  '/scribble-trace': typeof ScribbleTraceRoute
   '/settings': typeof SettingsRoute
 }
 export interface FileRoutesByTo {
@@ -53,6 +60,7 @@ export interface FileRoutesByTo {
   '/abc-world': typeof AbcWorldRoute
   '/number-world': typeof NumberWorldRoute
   '/profile': typeof ProfileRoute
+  '/scribble-trace': typeof ScribbleTraceRoute
   '/settings': typeof SettingsRoute
 }
 export interface FileRoutesById {
@@ -61,19 +69,33 @@ export interface FileRoutesById {
   '/abc-world': typeof AbcWorldRoute
   '/number-world': typeof NumberWorldRoute
   '/profile': typeof ProfileRoute
+  '/scribble-trace': typeof ScribbleTraceRoute
   '/settings': typeof SettingsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/abc-world' | '/number-world' | '/profile' | '/settings'
+  fullPaths:
+    | '/'
+    | '/abc-world'
+    | '/number-world'
+    | '/profile'
+    | '/scribble-trace'
+    | '/settings'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/abc-world' | '/number-world' | '/profile' | '/settings'
+  to:
+    | '/'
+    | '/abc-world'
+    | '/number-world'
+    | '/profile'
+    | '/scribble-trace'
+    | '/settings'
   id:
     | '__root__'
     | '/'
     | '/abc-world'
     | '/number-world'
     | '/profile'
+    | '/scribble-trace'
     | '/settings'
   fileRoutesById: FileRoutesById
 }
@@ -82,6 +104,7 @@ export interface RootRouteChildren {
   AbcWorldRoute: typeof AbcWorldRoute
   NumberWorldRoute: typeof NumberWorldRoute
   ProfileRoute: typeof ProfileRoute
+  ScribbleTraceRoute: typeof ScribbleTraceRoute
   SettingsRoute: typeof SettingsRoute
 }
 
@@ -92,6 +115,13 @@ declare module '@tanstack/react-router' {
       path: '/settings'
       fullPath: '/settings'
       preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/scribble-trace': {
+      id: '/scribble-trace'
+      path: '/scribble-trace'
+      fullPath: '/scribble-trace'
+      preLoaderRoute: typeof ScribbleTraceRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/profile': {
@@ -130,6 +160,7 @@ const rootRouteChildren: RootRouteChildren = {
   AbcWorldRoute: AbcWorldRoute,
   NumberWorldRoute: NumberWorldRoute,
   ProfileRoute: ProfileRoute,
+  ScribbleTraceRoute: ScribbleTraceRoute,
   SettingsRoute: SettingsRoute,
 }
 export const routeTree = rootRouteImport
