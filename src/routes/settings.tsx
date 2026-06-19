@@ -147,3 +147,27 @@ function SettingsPage() {
     </div>
   );
 }
+
+function ToggleRow() {
+  const [sound, setSound] = useState(true);
+  const [vibration, setVibration] = useState(true);
+  const [notif, setNotif] = useState(true);
+  const items = [
+    { label: "Sound",         icon: <Volume2 className="size-5 text-white" />,  bg: "from-sky-400 to-sky-600",       value: sound,     set: setSound },
+    { label: "Vibration",     icon: <Vibrate className="size-5 text-white" />,  bg: "from-violet-400 to-purple-600", value: vibration, set: setVibration },
+    { label: "Notifications", icon: <Bell className="size-5 text-white" />,     bg: "from-amber-400 to-orange-500",  value: notif,     set: setNotif },
+  ];
+  return (
+    <section className="mt-4 space-y-2">
+      {items.map((i) => (
+        <div key={i.label} className="flex items-center gap-3 rounded-2xl bg-white px-4 py-3 shadow ring-2 ring-white/80">
+          <div className={`flex size-10 items-center justify-center rounded-xl bg-gradient-to-b ${i.bg} shadow-inner`}>
+            {i.icon}
+          </div>
+          <span className="flex-1 text-base font-extrabold text-amber-900">{i.label}</span>
+          <Switch checked={i.value} onCheckedChange={i.set} className="h-7 w-12 data-[state=checked]:bg-emerald-500" />
+        </div>
+      ))}
+    </section>
+  );
+}
