@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeft, X, Home } from "lucide-react";
+import { ArrowLeft, X, Home, Volume2, ChevronRight } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
 import bearFace from "@/assets/icons/bear-face.png";
