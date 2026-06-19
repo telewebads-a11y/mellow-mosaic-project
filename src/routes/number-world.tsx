@@ -38,17 +38,11 @@ function spell(n: number): string {
 }
 
 const MILESTONES: Record<number, { title: string; msg: string }> = {
-  10:  { title: "Great Start!",     msg: "You counted 1 to 10! You're a counting star!" },
-  20:  { title: "Way to Go!",       msg: "Awesome! You finished 1 to 20!" },
-  30:  { title: "Fantastic!",       msg: "Wow! 1 to 30 done — you're amazing!" },
-  40:  { title: "You're On Fire!",  msg: "1 to 40 complete! Keep that brain growing!" },
-  50:  { title: "Halfway There!",   msg: "Congratulations! You've reached 50 learning stars!" },
-  60:  { title: "Super Counter!",   msg: "1 to 60 — you're unstoppable!" },
-  70:  { title: "Brilliant!",       msg: "1 to 70 done! Such a clever cub!" },
-  80:  { title: "Almost There!",    msg: "1 to 80 — keep going, champion!" },
-  90:  { title: "Incredible!",      msg: "1 to 90! Just a tiny hop to 100!" },
-  100: { title: "You Did It!",      msg: "100 numbers! You're a Counting Hero!" },
+  20:  { title: "Way to Go!",     msg: "Awesome! You finished counting 1 to 20!" },
+  50:  { title: "Halfway There!", msg: "Wow! You reached 50 — you're a counting star!" },
+  100: { title: "You Did It!",    msg: "100 numbers! You're a Counting Hero!" },
 };
+
 
 function speak(text: string) {
   if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
