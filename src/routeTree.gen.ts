@@ -9,13 +9,20 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SmartLearningRouteImport } from './routes/smart-learning'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ScribbleTraceRouteImport } from './routes/scribble-trace'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as NumberWorldRouteImport } from './routes/number-world'
+import { Route as BrainQuizRouteImport } from './routes/brain-quiz'
 import { Route as AbcWorldRouteImport } from './routes/abc-world'
 import { Route as IndexRouteImport } from './routes/index'
 
+const SmartLearningRoute = SmartLearningRouteImport.update({
+  id: '/smart-learning',
+  path: '/smart-learning',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -36,6 +43,11 @@ const NumberWorldRoute = NumberWorldRouteImport.update({
   path: '/number-world',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BrainQuizRoute = BrainQuizRouteImport.update({
+  id: '/brain-quiz',
+  path: '/brain-quiz',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AbcWorldRoute = AbcWorldRouteImport.update({
   id: '/abc-world',
   path: '/abc-world',
@@ -50,66 +62,87 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/abc-world': typeof AbcWorldRoute
+  '/brain-quiz': typeof BrainQuizRoute
   '/number-world': typeof NumberWorldRoute
   '/profile': typeof ProfileRoute
   '/scribble-trace': typeof ScribbleTraceRoute
   '/settings': typeof SettingsRoute
+  '/smart-learning': typeof SmartLearningRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/abc-world': typeof AbcWorldRoute
+  '/brain-quiz': typeof BrainQuizRoute
   '/number-world': typeof NumberWorldRoute
   '/profile': typeof ProfileRoute
   '/scribble-trace': typeof ScribbleTraceRoute
   '/settings': typeof SettingsRoute
+  '/smart-learning': typeof SmartLearningRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/abc-world': typeof AbcWorldRoute
+  '/brain-quiz': typeof BrainQuizRoute
   '/number-world': typeof NumberWorldRoute
   '/profile': typeof ProfileRoute
   '/scribble-trace': typeof ScribbleTraceRoute
   '/settings': typeof SettingsRoute
+  '/smart-learning': typeof SmartLearningRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/abc-world'
+    | '/brain-quiz'
     | '/number-world'
     | '/profile'
     | '/scribble-trace'
     | '/settings'
+    | '/smart-learning'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/abc-world'
+    | '/brain-quiz'
     | '/number-world'
     | '/profile'
     | '/scribble-trace'
     | '/settings'
+    | '/smart-learning'
   id:
     | '__root__'
     | '/'
     | '/abc-world'
+    | '/brain-quiz'
     | '/number-world'
     | '/profile'
     | '/scribble-trace'
     | '/settings'
+    | '/smart-learning'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AbcWorldRoute: typeof AbcWorldRoute
+  BrainQuizRoute: typeof BrainQuizRoute
   NumberWorldRoute: typeof NumberWorldRoute
   ProfileRoute: typeof ProfileRoute
   ScribbleTraceRoute: typeof ScribbleTraceRoute
   SettingsRoute: typeof SettingsRoute
+  SmartLearningRoute: typeof SmartLearningRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/smart-learning': {
+      id: '/smart-learning'
+      path: '/smart-learning'
+      fullPath: '/smart-learning'
+      preLoaderRoute: typeof SmartLearningRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/settings': {
       id: '/settings'
       path: '/settings'
@@ -138,6 +171,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NumberWorldRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/brain-quiz': {
+      id: '/brain-quiz'
+      path: '/brain-quiz'
+      fullPath: '/brain-quiz'
+      preLoaderRoute: typeof BrainQuizRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/abc-world': {
       id: '/abc-world'
       path: '/abc-world'
@@ -158,10 +198,12 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AbcWorldRoute: AbcWorldRoute,
+  BrainQuizRoute: BrainQuizRoute,
   NumberWorldRoute: NumberWorldRoute,
   ProfileRoute: ProfileRoute,
   ScribbleTraceRoute: ScribbleTraceRoute,
   SettingsRoute: SettingsRoute,
+  SmartLearningRoute: SmartLearningRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
