@@ -145,7 +145,7 @@ function NumberWorld() {
       <main className="px-3 pb-28">
         <div className="grid grid-cols-10 gap-1.5">
           {Array.from({ length: 100 }, (_, i) => i + 1).map((n) => (
-            <button key={n} onClick={() => setActive(n)} className="num-cell" style={{ background: COLORS[(n - 1) % COLORS.length] }} aria-label={`Number ${n}`}>
+            <button key={n} onClick={() => setActive(n)} className="num-cell cell-anim" style={{ background: COLORS[(n - 1) % COLORS.length], animationDelay: `${((n - 1) % 10) * 0.1}s` }} aria-label={`Number ${n}`}>
               {n}
             </button>
           ))}
@@ -208,7 +208,7 @@ function NumberWorld() {
                 <span className="eye" style={{ top: "22%", left: "28%" }}><span className="pupil" /></span>
                 <span className="eye" style={{ top: "22%", left: "58%" }}><span className="pupil" /></span>
               </div>
-              <div className="mt-2 rounded-full bg-white/90 px-5 py-1.5 text-xl font-extrabold tracking-wide text-slate-700 shadow ring-2 ring-white">
+              <div className="mt-2 rounded-full bg-white/90 px-5 py-1.5 text-2xl tracking-wide text-slate-700 shadow ring-2 ring-white center-pill">
                 {active} — {spell(active).toUpperCase()}
               </div>
             </div>

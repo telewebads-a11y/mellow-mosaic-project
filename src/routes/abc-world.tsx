@@ -99,7 +99,7 @@ function AbcWorld() {
   const active = activeIdx !== null ? ITEMS[activeIdx] : null;
 
   useEffect(() => {
-    if (active) speak(`${active.letter}. ${active.letter} for ${active.word}`);
+    if (active) speak(`${active.letter} for ${active.word}`);
   }, [active]);
 
   useEffect(() => {
@@ -144,8 +144,8 @@ function AbcWorld() {
             <button
               key={it.letter}
               onClick={() => setActiveIdx(i)}
-              className="num-cell aspect-square"
-              style={{ background: COLORS[i % COLORS.length], fontSize: "1.6rem" }}
+              className="num-cell cell-anim aspect-square"
+              style={{ background: COLORS[i % COLORS.length], fontSize: "1.6rem", animationDelay: `${(i % 10) * 0.12}s` }}
               aria-label={`Letter ${it.letter}`}
             >
               {it.letter}
@@ -210,7 +210,7 @@ function AbcWorld() {
                 <span className="eye" style={{ top: "22%", left: "58%" }}><span className="pupil" /></span>
               </div>
               <div className="mt-1 text-6xl drop-shadow">{active.emoji}</div>
-              <div className="mt-2 rounded-full bg-white/90 px-5 py-1.5 text-xl font-extrabold tracking-wide text-slate-700 shadow ring-2 ring-white">
+              <div className="mt-2 rounded-full bg-white/90 px-5 py-1.5 text-2xl tracking-wide text-slate-700 shadow ring-2 ring-white center-pill">
                 {active.letter} for {active.word.toUpperCase()}
               </div>
             </div>
@@ -218,7 +218,7 @@ function AbcWorld() {
             {/* Buttons */}
             <div className="absolute inset-x-0 bottom-4 z-30 flex items-center justify-center gap-5">
               <button
-                onClick={() => speak(`${active.letter}. ${active.letter} for ${active.word}`)}
+                onClick={() => speak(`${active.letter} for ${active.word}`)}
                 aria-label="Replay"
                 className="flex size-20 items-center justify-center rounded-full bg-gradient-to-b from-sky-400 to-sky-600 text-white shadow-[0_6px_0_rgba(0,0,0,0.2)] ring-4 ring-white transition active:translate-y-[3px] hover:scale-105"
               >
