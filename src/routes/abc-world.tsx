@@ -99,7 +99,7 @@ function AbcWorld() {
   const active = activeIdx !== null ? ITEMS[activeIdx] : null;
 
   useEffect(() => {
-    if (active) speak(`${active.letter}. ${active.letter} for ${active.word}`);
+    if (active) speak(`${active.letter} for ${active.word}`);
   }, [active]);
 
   useEffect(() => {
