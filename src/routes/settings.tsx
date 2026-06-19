@@ -1,6 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { ArrowLeft, Globe, Medal, ScrollText, Users, Info, FileText, LogOut, User } from "lucide-react";
-import type { ReactNode } from "react";
+import { ArrowLeft, Globe, Medal, ScrollText, Users, Info, FileText, LogOut, User, Volume2, Vibrate, Bell } from "lucide-react";
+import { useState, type ReactNode } from "react";
+import { Switch } from "@/components/ui/switch";
 
 import bgClouds from "@/assets/bg-clouds.jpg";
 
@@ -85,7 +86,10 @@ function SettingsPage() {
 
       <main className="px-4 pb-28">
         {/* Profile card */}
-        <section className="rounded-3xl bg-gradient-to-b from-sky-100 to-sky-200 p-4 shadow-lg ring-2 ring-white/70">
+        <Link
+          to="/profile"
+          className="block rounded-3xl bg-gradient-to-b from-sky-100 to-sky-200 p-4 shadow-lg ring-2 ring-white/70 active:translate-y-[2px] transition"
+        >
           <div className="flex items-center gap-4">
             <div className="flex flex-col items-center">
               <div className="flex size-24 items-center justify-center rounded-full bg-gradient-to-b from-amber-200 to-amber-400 shadow-inner ring-4 ring-white">
@@ -98,11 +102,15 @@ function SettingsPage() {
             <div className="flex-1">
               <h2 className="text-xl font-extrabold text-amber-900 drop-shadow-sm">Child Profile</h2>
               <div className="mt-2 inline-block rounded-full bg-amber-100 px-3 py-1 text-xs font-bold text-amber-900 ring-2 ring-amber-200">
-                Kids ID: [Sample ID]
+                Tap to edit profile
               </div>
             </div>
           </div>
-        </section>
+        </Link>
+
+        {/* Toggles */}
+        <ToggleRow />
+
 
         {/* Grid */}
         <section className="mt-4 grid grid-cols-2 gap-4">
@@ -137,5 +145,29 @@ function SettingsPage() {
         </div>
       </main>
     </div>
+  );
+}
+
+function ToggleRow() {
+  const [sound, setSound] = useState(true);
+  const [vibration, setVibration] = useState(true);
+  const [notif, setNotif] = useState(true);
+  const items = [
+    { label: "Sound",         icon: <Volume2 className="size-5 text-white" />,  bg: "from-sky-400 to-sky-600",       value: sound,     set: setSound },
+    { label: "Vibration",     icon: <Vibrate className="size-5 text-white" />,  bg: "from-violet-400 to-purple-600", value: vibration, set: setVibration },
+    { label: "Notifications", icon: <Bell className="size-5 text-white" />,     bg: "from-amber-400 to-orange-500",  value: notif,     set: setNotif },
+  ];
+  return (
+    <section className="mt-4 space-y-2">
+      {items.map((i) => (
+        <div key={i.label} className="flex items-center gap-3 rounded-2xl bg-white px-4 py-3 shadow ring-2 ring-white/80">
+          <div className={`flex size-10 items-center justify-center rounded-xl bg-gradient-to-b ${i.bg} shadow-inner`}>
+            {i.icon}
+          </div>
+          <span className="flex-1 text-base font-extrabold text-amber-900">{i.label}</span>
+          <Switch checked={i.value} onCheckedChange={i.set} className="h-7 w-12 data-[state=checked]:bg-emerald-500" />
+        </div>
+      ))}
+    </section>
   );
 }
