@@ -9,10 +9,16 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as NumberWorldRouteImport } from './routes/number-world'
 import { Route as AbcWorldRouteImport } from './routes/abc-world'
 import { Route as IndexRouteImport } from './routes/index'
 
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const NumberWorldRoute = NumberWorldRouteImport.update({
   id: '/number-world',
   path: '/number-world',
@@ -33,34 +39,45 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/abc-world': typeof AbcWorldRoute
   '/number-world': typeof NumberWorldRoute
+  '/settings': typeof SettingsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/abc-world': typeof AbcWorldRoute
   '/number-world': typeof NumberWorldRoute
+  '/settings': typeof SettingsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/abc-world': typeof AbcWorldRoute
   '/number-world': typeof NumberWorldRoute
+  '/settings': typeof SettingsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/abc-world' | '/number-world'
+  fullPaths: '/' | '/abc-world' | '/number-world' | '/settings'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/abc-world' | '/number-world'
-  id: '__root__' | '/' | '/abc-world' | '/number-world'
+  to: '/' | '/abc-world' | '/number-world' | '/settings'
+  id: '__root__' | '/' | '/abc-world' | '/number-world' | '/settings'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AbcWorldRoute: typeof AbcWorldRoute
   NumberWorldRoute: typeof NumberWorldRoute
+  SettingsRoute: typeof SettingsRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/number-world': {
       id: '/number-world'
       path: '/number-world'
@@ -89,6 +106,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AbcWorldRoute: AbcWorldRoute,
   NumberWorldRoute: NumberWorldRoute,
+  SettingsRoute: SettingsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
