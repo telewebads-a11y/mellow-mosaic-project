@@ -218,7 +218,7 @@ function AbcWorld() {
             {/* Buttons */}
             <div className="absolute inset-x-0 bottom-4 z-30 flex items-center justify-center gap-5">
               <button
-                onClick={() => speak(`${active.letter}. ${active.letter} for ${active.word}`)}
+                onClick={() => speak(`${active.letter} for ${active.word}`)}
                 aria-label="Replay"
                 className="flex size-20 items-center justify-center rounded-full bg-gradient-to-b from-sky-400 to-sky-600 text-white shadow-[0_6px_0_rgba(0,0,0,0.2)] ring-4 ring-white transition active:translate-y-[3px] hover:scale-105"
               >
