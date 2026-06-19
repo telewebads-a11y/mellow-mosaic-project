@@ -160,12 +160,21 @@ function Index() {
       </header>
 
       <main className="grid flex-1 grid-cols-2 gap-4 px-4 pb-28">
-        {tiles.map((t) => (
-          <button key={t.title} className={`tile tile-horizontal ${t.color}`}>
-            <span className="tile-label whitespace-pre-line">{t.title}</span>
-            <img src={t.img} alt="" width={96} height={96} loading="lazy" className="tile-img" />
-          </button>
-        ))}
+        {tiles.map((t, i) => {
+          const inner = (
+            <>
+              <span className="tile-label whitespace-pre-line">{t.title}</span>
+              <img src={t.img} alt="" width={96} height={96} loading="lazy" className="tile-img" />
+            </>
+          );
+          const key = `${t.title}-${i}`;
+          const cls = `tile tile-horizontal ${t.color}`;
+          return t.to ? (
+            <Link key={key} to={t.to} className={cls}>{inner}</Link>
+          ) : (
+            <button key={key} className={cls}>{inner}</button>
+          );
+        })}
       </main>
 
       <nav className="bottom-nav fixed inset-x-0 bottom-0 mx-auto flex max-w-md items-center justify-around px-6 py-3">
