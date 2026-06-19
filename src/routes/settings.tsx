@@ -1,6 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { ArrowLeft, Globe, Medal, ScrollText, Users, Info, FileText, LogOut, User } from "lucide-react";
-import type { ReactNode } from "react";
+import { ArrowLeft, Globe, Medal, ScrollText, Users, Info, FileText, LogOut, User, Volume2, Vibrate, Bell } from "lucide-react";
+import { useState, type ReactNode } from "react";
+import { Switch } from "@/components/ui/switch";
 
 import bgClouds from "@/assets/bg-clouds.jpg";
 
