@@ -149,13 +149,15 @@ function Index() {
               </>
             )}
           </div>
-          <button
+          <Link
+            to="/settings"
             aria-label="Settings"
             className="flex size-11 items-center justify-center rounded-full bg-white/90 shadow-md ring-2 ring-white transition hover:scale-105"
             style={{ color: activeTheme.tint }}
           >
             <Settings className="size-6" />
-          </button>
+          </Link>
+
         </div>
       </header>
 
