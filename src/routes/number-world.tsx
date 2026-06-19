@@ -1,11 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeft, X, Home } from "lucide-react";
+import { ArrowLeft, X, Home, Volume2, ChevronRight } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
 import bearFace from "@/assets/icons/bear-face.png";
 import bearTrophy from "@/assets/bear-trophy.png";
-import btnReplay from "@/assets/icons/btn-replay.png";
-import btnNext from "@/assets/icons/btn-next.png";
 import bgJungle from "@/assets/bg-clouds.jpg";
 
 export const Route = createFileRoute("/number-world")({
@@ -38,25 +36,22 @@ function spell(n: number): string {
 }
 
 const MILESTONES: Record<number, { title: string; msg: string }> = {
-  10:  { title: "Great Start!",     msg: "You counted 1 to 10! You're a counting star!" },
-  20:  { title: "Way to Go!",       msg: "Awesome! You finished 1 to 20!" },
-  30:  { title: "Fantastic!",       msg: "Wow! 1 to 30 done — you're amazing!" },
-  40:  { title: "You're On Fire!",  msg: "1 to 40 complete! Keep that brain growing!" },
-  50:  { title: "Halfway There!",   msg: "Congratulations! You've reached 50 learning stars!" },
-  60:  { title: "Super Counter!",   msg: "1 to 60 — you're unstoppable!" },
-  70:  { title: "Brilliant!",       msg: "1 to 70 done! Such a clever cub!" },
-  80:  { title: "Almost There!",    msg: "1 to 80 — keep going, champion!" },
-  90:  { title: "Incredible!",      msg: "1 to 90! Just a tiny hop to 100!" },
-  100: { title: "You Did It!",      msg: "100 numbers! You're a Counting Hero!" },
+  20:  { title: "Way to Go!",     msg: "Awesome! You finished counting 1 to 20!" },
+  50:  { title: "Halfway There!", msg: "Wow! You reached 50 — you're a counting star!" },
+  100: { title: "You Did It!",    msg: "100 numbers! You're a Counting Hero!" },
 };
+
 
 function speak(text: string) {
   if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
   window.speechSynthesis.cancel();
   const u = new SpeechSynthesisUtterance(text);
-  u.rate = 0.9; u.pitch = 1.3;
+  u.rate = 0.95; u.pitch = 1.3;
   window.speechSynthesis.speak(u);
 }
+
+const MILESTONE_STEPS = [20, 50, 100];
+
 
 // Non-overlapping scatter positions around the edges, avoiding the center
 // (where the big number, mic and next buttons live).
@@ -101,7 +96,7 @@ function NumberWorld() {
   const [milestone, setMilestone] = useState<number | null>(null);
 
   useEffect(() => {
-    if (active !== null) speak(`${active}. ${spell(active)}`);
+    if (active !== null) speak(spell(active));
   }, [active]);
 
   useEffect(() => {
@@ -118,13 +113,14 @@ function NumberWorld() {
   const next = () => {
     setActive((n) => {
       if (n === null) return 1;
-      if (n % 10 === 0) {
+      if (MILESTONE_STEPS.includes(n)) {
         setMilestone(n);
         return n;
       }
       return n >= 100 ? 1 : n + 1;
     });
   };
+
   const continueAfterMilestone = () => {
     const m = milestone;
     setMilestone(null);
@@ -163,10 +159,24 @@ function NumberWorld() {
             style={{ height: "min(82vh, 640px)" }}
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Title top-center */}
-            <div className="absolute inset-x-0 top-2 z-20 flex justify-center pointer-events-none">
-              <span className="nw-title" style={{ fontSize: "1.25rem" }}>Number World</span>
+            {/* Title top-center — colorful rainbow */}
+            <div className="absolute inset-x-0 top-3 z-20 flex justify-center pointer-events-none">
+              <span
+                className="nw-title"
+                style={{
+                  fontSize: "2rem",
+                  background: "linear-gradient(90deg,#ef4444,#fb923c,#facc15,#22c55e,#3b82f6,#a855f7)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                  WebkitTextStroke: "1.5px #fff",
+                  filter: "drop-shadow(2px 3px 0 rgba(0,0,0,0.15))",
+                }}
+              >
+                Number World
+              </span>
             </div>
+
 
             {/* Bear mascot top-left */}
             <img src={bearFace} alt="" width={64} height={64} className="bear-bounce absolute left-2 top-2 z-20 drop-shadow-lg" />
@@ -203,16 +213,25 @@ function NumberWorld() {
               </div>
             </div>
 
-            {/* Buttons (image-based) pinned bottom, with white bg strip so objects can't overlap */}
-            <div className="absolute inset-x-0 bottom-0 z-20 h-24 bg-gradient-to-t from-white/85 to-transparent" />
-            <div className="absolute inset-x-0 bottom-3 z-30 flex items-center justify-center gap-4">
-              <button onClick={() => speak(`${active}. ${spell(active)}`)} aria-label="Replay" className="transition active:translate-y-[2px] hover:scale-105">
-                <img src={btnReplay} alt="Replay" width={112} height={112} className="h-24 w-auto drop-shadow-lg" />
+            {/* Buttons (CSS-only, instant) pinned bottom */}
+            <div className="absolute inset-x-0 bottom-4 z-30 flex items-center justify-center gap-5">
+              <button
+                onClick={() => speak(spell(active))}
+                aria-label="Replay"
+                className="flex size-20 items-center justify-center rounded-full bg-gradient-to-b from-sky-400 to-sky-600 text-white shadow-[0_6px_0_rgba(0,0,0,0.2)] ring-4 ring-white transition active:translate-y-[3px] active:shadow-[0_3px_0_rgba(0,0,0,0.2)] hover:scale-105"
+              >
+                <Volume2 className="size-10" strokeWidth={2.5} />
               </button>
-              <button onClick={next} aria-label="Next" className="transition active:translate-y-[2px] hover:scale-105">
-                <img src={btnNext} alt="Next" width={140} height={112} className="h-24 w-auto drop-shadow-lg" />
+              <button
+                onClick={next}
+                aria-label="Next"
+                className="flex h-20 items-center gap-2 rounded-full bg-gradient-to-b from-emerald-400 to-emerald-600 px-7 text-white shadow-[0_6px_0_rgba(0,0,0,0.2)] ring-4 ring-white transition active:translate-y-[3px] active:shadow-[0_3px_0_rgba(0,0,0,0.2)] hover:scale-105"
+              >
+                <span className="text-2xl font-extrabold">Next</span>
+                <ChevronRight className="size-8" strokeWidth={3} />
               </button>
             </div>
+
           </div>
         </div>
       )}
