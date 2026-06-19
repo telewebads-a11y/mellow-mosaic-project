@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SmartLearningRouteImport } from './routes/smart-learning'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ScribbleTraceRouteImport } from './routes/scribble-trace'
 import { Route as ProfileRouteImport } from './routes/profile'
@@ -17,6 +18,11 @@ import { Route as BrainQuizRouteImport } from './routes/brain-quiz'
 import { Route as AbcWorldRouteImport } from './routes/abc-world'
 import { Route as IndexRouteImport } from './routes/index'
 
+const SmartLearningRoute = SmartLearningRouteImport.update({
+  id: '/smart-learning',
+  path: '/smart-learning',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SettingsRoute = SettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -61,6 +67,7 @@ export interface FileRoutesByFullPath {
   '/profile': typeof ProfileRoute
   '/scribble-trace': typeof ScribbleTraceRoute
   '/settings': typeof SettingsRoute
+  '/smart-learning': typeof SmartLearningRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -70,6 +77,7 @@ export interface FileRoutesByTo {
   '/profile': typeof ProfileRoute
   '/scribble-trace': typeof ScribbleTraceRoute
   '/settings': typeof SettingsRoute
+  '/smart-learning': typeof SmartLearningRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -80,6 +88,7 @@ export interface FileRoutesById {
   '/profile': typeof ProfileRoute
   '/scribble-trace': typeof ScribbleTraceRoute
   '/settings': typeof SettingsRoute
+  '/smart-learning': typeof SmartLearningRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -91,6 +100,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/scribble-trace'
     | '/settings'
+    | '/smart-learning'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -100,6 +110,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/scribble-trace'
     | '/settings'
+    | '/smart-learning'
   id:
     | '__root__'
     | '/'
@@ -109,6 +120,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/scribble-trace'
     | '/settings'
+    | '/smart-learning'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -119,10 +131,18 @@ export interface RootRouteChildren {
   ProfileRoute: typeof ProfileRoute
   ScribbleTraceRoute: typeof ScribbleTraceRoute
   SettingsRoute: typeof SettingsRoute
+  SmartLearningRoute: typeof SmartLearningRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/smart-learning': {
+      id: '/smart-learning'
+      path: '/smart-learning'
+      fullPath: '/smart-learning'
+      preLoaderRoute: typeof SmartLearningRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/settings': {
       id: '/settings'
       path: '/settings'
@@ -183,6 +203,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProfileRoute: ProfileRoute,
   ScribbleTraceRoute: ScribbleTraceRoute,
   SettingsRoute: SettingsRoute,
+  SmartLearningRoute: SmartLearningRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
