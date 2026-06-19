@@ -215,16 +215,25 @@ function NumberWorld() {
               </div>
             </div>
 
-            {/* Buttons (image-based) pinned bottom, with white bg strip so objects can't overlap */}
-            <div className="absolute inset-x-0 bottom-0 z-20 h-24 bg-gradient-to-t from-white/85 to-transparent" />
-            <div className="absolute inset-x-0 bottom-3 z-30 flex items-center justify-center gap-4">
-              <button onClick={() => speak(`${active}. ${spell(active)}`)} aria-label="Replay" className="transition active:translate-y-[2px] hover:scale-105">
-                <img src={btnReplay} alt="Replay" width={112} height={112} className="h-24 w-auto drop-shadow-lg" />
+            {/* Buttons (CSS-only, instant) pinned bottom */}
+            <div className="absolute inset-x-0 bottom-4 z-30 flex items-center justify-center gap-5">
+              <button
+                onClick={() => speak(spell(active))}
+                aria-label="Replay"
+                className="flex size-20 items-center justify-center rounded-full bg-gradient-to-b from-sky-400 to-sky-600 text-white shadow-[0_6px_0_rgba(0,0,0,0.2)] ring-4 ring-white transition active:translate-y-[3px] active:shadow-[0_3px_0_rgba(0,0,0,0.2)] hover:scale-105"
+              >
+                <Volume2 className="size-10" strokeWidth={2.5} />
               </button>
-              <button onClick={next} aria-label="Next" className="transition active:translate-y-[2px] hover:scale-105">
-                <img src={btnNext} alt="Next" width={140} height={112} className="h-24 w-auto drop-shadow-lg" />
+              <button
+                onClick={next}
+                aria-label="Next"
+                className="flex h-20 items-center gap-2 rounded-full bg-gradient-to-b from-emerald-400 to-emerald-600 px-7 text-white shadow-[0_6px_0_rgba(0,0,0,0.2)] ring-4 ring-white transition active:translate-y-[3px] active:shadow-[0_3px_0_rgba(0,0,0,0.2)] hover:scale-105"
+              >
+                <span className="text-2xl font-extrabold">Next</span>
+                <ChevronRight className="size-8" strokeWidth={3} />
               </button>
             </div>
+
           </div>
         </div>
       )}
