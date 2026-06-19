@@ -17,17 +17,18 @@ export const Route = createFileRoute("/scribble-trace")({
 type SubTile = {
   title: string;
   subtitle: string;
-  emoji: string;
+  icon: string;
+  iconStyle?: React.CSSProperties;
   color: string;
 };
 
 const TILES: SubTile[] = [
-  { title: "A – Z",          subtitle: "Capital Letters",          emoji: "🔠", color: "tile-blue" },
-  { title: "a – z",          subtitle: "Small Letters",            emoji: "🔡", color: "tile-pink" },
-  { title: "1 – 100",        subtitle: "Counting Numbers",         emoji: "🔢", color: "tile-green" },
-  { title: "English Words",  subtitle: "3 & 4 Letter Words",       emoji: "📝", color: "tile-yellow" },
-  { title: "हिंदी वर्णमाला",  subtitle: "स्वर और व्यंजन",            emoji: "🕉️", color: "tile-coral" },
-  { title: "हिंदी शब्द",       subtitle: "बिना मात्रा के शब्द",       emoji: "📖", color: "tile-mustard" },
+  { title: "A – Z",           subtitle: "Capital Letters",     icon: "Aa", color: "tile-blue",    iconStyle: { color: "#fff", WebkitTextStroke: "2px #1d4ed8" } },
+  { title: "a – z",           subtitle: "Small Letters",       icon: "ab", color: "tile-pink",    iconStyle: { color: "#fff", WebkitTextStroke: "2px #9d174d" } },
+  { title: "1 – 100",         subtitle: "Counting Numbers",    icon: "123", color: "tile-green",  iconStyle: { color: "#fff", WebkitTextStroke: "2px #166534" } },
+  { title: "English Words",   subtitle: "3 & 4 Letter Words",  icon: "abc", color: "tile-yellow", iconStyle: { color: "#fff", WebkitTextStroke: "2px #b45309" } },
+  { title: "हिंदी वर्णमाला",   subtitle: "स्वर और व्यंजन",       icon: "अ आ", color: "tile-coral",  iconStyle: { color: "#fff", WebkitTextStroke: "2px #9a3412" } },
+  { title: "हिंदी शब्द",        subtitle: "बिना मात्रा के शब्द",   icon: "कमल", color: "tile-mustard", iconStyle: { color: "#fff", WebkitTextStroke: "1.5px #854d0e" } },
 ];
 
 function ScribbleTrace() {
@@ -81,9 +82,26 @@ function ScribbleTrace() {
           <button
             key={i}
             className={`tile ${t.color} flex-col items-center justify-center text-center`}
+            style={{ minHeight: 168 }}
           >
-            <span className="text-5xl drop-shadow" aria-hidden>{t.emoji}</span>
-            <span className="tile-label mt-2 text-base leading-tight">{t.title}</span>
+            <span
+              className="melly-title icon-wiggle leading-none drop-shadow-lg"
+              style={{
+                fontSize: "2.6rem",
+                animationDelay: `${i * 0.15}s`,
+                textShadow: "0 3px 0 rgba(0,0,0,0.18)",
+                ...t.iconStyle,
+              }}
+              aria-hidden
+            >
+              {t.icon}
+            </span>
+            <span
+              className="melly-title mt-2 leading-tight"
+              style={{ fontSize: "1.3rem", color: "#fff", textShadow: "0 2px 2px rgba(0,0,0,0.25)" }}
+            >
+              {t.title}
+            </span>
             <span className="mt-1 text-xs font-bold text-white/95 leading-tight">{t.subtitle}</span>
           </button>
         ))}
@@ -91,3 +109,5 @@ function ScribbleTrace() {
     </div>
   );
 }
+
+

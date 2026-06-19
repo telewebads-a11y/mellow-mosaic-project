@@ -212,6 +212,18 @@
   transform-origin: center bottom;
 }
 
+@keyframes iconWiggle {
+  0%, 100% { transform: translateY(0) rotate(-6deg) scale(1); }
+  50%      { transform: translateY(-6px) rotate(6deg) scale(1.08); }
+}
+.icon-wiggle {
+  display: inline-block;
+  animation: iconWiggle 1.8s ease-in-out infinite;
+  transform-origin: center bottom;
+}
+
+
+
 
 
 .tile-green   { background: linear-gradient(180deg, #5ec98a, #3fae6c); }
