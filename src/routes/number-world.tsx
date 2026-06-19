@@ -4,8 +4,6 @@ import { useEffect, useMemo, useState } from "react";
 
 import bearFace from "@/assets/icons/bear-face.png";
 import bearTrophy from "@/assets/bear-trophy.png";
-import btnReplay from "@/assets/icons/btn-replay.png";
-import btnNext from "@/assets/icons/btn-next.png";
 import bgJungle from "@/assets/bg-clouds.jpg";
 
 export const Route = createFileRoute("/number-world")({
