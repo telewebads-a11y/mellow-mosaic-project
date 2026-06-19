@@ -11,7 +11,7 @@ export const Route = createFileRoute("/brain-quiz")({
       { name: "description", content: "Brain Marathon, Maths Challenge, English Grammar and Hindi counting quizzes for kids." },
     ],
   }),
-  component: BrainQuiz;
+  component: BrainQuiz,
 });
 
 type SubTile = {
