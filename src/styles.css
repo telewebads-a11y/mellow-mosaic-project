@@ -321,3 +321,27 @@
   0%, 100% { transform: translateX(-2px); }
   50%      { transform: translateX(2px); }
 }
+
+/* Shimmer for crayon color buttons */
+@keyframes crayonShimmer {
+  0%   { background-position: -200% 50%; }
+  100% { background-position:  200% 50%; }
+}
+.crayon-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+.crayon-shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background: linear-gradient(115deg,
+    rgba(255,255,255,0) 30%,
+    rgba(255,255,255,0.85) 50%,
+    rgba(255,255,255,0) 70%);
+  background-size: 200% 100%;
+  animation: crayonShimmer 2.2s linear infinite;
+  pointer-events: none;
+  mix-blend-mode: overlay;
+}
