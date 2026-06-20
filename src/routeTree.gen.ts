@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TraceWordsRouteImport } from './routes/trace-words'
 import { Route as TraceVarnamalaRouteImport } from './routes/trace-varnamala'
+import { Route as TraceShabadRouteImport } from './routes/trace-shabad'
 import { Route as TraceSmallRouteImport } from './routes/trace-small'
 import { Route as TraceShabadRouteImport } from './routes/trace-shabad'
 import { Route as TraceNumbersRouteImport } from './routes/trace-numbers'
