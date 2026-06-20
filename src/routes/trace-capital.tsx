@@ -37,6 +37,14 @@ const CRAYONS = [
 
 const PRAISES = ["Perfect!", "Good Job!", "Awesome!", "Well Done!", "Superstar!", "Amazing!"];
 
+const WORDS: Record<string, string> = {
+  A: "Apple", B: "Boy", C: "Cat", D: "Dog", E: "Egg", F: "Fish",
+  G: "Goat", H: "Hat", I: "Ice", J: "Jug", K: "Kite", L: "Lion",
+  M: "Moon", N: "Nest", O: "Owl", P: "Pen", Q: "Queen", R: "Rat",
+  S: "Sun", T: "Tree", U: "Umbrella", V: "Van", W: "Web", X: "Xylophone",
+  Y: "Yak", Z: "Zebra",
+};
+
 function speak(text: string) {
   if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
   window.speechSynthesis.cancel();
@@ -44,6 +52,63 @@ function speak(text: string) {
   u.rate = 0.95;
   u.pitch = 1.3;
   window.speechSynthesis.speak(u);
+}
+
+// Synthesize a clap + popper-blast burst with Web Audio
+function playCelebration() {
+  if (typeof window === "undefined") return;
+  try {
+    const AC = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+    const ctx = new AC();
+    const now = ctx.currentTime;
+
+    // Popper "pop" — quick low thump
+    const pop = ctx.createOscillator();
+    const popGain = ctx.createGain();
+    pop.type = "triangle";
+    pop.frequency.setValueAtTime(180, now);
+    pop.frequency.exponentialRampToValueAtTime(60, now + 0.18);
+    popGain.gain.setValueAtTime(0.0001, now);
+    popGain.gain.exponentialRampToValueAtTime(0.7, now + 0.01);
+    popGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.22);
+    pop.connect(popGain).connect(ctx.destination);
+    pop.start(now); pop.stop(now + 0.25);
+
+    // Confetti sparkle (high noise burst)
+    const sparkleBuf = ctx.createBuffer(1, ctx.sampleRate * 0.6, ctx.sampleRate);
+    const sd = sparkleBuf.getChannelData(0);
+    for (let i = 0; i < sd.length; i++) sd[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / sd.length, 2);
+    const sparkle = ctx.createBufferSource();
+    sparkle.buffer = sparkleBuf;
+    const sFilt = ctx.createBiquadFilter();
+    sFilt.type = "highpass"; sFilt.frequency.value = 3500;
+    const sGain = ctx.createGain();
+    sGain.gain.setValueAtTime(0.25, now);
+    sGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.55);
+    sparkle.connect(sFilt).connect(sGain).connect(ctx.destination);
+    sparkle.start(now + 0.05);
+
+    // Claps — several short filtered noise bursts
+    const clapTimes = [0.25, 0.36, 0.48, 0.62, 0.78, 0.96, 1.18];
+    clapTimes.forEach((t) => {
+      const buf = ctx.createBuffer(1, ctx.sampleRate * 0.08, ctx.sampleRate);
+      const d = buf.getChannelData(0);
+      for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / d.length, 1.5);
+      const src = ctx.createBufferSource();
+      src.buffer = buf;
+      const filt = ctx.createBiquadFilter();
+      filt.type = "bandpass"; filt.frequency.value = 1500; filt.Q.value = 0.8;
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(0.5, now + t);
+      g.gain.exponentialRampToValueAtTime(0.0001, now + t + 0.09);
+      src.connect(filt).connect(g).connect(ctx.destination);
+      src.start(now + t);
+    });
+
+    setTimeout(() => ctx.close(), 2000);
+  } catch {
+    // noop
+  }
 }
 
 function TraceCapital() {
@@ -95,15 +160,27 @@ function TraceCapital() {
             <button
               key={l}
               onClick={() => setActive(i)}
-              className="num-cell cell-anim aspect-square"
+              className="num-cell cell-anim aspect-square flex flex-col items-center justify-center leading-tight"
               style={{
                 background: TILE_COLORS[i % TILE_COLORS.length],
-                fontSize: "1.7rem",
                 animationDelay: `${(i % 10) * 0.1}s`,
               }}
-              aria-label={`Trace letter ${l}`}
+              aria-label={`Trace letter ${l} for ${WORDS[l]}`}
             >
-              {l}
+              <span style={{ fontSize: "1.7rem", lineHeight: 1 }}>{l}</span>
+              <span
+                style={{
+                  fontFamily: "'Fredoka', 'Baloo 2', system-ui, sans-serif",
+                  fontSize: "0.65rem",
+                  fontWeight: 800,
+                  marginTop: 2,
+                  color: "#fff",
+                  textShadow: "1px 1px 0 rgba(0,0,0,0.25)",
+                  letterSpacing: "0.02em",
+                }}
+              >
+                for {WORDS[l]}
+              </span>
             </button>
           ))}
         </div>
@@ -111,7 +188,9 @@ function TraceCapital() {
 
       {active !== null && (
         <TraceModal
+          key={LETTERS[active]}
           letter={LETTERS[active]}
+          word={WORDS[LETTERS[active]]}
           onClose={() => setActive(null)}
           onComplete={() => {
             const praise = PRAISES[Math.floor(Math.random() * PRAISES.length)];
@@ -142,10 +221,12 @@ function TraceCapital() {
 
 function TraceModal({
   letter,
+  word,
   onClose,
   onComplete,
 }: {
   letter: string;
+  word: string;
   onClose: () => void;
   onComplete: () => void;
 }) {
@@ -235,7 +316,7 @@ function TraceModal({
     distanceRef.current += Math.sqrt(dx * dx + dy * dy);
     lastRef.current = p;
 
-    const target = 900;
+    const target = 480;
     const pct = Math.min(100, (distanceRef.current / target) * 100);
     setProgress(pct);
     if (pct >= 100 && !completedRef.current) {
@@ -276,7 +357,7 @@ function TraceModal({
               filter: "drop-shadow(2px 3px 0 rgba(0,0,0,0.15))",
             }}
           >
-            Trace {letter}
+            Trace {letter} for {word}
           </span>
         </div>
 
@@ -354,10 +435,13 @@ function TraceModal({
               key={c}
               aria-label={`Pick color ${c}`}
               onClick={() => setColor(c)}
-              className={`size-11 rounded-full ring-4 transition ${
+              className={`crayon-shimmer size-11 rounded-full ring-4 transition ${
                 color === c ? "ring-slate-700 scale-110" : "ring-white"
               } shadow-md`}
-              style={{ background: c }}
+              style={{
+                background: `radial-gradient(circle at 30% 30%, rgba(255,255,255,0.85), ${c} 55%, ${c} 100%)`,
+                boxShadow: `0 4px 10px ${c}80, inset 0 -3px 6px rgba(0,0,0,0.25)`,
+              }}
             />
           ))}
         </div>
@@ -403,7 +487,9 @@ function SuccessModal({
   onClose: () => void;
 }) {
   useEffect(() => {
-    speak(`${praise} You traced the letter ${letter}!`);
+    playCelebration();
+    const t = setTimeout(() => speak(`${praise} You traced the letter ${letter}!`), 350);
+    return () => clearTimeout(t);
   }, [letter, praise]);
 
   return (
