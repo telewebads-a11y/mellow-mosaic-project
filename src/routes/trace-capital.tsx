@@ -160,15 +160,27 @@ function TraceCapital() {
             <button
               key={l}
               onClick={() => setActive(i)}
-              className="num-cell cell-anim aspect-square"
+              className="num-cell cell-anim aspect-square flex flex-col items-center justify-center leading-tight"
               style={{
                 background: TILE_COLORS[i % TILE_COLORS.length],
-                fontSize: "1.7rem",
                 animationDelay: `${(i % 10) * 0.1}s`,
               }}
-              aria-label={`Trace letter ${l}`}
+              aria-label={`Trace letter ${l} for ${WORDS[l]}`}
             >
-              {l}
+              <span style={{ fontSize: "1.7rem", lineHeight: 1 }}>{l}</span>
+              <span
+                style={{
+                  fontFamily: "'Fredoka', 'Baloo 2', system-ui, sans-serif",
+                  fontSize: "0.65rem",
+                  fontWeight: 800,
+                  marginTop: 2,
+                  color: "#fff",
+                  textShadow: "1px 1px 0 rgba(0,0,0,0.25)",
+                  letterSpacing: "0.02em",
+                }}
+              >
+                for {WORDS[l]}
+              </span>
             </button>
           ))}
         </div>
@@ -176,7 +188,9 @@ function TraceCapital() {
 
       {active !== null && (
         <TraceModal
+          key={LETTERS[active]}
           letter={LETTERS[active]}
+          word={WORDS[LETTERS[active]]}
           onClose={() => setActive(null)}
           onComplete={() => {
             const praise = PRAISES[Math.floor(Math.random() * PRAISES.length)];
