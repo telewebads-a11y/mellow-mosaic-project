@@ -11,7 +11,6 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TraceWordsRouteImport } from './routes/trace-words'
 import { Route as TraceVarnamalaRouteImport } from './routes/trace-varnamala'
-import { Route as TraceShabadRouteImport } from './routes/trace-shabad'
 import { Route as TraceSmallRouteImport } from './routes/trace-small'
 import { Route as TraceShabadRouteImport } from './routes/trace-shabad'
 import { Route as TraceNumbersRouteImport } from './routes/trace-numbers'
@@ -33,6 +32,11 @@ const TraceWordsRoute = TraceWordsRouteImport.update({
 const TraceVarnamalaRoute = TraceVarnamalaRouteImport.update({
   id: '/trace-varnamala',
   path: '/trace-varnamala',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TraceShabadRoute = TraceShabadRouteImport.update({
+  id: '/trace-shabad',
+  path: '/trace-shabad',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TraceSmallRoute = TraceSmallRouteImport.update({
