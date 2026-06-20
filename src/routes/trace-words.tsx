@@ -175,17 +175,17 @@ function Column({ title, items, onPick }: { title: string; items: WordItem[]; on
       <h2 className="melly-title mb-2 text-center leading-tight" style={{ fontSize: "1.1rem", color: "#fff", WebkitTextStroke: "1.5px #1d4ed8", textShadow: "0 2px 0 rgba(0,0,0,0.15)" }}>
         {title}
       </h2>
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2.5">
         {items.map((it, i) => (
           <button
             key={`${it.w}-${i}`}
             onClick={() => onPick(i)}
-            className="num-cell cell-anim flex items-center justify-between gap-2 px-3 py-2.5 leading-tight"
-            style={{ background: TILE_COLORS[i % TILE_COLORS.length], animationDelay: `${(i % 10) * 0.07}s`, minHeight: 60 }}
+            className="num-cell cell-anim flex flex-col items-center justify-center gap-1 px-2 py-3 leading-tight"
+            style={{ background: TILE_COLORS[i % TILE_COLORS.length], animationDelay: `${(i % 10) * 0.07}s`, minHeight: 110 }}
             aria-label={`Trace word ${it.w}`}
           >
-            <span style={{ fontSize: "1.3rem", lineHeight: 1, letterSpacing: "0.04em" }}>{it.w}</span>
-            <span style={{ fontSize: "1.7rem", lineHeight: 1 }} aria-hidden>{it.e}</span>
+            <span style={{ fontSize: "1.9rem", lineHeight: 1, letterSpacing: "0.04em" }}>{it.w}</span>
+            <span style={{ fontSize: "2.6rem", lineHeight: 1 }} aria-hidden>{it.e}</span>
           </button>
         ))}
       </div>
