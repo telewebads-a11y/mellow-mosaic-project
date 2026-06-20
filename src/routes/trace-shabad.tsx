@@ -307,7 +307,7 @@ function TraceModal({ word, english, emoji, onClose, onComplete }: { word: strin
     const dy = p.y - last.y;
     distanceRef.current += Math.sqrt(dx * dx + dy * dy);
     lastRef.current = p;
-    const target = word.length <= 2 ? 500 : 700;
+    const target = word.length <= 2 ? 550 : 750;
     const pct = Math.min(100, (distanceRef.current / target) * 100);
     setProgress(pct);
     if (pct >= 100 && !completedRef.current) {
