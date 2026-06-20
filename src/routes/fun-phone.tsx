@@ -338,16 +338,42 @@ function ChatScreen() {
 /* ===================== SCREEN 3: VIDEO CALL ===================== */
 type Action = "idle" | "entering" | "hello" | "smile" | "laugh" | "cry" | "dance" | "funny";
 
+// Simple kid-friendly dance loop (C major arpeggio)
+const DANCE_NOTES = [523.25, 587.33, 659.25, 783.99, 659.25, 587.33, 523.25, 659.25];
+
 function VideoScreen() {
   const [calling, setCalling] = useState(false);
   const [action, setAction] = useState<Action>("idle");
   const [duration, setDuration] = useState(0);
+  const danceTimer = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
     if (!calling) return;
     const t = setInterval(() => setDuration((d) => d + 1), 1000);
     return () => clearInterval(t);
   }, [calling]);
+
+  // Background dance music — runs only while action === "dance"
+  useEffect(() => {
+    if (danceTimer.current) {
+      clearInterval(danceTimer.current);
+      danceTimer.current = null;
+    }
+    if (action === "dance") {
+      let i = 0;
+      danceTimer.current = setInterval(() => {
+        tone(DANCE_NOTES[i % DANCE_NOTES.length], 0.18, "triangle", 0.15);
+        if (i % 2 === 0) tone(120, 0.08, "square", 0.18);
+        i++;
+      }, 230);
+    }
+    return () => {
+      if (danceTimer.current) {
+        clearInterval(danceTimer.current);
+        danceTimer.current = null;
+      }
+    };
+  }, [action]);
 
   function startCall() {
     setCalling(true);
@@ -379,30 +405,12 @@ function VideoScreen() {
     <div className="mx-auto w-full max-w-[380px] overflow-hidden rounded-[32px] bg-slate-900 shadow-[0_10px_0_rgba(0,0,0,0.2)] ring-4 ring-white">
       {/* Video stage */}
       <div className="relative h-[340px] overflow-hidden bg-gradient-to-b from-indigo-500 via-purple-500 to-pink-400">
-        {/* Sparkles */}
-        <div className="pointer-events-none absolute inset-0">
-          {[...Array(14)].map((_, i) => (
-            <span
-              key={i}
-              className="absolute text-white/70"
-              style={{
-                left: `${(i * 73) % 100}%`,
-                top: `${(i * 41) % 100}%`,
-                animation: `bearBounce ${2 + (i % 3)}s ease-in-out ${i * 0.2}s infinite`,
-                fontSize: `${10 + (i % 4) * 4}px`,
-              }}
-            >
-              ✨
-            </span>
-          ))}
-        </div>
-
         {!calling ? (
           <div className="flex h-full flex-col items-center justify-center gap-4">
             <img src={bearFace} alt="" className="size-32 drop-shadow-2xl bear-bounce" />
             <div className="text-center">
               <div className="text-xl font-extrabold text-white drop-shadow">Melly Bear</div>
-              <div className="text-xs font-bold text-white/80">Tap to video call 📞</div>
+              <div className="text-xs font-bold text-white/80">Tap to video call</div>
             </div>
             <button
               onClick={startCall}
@@ -413,14 +421,12 @@ function VideoScreen() {
           </div>
         ) : (
           <>
-            {/* Bear stage */}
             <BearActor action={action} />
-            {/* HUD */}
             <div className="absolute left-3 top-3 flex items-center gap-2 rounded-full bg-black/40 px-3 py-1 text-xs font-extrabold text-white backdrop-blur-sm">
               <span className="size-2 animate-pulse rounded-full bg-red-500" /> LIVE {mm}:{ss}
             </div>
             <div className="absolute right-3 top-3 rounded-2xl bg-black/40 px-2 py-1 text-[10px] font-extrabold text-white backdrop-blur-sm">
-              You 👶
+              You
             </div>
           </>
         )}
@@ -446,7 +452,7 @@ function VideoScreen() {
           </>
         ) : (
           <div className="text-center text-xs font-bold text-white/70">
-            Start the call to play with Melly 💜
+            Start the call to play with Melly
           </div>
         )}
       </div>
@@ -467,56 +473,168 @@ function ActionBtn({ icon, label, color, onClick }: { icon: React.ReactNode; lab
   );
 }
 
-/* Animated bear actor — swaps real bear illustrations per emotion */
+/* Animated bear actor — pure CSS / SVG motion, no emoji */
 function BearActor({ action }: { action: Action }) {
-  const anim: Record<Action, { img: string; transform: string; bg: string; caption: string; animation?: string }> = {
-    idle:     { img: bearHello, transform: "translateX(-150%)",               bg: "transparent",            caption: "" },
-    entering: { img: bearHello, transform: "translateX(0)",                   bg: "transparent",            caption: "", animation: "bearBounce 1s ease-in-out infinite" },
-    hello:    { img: bearHello, transform: "translateX(0)",                   bg: "rgba(255,255,255,0.15)", caption: "Hello, friend!",  animation: "bearWave 1.2s ease-in-out infinite" },
-    smile:    { img: bearSmile, transform: "translateX(0) scale(1.05)",       bg: "rgba(255,210,63,0.25)",  caption: "You make me smile!", animation: "bearBounce 1.4s ease-in-out infinite" },
-    laugh:    { img: bearLaugh, transform: "translateX(0)",                   bg: "rgba(255,107,107,0.25)", caption: "Hahahaha!",       animation: "bearLaugh 0.35s ease-in-out infinite" },
-    cry:      { img: bearCry,   transform: "translateX(0)",                   bg: "rgba(74,198,232,0.3)",   caption: "Boo hoo…",        animation: "bearCry 1.6s ease-in-out infinite" },
-    dance:    { img: bearDance, transform: "translateX(0)",                   bg: "rgba(183,140,232,0.35)", caption: "La la la!",       animation: "bearDance 0.55s ease-in-out infinite" },
-    funny:    { img: bearFunny, transform: "translateX(0)",                   bg: "rgba(109,212,126,0.3)",  caption: "Silly bear!",     animation: "bearFunny 0.7s ease-in-out infinite" },
+  const bearRef = useRef<HTMLDivElement>(null);
+
+  // Funny mode: play laugh sound each time bear hits a wall
+  useEffect(() => {
+    if (action !== "funny") return;
+    const el = bearRef.current;
+    if (!el) return;
+    let hitLeft = true;
+    const onIter = () => {
+      tone(hitLeft ? 880 : 1100, 0.12, "triangle", 0.2);
+      setTimeout(() => tone(hitLeft ? 660 : 990, 0.18, "triangle", 0.18), 90);
+      hitLeft = !hitLeft;
+    };
+    el.addEventListener("animationiteration", onIter);
+    return () => el.removeEventListener("animationiteration", onIter);
+  }, [action]);
+
+  const config: Record<Action, { img: string; bg: string; caption: string; animation?: string }> = {
+    idle:     { img: bearHello, bg: "transparent",            caption: "" },
+    entering: { img: bearHello, bg: "transparent",            caption: "",                   animation: "bearEnter 1s ease-out forwards" },
+    hello:    { img: bearHello, bg: "rgba(255,255,255,0.15)", caption: "Hello, friend!",     animation: "bearWave 1.2s ease-in-out infinite" },
+    smile:    { img: bearSmile, bg: "rgba(255,210,63,0.25)",  caption: "You make me smile!", animation: "bearSmileBounce 0.7s ease-in-out infinite" },
+    laugh:    { img: bearLaugh, bg: "rgba(255,107,107,0.25)", caption: "Hahahaha!",          animation: "bearLaugh 0.35s ease-in-out infinite" },
+    cry:      { img: bearCry,   bg: "rgba(74,198,232,0.3)",   caption: "Boo hoo...",         animation: "bearCrySway 1.6s ease-in-out infinite" },
+    dance:    { img: bearDance, bg: "rgba(183,140,232,0.35)", caption: "La la la!",          animation: "bearDanceRoam 3.2s ease-in-out infinite" },
+    funny:    { img: bearFunny, bg: "rgba(109,212,126,0.3)",  caption: "Silly bear!",        animation: "bearFunnyWall 2.4s ease-in-out infinite" },
   };
-  const cur = anim[action];
+  const cur = config[action];
 
   return (
-    <div className="absolute inset-0 flex flex-col items-center justify-end pb-6" style={{ background: cur.bg, transition: "background 0.4s" }}>
+    <div className="absolute inset-0" style={{ background: cur.bg, transition: "background 0.4s" }}>
       <div
-        className="relative"
+        ref={bearRef}
+        className="absolute left-1/2 bottom-6"
         style={{
-          transform: cur.transform,
-          transition: "transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1)",
+          width: 180,
+          height: 180,
+          marginLeft: -90,
           animation: cur.animation,
+          willChange: "transform",
         }}
       >
         <img
           key={action}
           src={cur.img}
           alt=""
-          className="size-56 drop-shadow-2xl animate-scale-in"
+          className="size-full drop-shadow-2xl animate-scale-in"
           style={{ objectFit: "contain" }}
         />
+
+        {action === "cry" && (
+          <>
+            <span className="tear tear-l" />
+            <span className="tear tear-r" />
+            <span className="tear tear-l" style={{ animationDelay: "0.6s" }} />
+            <span className="tear tear-r" style={{ animationDelay: "0.9s" }} />
+          </>
+        )}
+
+        {action === "funny" && (
+          <div className="dizzy-birds">
+            <Bird style={{ animationDelay: "0s" }} />
+            <Bird style={{ animationDelay: "-0.4s" }} />
+            <Bird style={{ animationDelay: "-0.8s" }} />
+          </div>
+        )}
       </div>
+
       {cur.caption && (
-        <div className="mt-3 animate-fade-in rounded-full bg-white px-4 py-1.5 text-base font-extrabold text-pink-500 shadow-lg">
+        <div className="absolute left-1/2 top-4 -translate-x-1/2 animate-fade-in rounded-full bg-white px-4 py-1.5 text-base font-extrabold text-pink-500 shadow-lg">
           {cur.caption}
         </div>
       )}
-      {/* Inline keyframes for bear-specific motions */}
+
       <style>{`
-        @keyframes bearWave   { 0%,100% { transform: translateX(0) rotate(-4deg);} 50% { transform: translateX(0) rotate(6deg);} }
-        @keyframes bearLaugh  { 0%,100% { transform: translateX(0) translateY(0) scale(1.05);} 50% { transform: translateX(0) translateY(-10px) scale(1.1);} }
-        @keyframes bearCry    { 0%,100% { transform: translateX(0) translateY(0) rotate(-2deg);} 50% { transform: translateX(0) translateY(6px) rotate(2deg);} }
-        @keyframes bearDance  { 0%   { transform: translateX(-12px) rotate(-8deg) translateY(0);}
-                                25%  { transform: translateX(0)      rotate(0deg)  translateY(-14px);}
-                                50%  { transform: translateX(12px)   rotate(8deg)  translateY(0);}
-                                75%  { transform: translateX(0)      rotate(0deg)  translateY(-14px);}
-                                100% { transform: translateX(-12px)  rotate(-8deg) translateY(0);} }
-        @keyframes bearFunny  { 0%,100% { transform: rotate(-10deg) scale(1);} 25% { transform: rotate(8deg) scale(1.08);} 50% { transform: rotate(-6deg) scale(0.96);} 75% { transform: rotate(10deg) scale(1.05);} }
+        @keyframes bearEnter        { 0% { transform: translateX(-140%);} 100% { transform: translateX(0);} }
+        @keyframes bearWave         { 0%,100% { transform: rotate(-4deg);} 50% { transform: rotate(6deg);} }
+
+        @keyframes bearSmileBounce  { 0%,100% { transform: translateY(0)     scale(1);}
+                                      50%     { transform: translateY(-26px) scale(1.04);} }
+
+        @keyframes bearLaugh        { 0%,100% { transform: translateY(0)    scale(1.05);}
+                                      50%     { transform: translateY(-10px) scale(1.1);} }
+
+        @keyframes bearCrySway      { 0%,100% { transform: rotate(-2deg) translateY(0);}
+                                      50%     { transform: rotate(2deg)  translateY(4px);} }
+        .tear {
+          position: absolute;
+          width: 10px; height: 14px;
+          background: #4ac6e8;
+          border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+          box-shadow: inset -2px -2px 0 rgba(255,255,255,0.4);
+          opacity: 0;
+          animation: tearFall 1.4s ease-in infinite;
+          top: 70px;
+        }
+        .tear-l { left: 56px; }
+        .tear-r { left: 114px; animation-delay: 0.3s; }
+        @keyframes tearFall {
+          0%   { transform: translateY(0)   scale(0.6); opacity: 0; }
+          20%  { opacity: 1; }
+          100% { transform: translateY(90px) scale(1);  opacity: 0; }
+        }
+
+        @keyframes bearDanceRoam {
+          0%   { transform: translate(0,    0)     rotate(-8deg)  scale(1);}
+          15%  { transform: translate(-90px,-40px) rotate(-14deg) scale(0.95);}
+          30%  { transform: translate(80px, -80px) rotate(12deg)  scale(1.05);}
+          45%  { transform: translate(-70px,-110px)rotate(-10deg) scale(1);}
+          60%  { transform: translate(100px,-30px) rotate(14deg)  scale(1.08);}
+          75%  { transform: translate(-50px,-60px) rotate(-12deg) scale(0.98);}
+          90%  { transform: translate(60px, -10px) rotate(8deg)   scale(1.04);}
+          100% { transform: translate(0,    0)     rotate(-8deg)  scale(1);}
+        }
+
+        @keyframes bearFunnyWall {
+          0%   { transform: translateX(-95px) rotate(-12deg);}
+          50%  { transform: translateX( 95px) rotate( 12deg);}
+          100% { transform: translateX(-95px) rotate(-12deg);}
+        }
+
+        .dizzy-birds {
+          position: absolute;
+          top: -28px;
+          left: 50%;
+          width: 120px;
+          height: 40px;
+          margin-left: -60px;
+          pointer-events: none;
+        }
+        .dizzy-bird {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: 22px;
+          height: 16px;
+          margin: -8px 0 0 -11px;
+          animation: birdOrbit 1.2s linear infinite;
+        }
+        @keyframes birdOrbit {
+          0%   { transform: rotate(0deg)   translateX(46px) rotate(0deg);}
+          100% { transform: rotate(360deg) translateX(46px) rotate(-360deg);}
+        }
+        .wing { transform-origin: 50% 50%; animation: wingFlap 0.18s ease-in-out infinite; }
+        @keyframes wingFlap { 0%,100% { transform: scaleY(1);} 50% { transform: scaleY(0.3);} }
       `}</style>
     </div>
   );
 }
+
+function Bird({ style }: { style?: React.CSSProperties }) {
+  return (
+    <svg className="dizzy-bird" viewBox="0 0 22 16" style={style} aria-hidden>
+      <g fill="#1f2937">
+        <ellipse cx="11" cy="10" rx="4" ry="3" />
+        <polygon className="wing" points="3,4 11,9 11,11" />
+        <polygon className="wing" points="19,4 11,9 11,11" />
+      </g>
+    </svg>
+  );
+}
+
 
