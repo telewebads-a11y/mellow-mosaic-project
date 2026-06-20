@@ -288,7 +288,7 @@ function TraceModal({ word, emoji, onClose, onComplete }: { word: string; emoji:
 
   const onPointerUp = () => { drawingRef.current = false; lastRef.current = null; };
 
-  const guideFont = word.length <= 3 ? "5rem" : "4rem";
+  const guideFont = word.length <= 3 ? "11rem" : "8.5rem";
 
   return (
     <div className="fixed inset-0 z-40 flex items-center justify-center bg-slate-900/50 p-3" onClick={onClose}>
