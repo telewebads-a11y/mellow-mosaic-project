@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as FunPhoneRouteImport } from './routes/fun-phone'
 import { Route as TraceWordsRouteImport } from './routes/trace-words'
 import { Route as TraceVarnamalaRouteImport } from './routes/trace-varnamala'
 import { Route as TraceSmallRouteImport } from './routes/trace-small'
@@ -20,10 +21,16 @@ import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ScribbleTraceRouteImport } from './routes/scribble-trace'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as NumberWorldRouteImport } from './routes/number-world'
+import { Route as FunPhoneRouteImport } from './routes/fun-phone'
 import { Route as BrainQuizRouteImport } from './routes/brain-quiz'
 import { Route as AbcWorldRouteImport } from './routes/abc-world'
 import { Route as IndexRouteImport } from './routes/index'
 
+const FunPhoneRoute = FunPhoneRouteImport.update({
+  id: '/fun-phone',
+  path: '/fun-phone',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TraceWordsRoute = TraceWordsRouteImport.update({
   id: '/trace-words',
   path: '/trace-words',
@@ -79,6 +86,11 @@ const NumberWorldRoute = NumberWorldRouteImport.update({
   path: '/number-world',
   getParentRoute: () => rootRouteImport,
 } as any)
+const FunPhoneRoute = FunPhoneRouteImport.update({
+  id: '/fun-phone',
+  path: '/fun-phone',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BrainQuizRoute = BrainQuizRouteImport.update({
   id: '/brain-quiz',
   path: '/brain-quiz',
@@ -99,6 +111,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/abc-world': typeof AbcWorldRoute
   '/brain-quiz': typeof BrainQuizRoute
+  '/fun-phone': typeof FunPhoneRoute
   '/number-world': typeof NumberWorldRoute
   '/profile': typeof ProfileRoute
   '/scribble-trace': typeof ScribbleTraceRoute
@@ -115,6 +128,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/abc-world': typeof AbcWorldRoute
   '/brain-quiz': typeof BrainQuizRoute
+  '/fun-phone': typeof FunPhoneRoute
   '/number-world': typeof NumberWorldRoute
   '/profile': typeof ProfileRoute
   '/scribble-trace': typeof ScribbleTraceRoute
@@ -132,6 +146,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/abc-world': typeof AbcWorldRoute
   '/brain-quiz': typeof BrainQuizRoute
+  '/fun-phone': typeof FunPhoneRoute
   '/number-world': typeof NumberWorldRoute
   '/profile': typeof ProfileRoute
   '/scribble-trace': typeof ScribbleTraceRoute
@@ -150,6 +165,7 @@ export interface FileRouteTypes {
     | '/'
     | '/abc-world'
     | '/brain-quiz'
+    | '/fun-phone'
     | '/number-world'
     | '/profile'
     | '/scribble-trace'
@@ -166,6 +182,7 @@ export interface FileRouteTypes {
     | '/'
     | '/abc-world'
     | '/brain-quiz'
+    | '/fun-phone'
     | '/number-world'
     | '/profile'
     | '/scribble-trace'
@@ -182,6 +199,7 @@ export interface FileRouteTypes {
     | '/'
     | '/abc-world'
     | '/brain-quiz'
+    | '/fun-phone'
     | '/number-world'
     | '/profile'
     | '/scribble-trace'
@@ -199,6 +217,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AbcWorldRoute: typeof AbcWorldRoute
   BrainQuizRoute: typeof BrainQuizRoute
+  FunPhoneRoute: typeof FunPhoneRoute
   NumberWorldRoute: typeof NumberWorldRoute
   ProfileRoute: typeof ProfileRoute
   ScribbleTraceRoute: typeof ScribbleTraceRoute
@@ -291,11 +310,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NumberWorldRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/fun-phone': {
+      id: '/fun-phone'
+      path: '/fun-phone'
+      fullPath: '/fun-phone'
+      preLoaderRoute: typeof FunPhoneRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/brain-quiz': {
       id: '/brain-quiz'
       path: '/brain-quiz'
       fullPath: '/brain-quiz'
       preLoaderRoute: typeof BrainQuizRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/fun-phone': {
+      id: '/fun-phone'
+      path: '/fun-phone'
+      fullPath: '/fun-phone'
+      preLoaderRoute: typeof FunPhoneRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/abc-world': {
@@ -319,6 +352,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AbcWorldRoute: AbcWorldRoute,
   BrainQuizRoute: BrainQuizRoute,
+  FunPhoneRoute: FunPhoneRoute,
   NumberWorldRoute: NumberWorldRoute,
   ProfileRoute: ProfileRoute,
   ScribbleTraceRoute: ScribbleTraceRoute,
@@ -334,13 +368,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
