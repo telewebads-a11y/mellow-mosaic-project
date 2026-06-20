@@ -308,10 +308,10 @@ function TraceModal({ word, emoji, onClose, onComplete }: { word: string; emoji:
 
         <div className="absolute inset-x-3 top-14 bottom-44 rounded-2xl bg-white/80 ring-2 ring-white shadow-inner overflow-hidden">
           <div className="absolute inset-0 flex items-center justify-center select-none pointer-events-none px-2">
-            <span style={{ fontFamily: "'Fredoka', 'Baloo 2', system-ui, sans-serif", fontWeight: 900, fontSize: guideFont, lineHeight: 1, color: "transparent", WebkitTextStroke: "4px #94a3b8", letterSpacing: "0.02em" }}>{word}</span>
+            <span style={{ fontFamily: "'Fredoka', 'Baloo 2', system-ui, sans-serif", fontWeight: 900, fontSize: guideFont, lineHeight: 1, color: "transparent", WebkitTextStroke: "7px #94a3b8", letterSpacing: "0.02em" }}>{word}</span>
           </div>
           <div className="absolute inset-0 flex items-center justify-center select-none pointer-events-none px-2">
-            <span style={{ fontFamily: "'Fredoka', 'Baloo 2', system-ui, sans-serif", fontWeight: 900, fontSize: guideFont, lineHeight: 1, color: "transparent", WebkitTextStroke: "1.5px #cbd5e1", letterSpacing: "0.02em" }}>{word}</span>
+            <span style={{ fontFamily: "'Fredoka', 'Baloo 2', system-ui, sans-serif", fontWeight: 900, fontSize: guideFont, lineHeight: 1, color: "transparent", WebkitTextStroke: "2.5px #cbd5e1", letterSpacing: "0.02em" }}>{word}</span>
           </div>
           <canvas ref={canvasRef} className="absolute inset-0 h-full w-full touch-none" style={{ cursor: "crosshair" }} onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={onPointerUp} onPointerCancel={onPointerUp} onPointerLeave={onPointerUp} />
         </div>
