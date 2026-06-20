@@ -277,7 +277,7 @@ function TraceModal({ word, emoji, onClose, onComplete }: { word: string; emoji:
     const dy = p.y - last.y;
     distanceRef.current += Math.sqrt(dx * dx + dy * dy);
     lastRef.current = p;
-    const target = 500 * word.length;
+    const target = 900 * word.length;
     const pct = Math.min(100, (distanceRef.current / target) * 100);
     setProgress(pct);
     if (pct >= 100 && !completedRef.current) {
@@ -288,7 +288,7 @@ function TraceModal({ word, emoji, onClose, onComplete }: { word: string; emoji:
 
   const onPointerUp = () => { drawingRef.current = false; lastRef.current = null; };
 
-  const guideFont = word.length <= 3 ? "5rem" : "4rem";
+  const guideFont = word.length <= 3 ? "11rem" : "8.5rem";
 
   return (
     <div className="fixed inset-0 z-40 flex items-center justify-center bg-slate-900/50 p-3" onClick={onClose}>
@@ -308,10 +308,10 @@ function TraceModal({ word, emoji, onClose, onComplete }: { word: string; emoji:
 
         <div className="absolute inset-x-3 top-14 bottom-44 rounded-2xl bg-white/80 ring-2 ring-white shadow-inner overflow-hidden">
           <div className="absolute inset-0 flex items-center justify-center select-none pointer-events-none px-2">
-            <span style={{ fontFamily: "'Fredoka', 'Baloo 2', system-ui, sans-serif", fontWeight: 900, fontSize: guideFont, lineHeight: 1, color: "transparent", WebkitTextStroke: "4px #94a3b8", letterSpacing: "0.02em" }}>{word}</span>
+            <span style={{ fontFamily: "'Fredoka', 'Baloo 2', system-ui, sans-serif", fontWeight: 900, fontSize: guideFont, lineHeight: 1, color: "transparent", WebkitTextStroke: "7px #94a3b8", letterSpacing: "0.02em" }}>{word}</span>
           </div>
           <div className="absolute inset-0 flex items-center justify-center select-none pointer-events-none px-2">
-            <span style={{ fontFamily: "'Fredoka', 'Baloo 2', system-ui, sans-serif", fontWeight: 900, fontSize: guideFont, lineHeight: 1, color: "transparent", WebkitTextStroke: "1.5px #cbd5e1", letterSpacing: "0.02em" }}>{word}</span>
+            <span style={{ fontFamily: "'Fredoka', 'Baloo 2', system-ui, sans-serif", fontWeight: 900, fontSize: guideFont, lineHeight: 1, color: "transparent", WebkitTextStroke: "2.5px #cbd5e1", letterSpacing: "0.02em" }}>{word}</span>
           </div>
           <canvas ref={canvasRef} className="absolute inset-0 h-full w-full touch-none" style={{ cursor: "crosshair" }} onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={onPointerUp} onPointerCancel={onPointerUp} onPointerLeave={onPointerUp} />
         </div>
