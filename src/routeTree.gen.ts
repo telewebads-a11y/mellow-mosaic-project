@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TraceWordsRouteImport } from './routes/trace-words'
 import { Route as TraceSmallRouteImport } from './routes/trace-small'
 import { Route as TraceNumbersRouteImport } from './routes/trace-numbers'
 import { Route as TraceCapitalRouteImport } from './routes/trace-capital'
@@ -21,6 +22,11 @@ import { Route as BrainQuizRouteImport } from './routes/brain-quiz'
 import { Route as AbcWorldRouteImport } from './routes/abc-world'
 import { Route as IndexRouteImport } from './routes/index'
 
+const TraceWordsRoute = TraceWordsRouteImport.update({
+  id: '/trace-words',
+  path: '/trace-words',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TraceSmallRoute = TraceSmallRouteImport.update({
   id: '/trace-small',
   path: '/trace-small',
@@ -89,6 +95,7 @@ export interface FileRoutesByFullPath {
   '/trace-capital': typeof TraceCapitalRoute
   '/trace-numbers': typeof TraceNumbersRoute
   '/trace-small': typeof TraceSmallRoute
+  '/trace-words': typeof TraceWordsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -102,6 +109,7 @@ export interface FileRoutesByTo {
   '/trace-capital': typeof TraceCapitalRoute
   '/trace-numbers': typeof TraceNumbersRoute
   '/trace-small': typeof TraceSmallRoute
+  '/trace-words': typeof TraceWordsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -116,6 +124,7 @@ export interface FileRoutesById {
   '/trace-capital': typeof TraceCapitalRoute
   '/trace-numbers': typeof TraceNumbersRoute
   '/trace-small': typeof TraceSmallRoute
+  '/trace-words': typeof TraceWordsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -131,6 +140,7 @@ export interface FileRouteTypes {
     | '/trace-capital'
     | '/trace-numbers'
     | '/trace-small'
+    | '/trace-words'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -144,6 +154,7 @@ export interface FileRouteTypes {
     | '/trace-capital'
     | '/trace-numbers'
     | '/trace-small'
+    | '/trace-words'
   id:
     | '__root__'
     | '/'
@@ -157,6 +168,7 @@ export interface FileRouteTypes {
     | '/trace-capital'
     | '/trace-numbers'
     | '/trace-small'
+    | '/trace-words'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -171,10 +183,18 @@ export interface RootRouteChildren {
   TraceCapitalRoute: typeof TraceCapitalRoute
   TraceNumbersRoute: typeof TraceNumbersRoute
   TraceSmallRoute: typeof TraceSmallRoute
+  TraceWordsRoute: typeof TraceWordsRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/trace-words': {
+      id: '/trace-words'
+      path: '/trace-words'
+      fullPath: '/trace-words'
+      preLoaderRoute: typeof TraceWordsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/trace-small': {
       id: '/trace-small'
       path: '/trace-small'
@@ -267,6 +287,7 @@ const rootRouteChildren: RootRouteChildren = {
   TraceCapitalRoute: TraceCapitalRoute,
   TraceNumbersRoute: TraceNumbersRoute,
   TraceSmallRoute: TraceSmallRoute,
+  TraceWordsRoute: TraceWordsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
