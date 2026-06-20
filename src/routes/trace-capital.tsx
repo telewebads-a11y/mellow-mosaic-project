@@ -487,7 +487,9 @@ function SuccessModal({
   onClose: () => void;
 }) {
   useEffect(() => {
-    speak(`${praise} You traced the letter ${letter}!`);
+    playCelebration();
+    const t = setTimeout(() => speak(`${praise} You traced the letter ${letter}!`), 350);
+    return () => clearTimeout(t);
   }, [letter, praise]);
 
   return (
