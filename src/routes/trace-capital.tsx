@@ -221,10 +221,12 @@ function TraceCapital() {
 
 function TraceModal({
   letter,
+  word,
   onClose,
   onComplete,
 }: {
   letter: string;
+  word: string;
   onClose: () => void;
   onComplete: () => void;
 }) {
