@@ -25,8 +25,8 @@ type SubTile = {
 
 const TILES: SubTile[] = [
   { title: "A – Z",           subtitle: "Capital Letters",     icon: "Aa", color: "tile-blue",    to: "/trace-capital", iconStyle: { color: "#fff", WebkitTextStroke: "2px #1d4ed8" } },
-  { title: "a – z",           subtitle: "Small Letters",       icon: "ab", color: "tile-pink",    iconStyle: { color: "#fff", WebkitTextStroke: "2px #9d174d" } },
-  { title: "1 – 100",         subtitle: "Counting Numbers",    icon: "123", color: "tile-green",  iconStyle: { color: "#fff", WebkitTextStroke: "2px #166534" } },
+  { title: "a – z",           subtitle: "Small Letters",       icon: "ab", color: "tile-pink",    to: "/trace-small", iconStyle: { color: "#fff", WebkitTextStroke: "2px #9d174d" } },
+  { title: "1 – 100",         subtitle: "Counting Numbers",    icon: "123", color: "tile-green",  to: "/trace-numbers", iconStyle: { color: "#fff", WebkitTextStroke: "2px #166534" } },
   { title: "English Words",   subtitle: "3 & 4 Letter Words",  icon: "abc", color: "tile-yellow", iconStyle: { color: "#fff", WebkitTextStroke: "2px #b45309" } },
   { title: "हिंदी वर्णमाला",   subtitle: "स्वर और व्यंजन",       icon: "अ आ", color: "tile-coral",  iconStyle: { color: "#fff", WebkitTextStroke: "2px #9a3412" } },
   { title: "हिंदी शब्द",        subtitle: "बिना मात्रा के शब्द",   icon: "कमल", color: "tile-mustard", iconStyle: { color: "#fff", WebkitTextStroke: "1.5px #854d0e" } },
