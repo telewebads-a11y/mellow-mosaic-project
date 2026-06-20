@@ -108,7 +108,6 @@ export interface FileRoutesByFullPath {
   '/trace-numbers': typeof TraceNumbersRoute
   '/trace-shabad': typeof TraceShabadRoute
   '/trace-small': typeof TraceSmallRoute
-  '/trace-shabad': typeof TraceShabadRoute
   '/trace-varnamala': typeof TraceVarnamalaRoute
   '/trace-words': typeof TraceWordsRoute
 }
