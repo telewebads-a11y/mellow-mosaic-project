@@ -55,7 +55,7 @@ const tiles: Tile[] = [
   { title: "Animal\nKingdom",    img: animals,  color: "tile-teal" },
   { title: "Games",              img: games,    color: "tile-red" },
   { title: "Quiz",               img: quiz,     color: "tile-magenta" },
-  { title: "Fun\nphone",         img: phone,    color: "tile-coral" },
+  { title: "Fun\nphone",         img: phone,    color: "tile-coral", to: "/fun-phone" },
   { title: "Rewards",            img: rewards,  color: "tile-mustard" },
 ];
 
