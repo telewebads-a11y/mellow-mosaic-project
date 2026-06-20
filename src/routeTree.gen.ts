@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TraceWordsRouteImport } from './routes/trace-words'
+import { Route as TraceVarnamalaRouteImport } from './routes/trace-varnamala'
 import { Route as TraceSmallRouteImport } from './routes/trace-small'
 import { Route as TraceNumbersRouteImport } from './routes/trace-numbers'
 import { Route as TraceCapitalRouteImport } from './routes/trace-capital'
@@ -25,6 +26,11 @@ import { Route as IndexRouteImport } from './routes/index'
 const TraceWordsRoute = TraceWordsRouteImport.update({
   id: '/trace-words',
   path: '/trace-words',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TraceVarnamalaRoute = TraceVarnamalaRouteImport.update({
+  id: '/trace-varnamala',
+  path: '/trace-varnamala',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TraceSmallRoute = TraceSmallRouteImport.update({
@@ -95,6 +101,7 @@ export interface FileRoutesByFullPath {
   '/trace-capital': typeof TraceCapitalRoute
   '/trace-numbers': typeof TraceNumbersRoute
   '/trace-small': typeof TraceSmallRoute
+  '/trace-varnamala': typeof TraceVarnamalaRoute
   '/trace-words': typeof TraceWordsRoute
 }
 export interface FileRoutesByTo {
@@ -109,6 +116,7 @@ export interface FileRoutesByTo {
   '/trace-capital': typeof TraceCapitalRoute
   '/trace-numbers': typeof TraceNumbersRoute
   '/trace-small': typeof TraceSmallRoute
+  '/trace-varnamala': typeof TraceVarnamalaRoute
   '/trace-words': typeof TraceWordsRoute
 }
 export interface FileRoutesById {
@@ -124,6 +132,7 @@ export interface FileRoutesById {
   '/trace-capital': typeof TraceCapitalRoute
   '/trace-numbers': typeof TraceNumbersRoute
   '/trace-small': typeof TraceSmallRoute
+  '/trace-varnamala': typeof TraceVarnamalaRoute
   '/trace-words': typeof TraceWordsRoute
 }
 export interface FileRouteTypes {
@@ -140,6 +149,7 @@ export interface FileRouteTypes {
     | '/trace-capital'
     | '/trace-numbers'
     | '/trace-small'
+    | '/trace-varnamala'
     | '/trace-words'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -154,6 +164,7 @@ export interface FileRouteTypes {
     | '/trace-capital'
     | '/trace-numbers'
     | '/trace-small'
+    | '/trace-varnamala'
     | '/trace-words'
   id:
     | '__root__'
@@ -168,6 +179,7 @@ export interface FileRouteTypes {
     | '/trace-capital'
     | '/trace-numbers'
     | '/trace-small'
+    | '/trace-varnamala'
     | '/trace-words'
   fileRoutesById: FileRoutesById
 }
@@ -183,6 +195,7 @@ export interface RootRouteChildren {
   TraceCapitalRoute: typeof TraceCapitalRoute
   TraceNumbersRoute: typeof TraceNumbersRoute
   TraceSmallRoute: typeof TraceSmallRoute
+  TraceVarnamalaRoute: typeof TraceVarnamalaRoute
   TraceWordsRoute: typeof TraceWordsRoute
 }
 
@@ -193,6 +206,13 @@ declare module '@tanstack/react-router' {
       path: '/trace-words'
       fullPath: '/trace-words'
       preLoaderRoute: typeof TraceWordsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/trace-varnamala': {
+      id: '/trace-varnamala'
+      path: '/trace-varnamala'
+      fullPath: '/trace-varnamala'
+      preLoaderRoute: typeof TraceVarnamalaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/trace-small': {
@@ -287,6 +307,7 @@ const rootRouteChildren: RootRouteChildren = {
   TraceCapitalRoute: TraceCapitalRoute,
   TraceNumbersRoute: TraceNumbersRoute,
   TraceSmallRoute: TraceSmallRoute,
+  TraceVarnamalaRoute: TraceVarnamalaRoute,
   TraceWordsRoute: TraceWordsRoute,
 }
 export const routeTree = rootRouteImport
