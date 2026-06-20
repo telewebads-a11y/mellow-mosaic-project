@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as TraceWordsRouteImport } from './routes/trace-words'
 import { Route as TraceVarnamalaRouteImport } from './routes/trace-varnamala'
 import { Route as TraceSmallRouteImport } from './routes/trace-small'
+import { Route as TraceShabadRouteImport } from './routes/trace-shabad'
 import { Route as TraceNumbersRouteImport } from './routes/trace-numbers'
 import { Route as TraceCapitalRouteImport } from './routes/trace-capital'
 import { Route as SmartLearningRouteImport } from './routes/smart-learning'
@@ -36,6 +37,11 @@ const TraceVarnamalaRoute = TraceVarnamalaRouteImport.update({
 const TraceSmallRoute = TraceSmallRouteImport.update({
   id: '/trace-small',
   path: '/trace-small',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TraceShabadRoute = TraceShabadRouteImport.update({
+  id: '/trace-shabad',
+  path: '/trace-shabad',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TraceNumbersRoute = TraceNumbersRouteImport.update({
@@ -100,6 +106,7 @@ export interface FileRoutesByFullPath {
   '/smart-learning': typeof SmartLearningRoute
   '/trace-capital': typeof TraceCapitalRoute
   '/trace-numbers': typeof TraceNumbersRoute
+  '/trace-shabad': typeof TraceShabadRoute
   '/trace-small': typeof TraceSmallRoute
   '/trace-varnamala': typeof TraceVarnamalaRoute
   '/trace-words': typeof TraceWordsRoute
@@ -115,6 +122,7 @@ export interface FileRoutesByTo {
   '/smart-learning': typeof SmartLearningRoute
   '/trace-capital': typeof TraceCapitalRoute
   '/trace-numbers': typeof TraceNumbersRoute
+  '/trace-shabad': typeof TraceShabadRoute
   '/trace-small': typeof TraceSmallRoute
   '/trace-varnamala': typeof TraceVarnamalaRoute
   '/trace-words': typeof TraceWordsRoute
@@ -131,6 +139,7 @@ export interface FileRoutesById {
   '/smart-learning': typeof SmartLearningRoute
   '/trace-capital': typeof TraceCapitalRoute
   '/trace-numbers': typeof TraceNumbersRoute
+  '/trace-shabad': typeof TraceShabadRoute
   '/trace-small': typeof TraceSmallRoute
   '/trace-varnamala': typeof TraceVarnamalaRoute
   '/trace-words': typeof TraceWordsRoute
@@ -148,6 +157,7 @@ export interface FileRouteTypes {
     | '/smart-learning'
     | '/trace-capital'
     | '/trace-numbers'
+    | '/trace-shabad'
     | '/trace-small'
     | '/trace-varnamala'
     | '/trace-words'
@@ -163,6 +173,7 @@ export interface FileRouteTypes {
     | '/smart-learning'
     | '/trace-capital'
     | '/trace-numbers'
+    | '/trace-shabad'
     | '/trace-small'
     | '/trace-varnamala'
     | '/trace-words'
@@ -178,6 +189,7 @@ export interface FileRouteTypes {
     | '/smart-learning'
     | '/trace-capital'
     | '/trace-numbers'
+    | '/trace-shabad'
     | '/trace-small'
     | '/trace-varnamala'
     | '/trace-words'
@@ -194,6 +206,7 @@ export interface RootRouteChildren {
   SmartLearningRoute: typeof SmartLearningRoute
   TraceCapitalRoute: typeof TraceCapitalRoute
   TraceNumbersRoute: typeof TraceNumbersRoute
+  TraceShabadRoute: typeof TraceShabadRoute
   TraceSmallRoute: typeof TraceSmallRoute
   TraceVarnamalaRoute: typeof TraceVarnamalaRoute
   TraceWordsRoute: typeof TraceWordsRoute
@@ -220,6 +233,13 @@ declare module '@tanstack/react-router' {
       path: '/trace-small'
       fullPath: '/trace-small'
       preLoaderRoute: typeof TraceSmallRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/trace-shabad': {
+      id: '/trace-shabad'
+      path: '/trace-shabad'
+      fullPath: '/trace-shabad'
+      preLoaderRoute: typeof TraceShabadRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/trace-numbers': {
@@ -306,6 +326,7 @@ const rootRouteChildren: RootRouteChildren = {
   SmartLearningRoute: SmartLearningRoute,
   TraceCapitalRoute: TraceCapitalRoute,
   TraceNumbersRoute: TraceNumbersRoute,
+  TraceShabadRoute: TraceShabadRoute,
   TraceSmallRoute: TraceSmallRoute,
   TraceVarnamalaRoute: TraceVarnamalaRoute,
   TraceWordsRoute: TraceWordsRoute,
