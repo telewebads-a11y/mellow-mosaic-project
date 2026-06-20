@@ -357,7 +357,7 @@ function TraceModal({
               filter: "drop-shadow(2px 3px 0 rgba(0,0,0,0.15))",
             }}
           >
-            Trace {letter}
+            Trace {letter} for {word}
           </span>
         </div>
 
