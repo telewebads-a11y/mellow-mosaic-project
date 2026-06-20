@@ -316,7 +316,7 @@ function TraceModal({
     distanceRef.current += Math.sqrt(dx * dx + dy * dy);
     lastRef.current = p;
 
-    const target = 800;
+    const target = 750;
     const pct = Math.min(100, (distanceRef.current / target) * 100);
     setProgress(pct);
     if (pct >= 100 && !completedRef.current) {
