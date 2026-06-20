@@ -9,7 +9,6 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as FunPhoneRouteImport } from './routes/fun-phone'
 import { Route as TraceWordsRouteImport } from './routes/trace-words'
 import { Route as TraceVarnamalaRouteImport } from './routes/trace-varnamala'
 import { Route as TraceSmallRouteImport } from './routes/trace-small'
@@ -26,11 +25,6 @@ import { Route as BrainQuizRouteImport } from './routes/brain-quiz'
 import { Route as AbcWorldRouteImport } from './routes/abc-world'
 import { Route as IndexRouteImport } from './routes/index'
 
-const FunPhoneRoute = FunPhoneRouteImport.update({
-  id: '/fun-phone',
-  path: '/fun-phone',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const TraceWordsRoute = TraceWordsRouteImport.update({
   id: '/trace-words',
   path: '/trace-words',
@@ -322,13 +316,6 @@ declare module '@tanstack/react-router' {
       path: '/brain-quiz'
       fullPath: '/brain-quiz'
       preLoaderRoute: typeof BrainQuizRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/fun-phone': {
-      id: '/fun-phone'
-      path: '/fun-phone'
-      fullPath: '/fun-phone'
-      preLoaderRoute: typeof FunPhoneRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/abc-world': {
