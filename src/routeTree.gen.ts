@@ -34,11 +34,6 @@ const TraceVarnamalaRoute = TraceVarnamalaRouteImport.update({
   path: '/trace-varnamala',
   getParentRoute: () => rootRouteImport,
 } as any)
-const TraceShabadRoute = TraceShabadRouteImport.update({
-  id: '/trace-shabad',
-  path: '/trace-shabad',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const TraceSmallRoute = TraceSmallRouteImport.update({
   id: '/trace-small',
   path: '/trace-small',
@@ -113,6 +108,7 @@ export interface FileRoutesByFullPath {
   '/trace-numbers': typeof TraceNumbersRoute
   '/trace-shabad': typeof TraceShabadRoute
   '/trace-small': typeof TraceSmallRoute
+  '/trace-shabad': typeof TraceShabadRoute
   '/trace-varnamala': typeof TraceVarnamalaRoute
   '/trace-words': typeof TraceWordsRoute
 }
