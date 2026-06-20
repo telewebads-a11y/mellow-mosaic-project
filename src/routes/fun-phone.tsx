@@ -3,6 +3,12 @@ import { ArrowLeft, Home, Phone, MessageCircle, Video, Music2, Hash, Delete, Pho
 import { useEffect, useRef, useState } from "react";
 
 import bearFace from "@/assets/icons/bear-face.png";
+import bearHello from "@/assets/bear-hello.png";
+import bearSmile from "@/assets/bear-smile.png";
+import bearLaugh from "@/assets/bear-laugh.png";
+import bearCry from "@/assets/bear-cry.png";
+import bearDance from "@/assets/bear-dance.png";
+import bearFunny from "@/assets/bear-funny.png";
 import bgRainbow from "@/assets/bg-rainbow.jpg";
 
 export const Route = createFileRoute("/fun-phone")({
@@ -461,23 +467,19 @@ function ActionBtn({ icon, label, color, onClick }: { icon: React.ReactNode; lab
   );
 }
 
-/* CSS-animated bear actor for the video call */
+/* Animated bear actor — swaps real bear illustrations per emotion */
 function BearActor({ action }: { action: Action }) {
-  // Different animations per action
-  const anim: Record<Action, { transform: string; emoji: string; bg: string; caption: string }> = {
-    idle:     { transform: "translateX(-150%)",                emoji: "🐻", bg: "transparent", caption: "" },
-    entering: { transform: "translateX(0)",                    emoji: "🐻", bg: "transparent", caption: "" },
-    hello:    { transform: "translateX(0) rotate(-6deg)",      emoji: "🐻", bg: "rgba(255,255,255,0.15)", caption: "Hello! 👋" },
-    smile:    { transform: "translateX(0) scale(1.05)",        emoji: "😊", bg: "rgba(255,210,63,0.25)", caption: "Smile! 😊" },
-    laugh:    { transform: "translateX(0) scale(1.1) rotate(-3deg)", emoji: "😂", bg: "rgba(255,107,107,0.25)", caption: "Hahaha! 😂" },
-    cry:      { transform: "translateX(0) translateY(8px) rotate(2deg)", emoji: "😢", bg: "rgba(74,198,232,0.25)", caption: "Boo hoo 😢" },
-    dance:    { transform: "translateX(0)",                    emoji: "🕺", bg: "rgba(183,140,232,0.3)", caption: "La la la! 💃" },
-    funny:    { transform: "translateX(0) rotate(8deg)",       emoji: "🤪", bg: "rgba(109,212,126,0.25)", caption: "Silly! 🤪" },
+  const anim: Record<Action, { img: string; transform: string; bg: string; caption: string; animation?: string }> = {
+    idle:     { img: bearHello, transform: "translateX(-150%)",               bg: "transparent",            caption: "" },
+    entering: { img: bearHello, transform: "translateX(0)",                   bg: "transparent",            caption: "", animation: "bearBounce 1s ease-in-out infinite" },
+    hello:    { img: bearHello, transform: "translateX(0)",                   bg: "rgba(255,255,255,0.15)", caption: "Hello, friend!",  animation: "bearWave 1.2s ease-in-out infinite" },
+    smile:    { img: bearSmile, transform: "translateX(0) scale(1.05)",       bg: "rgba(255,210,63,0.25)",  caption: "You make me smile!", animation: "bearBounce 1.4s ease-in-out infinite" },
+    laugh:    { img: bearLaugh, transform: "translateX(0)",                   bg: "rgba(255,107,107,0.25)", caption: "Hahahaha!",       animation: "bearLaugh 0.35s ease-in-out infinite" },
+    cry:      { img: bearCry,   transform: "translateX(0)",                   bg: "rgba(74,198,232,0.3)",   caption: "Boo hoo…",        animation: "bearCry 1.6s ease-in-out infinite" },
+    dance:    { img: bearDance, transform: "translateX(0)",                   bg: "rgba(183,140,232,0.35)", caption: "La la la!",       animation: "bearDance 0.55s ease-in-out infinite" },
+    funny:    { img: bearFunny, transform: "translateX(0)",                   bg: "rgba(109,212,126,0.3)",  caption: "Silly bear!",     animation: "bearFunny 0.7s ease-in-out infinite" },
   };
   const cur = anim[action];
-  const isDance = action === "dance";
-  const isLaugh = action === "laugh";
-  const isHello = action === "hello";
 
   return (
     <div className="absolute inset-0 flex flex-col items-center justify-end pb-6" style={{ background: cur.bg, transition: "background 0.4s" }}>
@@ -486,23 +488,35 @@ function BearActor({ action }: { action: Action }) {
         style={{
           transform: cur.transform,
           transition: "transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1)",
-          animation: isDance
-            ? "bearBounce 0.6s ease-in-out infinite"
-            : isLaugh
-            ? "bearBounce 0.3s ease-in-out infinite"
-            : isHello
-            ? "bearBounce 1.2s ease-in-out infinite"
-            : undefined,
+          animation: cur.animation,
         }}
       >
-        <img src={bearFace} alt="" className="size-40 drop-shadow-2xl" />
-        <div className="absolute -right-2 -top-2 text-5xl drop-shadow-lg">{cur.emoji}</div>
+        <img
+          key={action}
+          src={cur.img}
+          alt=""
+          className="size-56 drop-shadow-2xl animate-scale-in"
+          style={{ objectFit: "contain" }}
+        />
       </div>
       {cur.caption && (
         <div className="mt-3 animate-fade-in rounded-full bg-white px-4 py-1.5 text-base font-extrabold text-pink-500 shadow-lg">
           {cur.caption}
         </div>
       )}
+      {/* Inline keyframes for bear-specific motions */}
+      <style>{`
+        @keyframes bearWave   { 0%,100% { transform: translateX(0) rotate(-4deg);} 50% { transform: translateX(0) rotate(6deg);} }
+        @keyframes bearLaugh  { 0%,100% { transform: translateX(0) translateY(0) scale(1.05);} 50% { transform: translateX(0) translateY(-10px) scale(1.1);} }
+        @keyframes bearCry    { 0%,100% { transform: translateX(0) translateY(0) rotate(-2deg);} 50% { transform: translateX(0) translateY(6px) rotate(2deg);} }
+        @keyframes bearDance  { 0%   { transform: translateX(-12px) rotate(-8deg) translateY(0);}
+                                25%  { transform: translateX(0)      rotate(0deg)  translateY(-14px);}
+                                50%  { transform: translateX(12px)   rotate(8deg)  translateY(0);}
+                                75%  { transform: translateX(0)      rotate(0deg)  translateY(-14px);}
+                                100% { transform: translateX(-12px)  rotate(-8deg) translateY(0);} }
+        @keyframes bearFunny  { 0%,100% { transform: rotate(-10deg) scale(1);} 25% { transform: rotate(8deg) scale(1.08);} 50% { transform: rotate(-6deg) scale(0.96);} 75% { transform: rotate(10deg) scale(1.05);} }
+      `}</style>
     </div>
   );
 }
+
