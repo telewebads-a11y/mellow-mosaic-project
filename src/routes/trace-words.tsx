@@ -288,29 +288,29 @@ function TraceModal({ word, emoji, onClose, onComplete }: { word: string; emoji:
 
   const onPointerUp = () => { drawingRef.current = false; lastRef.current = null; };
 
-  const guideFont = `min(${Math.floor(85 / word.length)}vw, ${Math.floor(20 / word.length * 4)}rem)`;
+  const guideFont = word.length <= 3 ? "5rem" : "4rem";
 
   return (
     <div className="fixed inset-0 z-40 flex items-center justify-center bg-slate-900/50 p-3" onClick={onClose}>
-      <div className="relative w-full max-w-sm overflow-hidden rounded-3xl bg-gradient-to-b from-sky-100 to-emerald-50 shadow-2xl ring-4 ring-white" style={{ height: "min(88vh, 700px)" }} onClick={(e) => e.stopPropagation()}>
-        <img src={bearFace} alt="" width={56} height={56} className="bear-bounce absolute left-2 top-2 z-20 drop-shadow-lg" />
+      <div className="relative w-full max-w-sm overflow-hidden rounded-3xl bg-gradient-to-b from-sky-100 to-emerald-50 shadow-2xl ring-4 ring-white" style={{ height: "min(92vh, 760px)" }} onClick={(e) => e.stopPropagation()}>
+        <img src={bearFace} alt="" width={48} height={48} className="bear-bounce absolute left-2 top-2 z-20 drop-shadow-lg" />
 
-        <div className="absolute inset-x-0 top-3 z-10 flex flex-col items-center pointer-events-none">
-          <span className="melly-title" style={{ fontSize: "1.3rem", color: "#fff", WebkitTextStroke: "1.5px #1d4ed8", filter: "drop-shadow(2px 3px 0 rgba(0,0,0,0.15))" }}>
+        <div className="absolute inset-x-0 top-3 z-10 flex items-center justify-center gap-2 pointer-events-none">
+          <span className="melly-title" style={{ fontSize: "1.25rem", color: "#fff", WebkitTextStroke: "1.5px #1d4ed8", filter: "drop-shadow(2px 3px 0 rgba(0,0,0,0.15))" }}>
             Trace "{word}"
           </span>
-          <span style={{ fontSize: "2.2rem", lineHeight: 1 }} aria-hidden>{emoji}</span>
+          <span style={{ fontSize: "1.8rem", lineHeight: 1 }} aria-hidden>{emoji}</span>
         </div>
 
         <button onClick={onClose} aria-label="Close" className="absolute right-3 top-3 z-30 flex size-9 items-center justify-center rounded-full bg-white text-slate-500 shadow">
           <X className="size-5" />
         </button>
 
-        <div className="absolute inset-x-3 top-28 bottom-40 rounded-2xl bg-white/80 ring-2 ring-white shadow-inner overflow-hidden">
-          <div className="absolute inset-0 flex items-center justify-center select-none pointer-events-none">
+        <div className="absolute inset-x-3 top-14 bottom-44 rounded-2xl bg-white/80 ring-2 ring-white shadow-inner overflow-hidden">
+          <div className="absolute inset-0 flex items-center justify-center select-none pointer-events-none px-2">
             <span style={{ fontFamily: "'Fredoka', 'Baloo 2', system-ui, sans-serif", fontWeight: 900, fontSize: guideFont, lineHeight: 1, color: "transparent", WebkitTextStroke: "4px #94a3b8", letterSpacing: "0.02em" }}>{word}</span>
           </div>
-          <div className="absolute inset-0 flex items-center justify-center select-none pointer-events-none">
+          <div className="absolute inset-0 flex items-center justify-center select-none pointer-events-none px-2">
             <span style={{ fontFamily: "'Fredoka', 'Baloo 2', system-ui, sans-serif", fontWeight: 900, fontSize: guideFont, lineHeight: 1, color: "transparent", WebkitTextStroke: "1.5px #cbd5e1", letterSpacing: "0.02em" }}>{word}</span>
           </div>
           <canvas ref={canvasRef} className="absolute inset-0 h-full w-full touch-none" style={{ cursor: "crosshair" }} onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={onPointerUp} onPointerCancel={onPointerUp} onPointerLeave={onPointerUp} />
