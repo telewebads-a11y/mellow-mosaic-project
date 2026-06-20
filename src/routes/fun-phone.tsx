@@ -3,6 +3,12 @@ import { ArrowLeft, Home, Phone, MessageCircle, Video, Music2, Hash, Delete, Pho
 import { useEffect, useRef, useState } from "react";
 
 import bearFace from "@/assets/icons/bear-face.png";
+import bearHello from "@/assets/bear-hello.png";
+import bearSmile from "@/assets/bear-smile.png";
+import bearLaugh from "@/assets/bear-laugh.png";
+import bearCry from "@/assets/bear-cry.png";
+import bearDance from "@/assets/bear-dance.png";
+import bearFunny from "@/assets/bear-funny.png";
 import bgRainbow from "@/assets/bg-rainbow.jpg";
 
 export const Route = createFileRoute("/fun-phone")({
