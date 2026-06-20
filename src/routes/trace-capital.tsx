@@ -435,10 +435,13 @@ function TraceModal({
               key={c}
               aria-label={`Pick color ${c}`}
               onClick={() => setColor(c)}
-              className={`size-11 rounded-full ring-4 transition ${
+              className={`crayon-shimmer size-11 rounded-full ring-4 transition ${
                 color === c ? "ring-slate-700 scale-110" : "ring-white"
               } shadow-md`}
-              style={{ background: c }}
+              style={{
+                background: `radial-gradient(circle at 30% 30%, rgba(255,255,255,0.85), ${c} 55%, ${c} 100%)`,
+                boxShadow: `0 4px 10px ${c}80, inset 0 -3px 6px rgba(0,0,0,0.25)`,
+              }}
             />
           ))}
         </div>
