@@ -5,7 +5,7 @@ import {
   Brain, Apple, Grid3x3, Circle, Palette,
 } from "lucide-react";
 import bgClouds from "@/assets/bg-clouds.jpg";
-import bearFace from "@/assets/bear-face.png";
+import bearFace from "@/assets/icons/bear-face.png";
 
 export const Route = createFileRoute("/games/")({
   head: () => ({

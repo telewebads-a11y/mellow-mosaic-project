@@ -2,7 +2,7 @@ import { createFileRoute, useNavigate, useParams } from "@tanstack/react-router"
 import { ArrowLeft, Home, Play, RotateCcw, Trophy } from "lucide-react";
 import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import bgClouds from "@/assets/bg-clouds.jpg";
-import bearFace from "@/assets/bear-face.png";
+import bearFace from "@/assets/icons/bear-face.png";
 
 export const Route = createFileRoute("/games/$gameId")({
   head: () => ({ meta: [{ title: "Play — Melly Kids" }] }),
