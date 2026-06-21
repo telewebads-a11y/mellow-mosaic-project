@@ -948,3 +948,547 @@ function ColorSortGame({ diff, onReplay, onExit }: { diff: Diff; onReplay: () =>
     </div>
   );
 }
+
+/* ============= SHARED HELPERS for new games ============= */
+function useTick(active: boolean, ms: number, fn: () => void) {
+  useEffect(() => {
+    if (!active) return;
+    const id = setInterval(fn, ms);
+    return () => clearInterval(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [active, ms]);
+}
+function ArenaShell({ children, bg }: { children: any; bg: string }) {
+  return (
+    <div className="relative mt-3 aspect-[3/4] overflow-hidden rounded-3xl shadow-2xl ring-4 ring-white" style={{ background: bg }}>
+      {children}
+    </div>
+  );
+}
+function GameOver({ score, onReplay, onExit, label = "Score" }: { score: number; onReplay: () => void; onExit: () => void; label?: string }) {
+  return (
+    <div className="absolute inset-0 z-20 flex flex-col items-center justify-center bg-black/60 backdrop-blur-sm text-white">
+      <Trophy className="size-14 text-yellow-300 drop-shadow" />
+      <div className="mt-2 text-3xl font-black">Game Over</div>
+      <div className="mt-1 text-lg">{label}: <b>{score}</b></div>
+      <div className="mt-4 flex gap-3">
+        <button onClick={onReplay} className="flex items-center gap-2 rounded-2xl bg-emerald-500 px-5 py-3 font-bold shadow-lg active:scale-95"><RotateCcw className="size-4" /> Play Again</button>
+        <button onClick={onExit} className="rounded-2xl bg-white/20 px-5 py-3 font-bold shadow-lg active:scale-95">Exit</button>
+      </div>
+    </div>
+  );
+}
+
+/* ============= 11. FRUIT CUTTER ============= */
+function FruitCutGame({ diff, onReplay, onExit }: { diff: Diff; onReplay: () => void; onExit: () => void }) {
+  type F = { id: number; x: number; y: number; vy: number; emoji: string; cut: boolean; bomb: boolean };
+  const speed = diff === "easy" ? 1 : diff === "medium" ? 1.5 : 2.2;
+  const spawn = diff === "easy" ? 900 : diff === "medium" ? 650 : 450;
+  const [items, setItems] = useState<F[]>([]);
+  const [score, setScore] = useState(0);
+  const [lives, setLives] = useState(3);
+  const [over, setOver] = useState(false);
+  const idR = useRef(0);
+  const fruits = ["🍎","🍌","🍇","🍓","🍊","🍉","🥝","🍑","🍍"];
+  useTick(!over, 30, () => {
+    setItems((arr) => arr.map(f => ({ ...f, y: f.y + f.vy * speed })).filter(f => {
+      if (f.y > 110 && !f.cut && !f.bomb) { setLives(l => { const n = l - 1; if (n <= 0) { setOver(true); SFX.fail(); } return n; }); return false; }
+      return f.y < 120;
+    }));
+  });
+  useTick(!over, spawn, () => {
+    const bomb = Math.random() < 0.18;
+    setItems(a => [...a, { id: idR.current++, x: 10 + Math.random() * 80, y: -10, vy: 0.8 + Math.random() * 0.6, emoji: bomb ? "💣" : fruits[Math.floor(Math.random() * fruits.length)], cut: false, bomb }]);
+  });
+  function slice(id: number) {
+    setItems(arr => arr.map(f => {
+      if (f.id !== id || f.cut) return f;
+      if (f.bomb) { setOver(true); SFX.fail(); return f; }
+      SFX.pop(); setScore(s => s + 1);
+      return { ...f, cut: true };
+    }));
+  }
+  return (
+    <div>
+      <div className="flex justify-between gap-2"><HUD label="Score" value={score} /><HUD label="Lives" value={"❤️".repeat(lives)} /></div>
+      <ArenaShell bg="linear-gradient(180deg,#0f172a,#1e3a8a 70%,#312e81)">
+        {items.map(f => (
+          <div key={f.id} onPointerEnter={() => slice(f.id)} onPointerDown={() => slice(f.id)}
+            className="absolute -translate-x-1/2 -translate-y-1/2 text-5xl select-none cursor-pointer"
+            style={{ left: `${f.x}%`, top: `${f.y}%`, transform: `translate(-50%,-50%) rotate(${f.y * 4}deg) scale(${f.cut ? 1.4 : 1})`, opacity: f.cut ? 0 : 1, transition: "opacity .25s, transform .25s", filter: "drop-shadow(0 4px 6px #0008)" }}>
+            {f.emoji}
+          </div>
+        ))}
+        {over && <GameOver score={score} onReplay={onReplay} onExit={onExit} />}
+      </ArenaShell>
+      <p className="mt-2 text-center text-xs text-slate-600">Swipe through fruits to slice them. Avoid bombs!</p>
+    </div>
+  );
+}
+
+/* ============= 12. BOMB DODGER ============= */
+function BomberGame({ diff, onReplay, onExit }: { diff: Diff; onReplay: () => void; onExit: () => void }) {
+  type B = { id: number; x: number; y: number; vy: number; bomb: boolean };
+  const speed = diff === "easy" ? 0.8 : diff === "medium" ? 1.2 : 1.8;
+  const [px, setPx] = useState(50);
+  const [items, setItems] = useState<B[]>([]);
+  const [score, setScore] = useState(0);
+  const [over, setOver] = useState(false);
+  const idR = useRef(0);
+  useTick(!over, 50, () => {
+    setItems(arr => {
+      const next = arr.map(b => ({ ...b, y: b.y + b.vy * speed })).filter(b => b.y < 110);
+      // collision at bottom
+      for (const b of next) {
+        if (b.y > 78 && b.y < 92 && Math.abs(b.x - px) < 9) {
+          if (b.bomb) { setOver(true); SFX.fail(); }
+          else { setScore(s => s + 1); SFX.eat(); b.y = 200; }
+        }
+      }
+      return next.filter(b => b.y < 110);
+    });
+  });
+  useTick(!over, 500, () => {
+    const bomb = Math.random() < 0.45;
+    setItems(a => [...a, { id: idR.current++, x: 8 + Math.random() * 84, y: -8, vy: 0.8 + Math.random() * 0.8, bomb }]);
+  });
+  return (
+    <div>
+      <div className="flex justify-between gap-2"><HUD label="Caught" value={score} /><HUD label="Mode" value={diff} /></div>
+      <ArenaShell bg="linear-gradient(180deg,#374151,#0f172a)">
+        {items.map(b => (
+          <div key={b.id} className="absolute -translate-x-1/2 text-4xl" style={{ left: `${b.x}%`, top: `${b.y}%`, filter: "drop-shadow(0 3px 4px #000a)" }}>
+            {b.bomb ? "💣" : "🍒"}
+          </div>
+        ))}
+        {/* basket player */}
+        <div className="absolute bottom-2 -translate-x-1/2 text-5xl" style={{ left: `${px}%`, filter: "drop-shadow(0 4px 6px #0008)" }}>🧺</div>
+        {/* invisible drag layer */}
+        <div className="absolute inset-0" onPointerMove={(e) => {
+          const r = (e.currentTarget as HTMLDivElement).getBoundingClientRect();
+          setPx(Math.max(6, Math.min(94, ((e.clientX - r.left) / r.width) * 100)));
+        }} onPointerDown={(e) => {
+          const r = (e.currentTarget as HTMLDivElement).getBoundingClientRect();
+          setPx(Math.max(6, Math.min(94, ((e.clientX - r.left) / r.width) * 100)));
+        }} />
+        {over && <GameOver score={score} onReplay={onReplay} onExit={onExit} label="Caught" />}
+      </ArenaShell>
+      <p className="mt-2 text-center text-xs text-slate-600">Drag the basket. Catch cherries — dodge bombs!</p>
+    </div>
+  );
+}
+
+/* ============= 13. BEAR BROS (Mario-style) ============= */
+function MarioGame({ diff, onReplay, onExit }: { diff: Diff; onReplay: () => void; onExit: () => void }) {
+  const G = 0.7, JUMP = -11;
+  const speed = diff === "easy" ? 3 : diff === "medium" ? 4.5 : 6;
+  const [y, setY] = useState(0); const yR = useRef(0); const vR = useRef(0); const onG = useRef(true);
+  type Ob = { id: number; x: number; type: "goomba" | "pipe" | "coin"; alive: boolean };
+  const [obs, setObs] = useState<Ob[]>([]); const [score, setScore] = useState(0); const [over, setOver] = useState(false);
+  const idR = useRef(0); const spawnR = useRef(0);
+  useTick(!over, 30, () => {
+    vR.current += G; yR.current += vR.current;
+    if (yR.current >= 0) { yR.current = 0; vR.current = 0; onG.current = true; } else onG.current = false;
+    setY(yR.current);
+    setObs(arr => {
+      let next = arr.map(o => ({ ...o, x: o.x - speed })).filter(o => o.x > -15);
+      for (const o of next) {
+        if (!o.alive) continue;
+        if (o.x > 8 && o.x < 24) {
+          if (o.type === "coin") { o.alive = false; SFX.eat(); setScore(s => s + 5); }
+          else if (o.type === "goomba") {
+            if (yR.current < -20 && vR.current > 0) { o.alive = false; vR.current = -7; SFX.pop(); setScore(s => s + 3); }
+            else if (yR.current > -18) { setOver(true); SFX.fail(); }
+          } else if (o.type === "pipe" && yR.current > -40) { setOver(true); SFX.fail(); }
+        }
+      }
+      spawnR.current--;
+      if (spawnR.current <= 0) {
+        spawnR.current = 25 + Math.floor(Math.random() * 30);
+        const r = Math.random();
+        const type = r < 0.4 ? "goomba" : r < 0.7 ? "coin" : "pipe";
+        next.push({ id: idR.current++, x: 110, type, alive: true });
+      }
+      return next;
+    });
+  });
+  function jump() { if (onG.current && !over) { vR.current = JUMP; SFX.jump(); } }
+  return (
+    <div onPointerDown={jump}>
+      <div className="flex justify-between gap-2"><HUD label="Score" value={score} /><HUD label="Tap" value="Jump" /></div>
+      <ArenaShell bg="linear-gradient(180deg,#7dd3fc,#bae6fd 70%,#92400e 71%,#78350f)">
+        {/* clouds */}
+        <div className="absolute top-4 left-6 text-4xl opacity-80">☁️</div>
+        <div className="absolute top-10 right-8 text-3xl opacity-80">☁️</div>
+        {/* bricks ground line */}
+        <div className="absolute bottom-0 left-0 right-0 h-[29%]" style={{ background: "repeating-linear-gradient(90deg,#92400e 0 24px,#7c2d12 24px 26px), linear-gradient(180deg,#a16207,#78350f)" }} />
+        {/* player */}
+        <div className="absolute left-[10%] text-5xl" style={{ bottom: `calc(29% + ${-y}px)`, transition: "none", filter: "drop-shadow(0 4px 4px #0006)" }}>🐻</div>
+        {/* obstacles */}
+        {obs.map(o => o.alive && (
+          <div key={o.id} className="absolute text-4xl" style={{ left: `${o.x}%`, bottom: o.type === "coin" ? "45%" : "29%", filter: "drop-shadow(0 3px 4px #0007)" }}>
+            {o.type === "goomba" ? "👾" : o.type === "pipe" ? "🟢" : "🪙"}
+          </div>
+        ))}
+        {over && <GameOver score={score} onReplay={onReplay} onExit={onExit} />}
+      </ArenaShell>
+      <p className="mt-2 text-center text-xs text-slate-600">Tap to jump. Stomp 👾, grab 🪙, avoid 🟢 pipes!</p>
+    </div>
+  );
+}
+
+/* ============= 14. FLAPPY BEAR ============= */
+function FlyGame({ diff, onReplay, onExit }: { diff: Diff; onReplay: () => void; onExit: () => void }) {
+  const G = 0.5, FLAP = -7;
+  const gap = diff === "easy" ? 36 : diff === "medium" ? 28 : 22;
+  const speed = diff === "easy" ? 1.5 : diff === "medium" ? 2.2 : 3;
+  const [y, setY] = useState(40); const yR = useRef(40); const vR = useRef(0);
+  type Pipe = { id: number; x: number; top: number; scored: boolean };
+  const [pipes, setPipes] = useState<Pipe[]>([]); const [score, setScore] = useState(0); const [over, setOver] = useState(false);
+  const idR = useRef(0); const spawnR = useRef(0);
+  useTick(!over, 30, () => {
+    vR.current += G; yR.current += vR.current; setY(yR.current);
+    if (yR.current < -2 || yR.current > 96) { setOver(true); SFX.fail(); return; }
+    setPipes(arr => {
+      let next = arr.map(p => ({ ...p, x: p.x - speed })).filter(p => p.x > -20);
+      for (const p of next) {
+        if (!p.scored && p.x < 18) { p.scored = true; SFX.pop(); setScore(s => s + 1); }
+        if (p.x > 10 && p.x < 26) {
+          if (yR.current < p.top || yR.current > p.top + gap) { setOver(true); SFX.fail(); }
+        }
+      }
+      spawnR.current--;
+      if (spawnR.current <= 0) { spawnR.current = 60; next.push({ id: idR.current++, x: 105, top: 10 + Math.random() * (70 - gap), scored: false }); }
+      return next;
+    });
+  });
+  function flap() { if (!over) { vR.current = FLAP; SFX.jump(); } }
+  return (
+    <div onPointerDown={flap}>
+      <div className="flex justify-between gap-2"><HUD label="Score" value={score} /><HUD label="Tap" value="Flap" /></div>
+      <ArenaShell bg="linear-gradient(180deg,#38bdf8,#7dd3fc 70%,#bef264 71%,#65a30d)">
+        {pipes.map(p => (
+          <div key={p.id}>
+            <div className="absolute w-[14%]" style={{ left: `${p.x}%`, top: 0, height: `${p.top}%`, background: "linear-gradient(90deg,#15803d,#22c55e,#15803d)", borderBottom: "4px solid #14532d", boxShadow: "inset -6px 0 0 #14532d44" }} />
+            <div className="absolute w-[14%]" style={{ left: `${p.x}%`, top: `${p.top + gap}%`, bottom: 0, background: "linear-gradient(90deg,#15803d,#22c55e,#15803d)", borderTop: "4px solid #14532d" }} />
+          </div>
+        ))}
+        <div className="absolute text-4xl" style={{ left: "10%", top: `${y}%`, transform: `translate(-50%,-50%) rotate(${Math.max(-30, Math.min(60, vR.current * 6))}deg)`, filter: "drop-shadow(0 3px 4px #0008)" }}>🐻</div>
+        {over && <GameOver score={score} onReplay={onReplay} onExit={onExit} />}
+      </ArenaShell>
+      <p className="mt-2 text-center text-xs text-slate-600">Tap to flap and fly through gaps!</p>
+    </div>
+  );
+}
+
+/* ============= 15. ROCKET SHOOTER ============= */
+function RocketGame({ diff, onReplay, onExit }: { diff: Diff; onReplay: () => void; onExit: () => void }) {
+  const enemySpd = diff === "easy" ? 0.7 : diff === "medium" ? 1.1 : 1.6;
+  const spawn = diff === "easy" ? 900 : diff === "medium" ? 600 : 400;
+  const [px, setPx] = useState(50);
+  type E = { id: number; x: number; y: number };
+  const [enemies, setEnemies] = useState<E[]>([]);
+  const [bullets, setBullets] = useState<E[]>([]);
+  const [score, setScore] = useState(0); const [lives, setLives] = useState(3); const [over, setOver] = useState(false);
+  const idR = useRef(0);
+  useTick(!over, 30, () => {
+    setBullets(b => b.map(x => ({ ...x, y: x.y - 4 })).filter(x => x.y > -5));
+    setEnemies(es => es.map(e => ({ ...e, y: e.y + enemySpd })).filter(e => {
+      if (e.y > 95) { setLives(l => { const n = l - 1; if (n <= 0) { setOver(true); SFX.fail(); } return n; }); return false; }
+      return true;
+    }));
+    // collisions
+    setEnemies(es => {
+      const ks = new Set<number>(); const bks = new Set<number>();
+      setBullets(bs => {
+        for (const b of bs) for (const e of es) {
+          if (!ks.has(e.id) && !bks.has(b.id) && Math.abs(b.x - e.x) < 7 && Math.abs(b.y - e.y) < 7) {
+            ks.add(e.id); bks.add(b.id); SFX.pop(); setScore(s => s + 1);
+          }
+        }
+        return bs.filter(b => !bks.has(b.id));
+      });
+      return es.filter(e => !ks.has(e.id));
+    });
+  });
+  useTick(!over, spawn, () => setEnemies(a => [...a, { id: idR.current++, x: 8 + Math.random() * 84, y: -5 }]));
+  useTick(!over, 280, () => setBullets(b => [...b, { id: idR.current++, x: px, y: 82 }]));
+  return (
+    <div>
+      <div className="flex justify-between gap-2"><HUD label="Score" value={score} /><HUD label="Lives" value={"❤️".repeat(lives)} /></div>
+      <ArenaShell bg="radial-gradient(ellipse at 50% 20%, #312e81, #0b1437 70%, #000)">
+        {/* stars */}
+        {Array.from({ length: 24 }).map((_, i) => (
+          <div key={i} className="absolute size-[2px] rounded-full bg-white" style={{ left: `${(i * 37) % 100}%`, top: `${(i * 53) % 100}%`, opacity: 0.5 + (i % 5) * 0.1 }} />
+        ))}
+        {enemies.map(e => (
+          <div key={e.id} className="absolute -translate-x-1/2 text-3xl" style={{ left: `${e.x}%`, top: `${e.y}%`, filter: "drop-shadow(0 0 6px #a855f7)" }}>👾</div>
+        ))}
+        {bullets.map(b => (
+          <div key={b.id} className="absolute -translate-x-1/2 h-3 w-1 rounded-full bg-yellow-300" style={{ left: `${b.x}%`, top: `${b.y}%`, boxShadow: "0 0 8px #fde047" }} />
+        ))}
+        <div className="absolute bottom-3 -translate-x-1/2 text-5xl" style={{ left: `${px}%`, filter: "drop-shadow(0 0 8px #60a5fa)" }}>🚀</div>
+        <div className="absolute inset-0" onPointerMove={(e) => {
+          const r = (e.currentTarget as HTMLDivElement).getBoundingClientRect();
+          setPx(Math.max(6, Math.min(94, ((e.clientX - r.left) / r.width) * 100)));
+        }} onPointerDown={(e) => {
+          const r = (e.currentTarget as HTMLDivElement).getBoundingClientRect();
+          setPx(Math.max(6, Math.min(94, ((e.clientX - r.left) / r.width) * 100)));
+        }} />
+        {over && <GameOver score={score} onReplay={onReplay} onExit={onExit} />}
+      </ArenaShell>
+      <p className="mt-2 text-center text-xs text-slate-600">Drag to move. Rocket auto-fires!</p>
+    </div>
+  );
+}
+
+/* ============= 16. RACE CAR ============= */
+function RaceCarGame({ diff, onReplay, onExit }: { diff: Diff; onReplay: () => void; onExit: () => void }) {
+  const speed = diff === "easy" ? 2 : diff === "medium" ? 3 : 4.5;
+  const lanes = [20, 50, 80];
+  const [lane, setLane] = useState(1);
+  type C = { id: number; lane: number; y: number };
+  const [cars, setCars] = useState<C[]>([]);
+  const [score, setScore] = useState(0); const [over, setOver] = useState(false);
+  const idR = useRef(0); const sR = useRef(0); const tR = useRef(0);
+  useTick(!over, 30, () => {
+    tR.current++;
+    setCars(arr => {
+      let next = arr.map(c => ({ ...c, y: c.y + speed })).filter(c => c.y < 110);
+      for (const c of next) {
+        if (c.y > 75 && c.y < 90 && c.lane === lane) { setOver(true); SFX.fail(); }
+      }
+      sR.current--;
+      if (sR.current <= 0) {
+        sR.current = 30 + Math.floor(Math.random() * 25);
+        next.push({ id: idR.current++, lane: Math.floor(Math.random() * 3), y: -10 });
+      }
+      return next;
+    });
+    if (tR.current % 10 === 0) setScore(s => s + 1);
+  });
+  return (
+    <div>
+      <div className="flex justify-between gap-2"><HUD label="Distance" value={score} /><HUD label="Mode" value={diff} /></div>
+      <ArenaShell bg="linear-gradient(180deg,#1f2937,#111827)">
+        {/* lane markers */}
+        {[33, 66].map((p, i) => (
+          <div key={i} className="absolute top-0 bottom-0 w-1" style={{ left: `${p}%`, background: "repeating-linear-gradient(180deg,#fde047 0 14px,transparent 14px 28px)", animation: `roadDash 0.4s linear infinite` }} />
+        ))}
+        {cars.map(c => (
+          <div key={c.id} className="absolute -translate-x-1/2 text-4xl" style={{ left: `${lanes[c.lane]}%`, top: `${c.y}%`, filter: "drop-shadow(0 4px 6px #000a)" }}>🚙</div>
+        ))}
+        <div className="absolute -translate-x-1/2 text-5xl transition-all" style={{ left: `${lanes[lane]}%`, bottom: "8%", filter: "drop-shadow(0 4px 6px #0008)" }}>🏎️</div>
+        {/* controls */}
+        <div className="absolute inset-y-0 left-0 w-1/2" onPointerDown={() => setLane(l => Math.max(0, l - 1))} />
+        <div className="absolute inset-y-0 right-0 w-1/2" onPointerDown={() => setLane(l => Math.min(2, l + 1))} />
+        {over && <GameOver score={score} onReplay={onReplay} onExit={onExit} label="Distance" />}
+        <style>{`@keyframes roadDash { to { background-position: 0 28px; } }`}</style>
+      </ArenaShell>
+      <p className="mt-2 text-center text-xs text-slate-600">Tap left / right side to switch lanes.</p>
+    </div>
+  );
+}
+
+/* ============= 17. HELICOPTER ============= */
+function HelicopterGame({ diff, onReplay, onExit }: { diff: Diff; onReplay: () => void; onExit: () => void }) {
+  const G = 0.4, LIFT = -0.7;
+  const gap = diff === "easy" ? 40 : diff === "medium" ? 30 : 22;
+  const speed = diff === "easy" ? 1.5 : diff === "medium" ? 2.2 : 3;
+  const [y, setY] = useState(50); const yR = useRef(50); const vR = useRef(0); const liftR = useRef(false);
+  type W = { x: number; top: number; bot: number };
+  const [walls, setWalls] = useState<W[]>(() => Array.from({ length: 10 }, (_, i) => ({ x: i * 10, top: 10, bot: 10 })));
+  const [score, setScore] = useState(0); const [over, setOver] = useState(false);
+  const tR = useRef(0);
+  useTick(!over, 30, () => {
+    tR.current++;
+    vR.current += liftR.current ? LIFT : G; vR.current = Math.max(-6, Math.min(6, vR.current));
+    yR.current += vR.current; setY(yR.current);
+    setWalls(ws => {
+      const next = ws.map(w => ({ ...w, x: w.x - speed }));
+      while (next.length && next[0].x < -10) next.shift();
+      while (next.length < 14) {
+        const last = next[next.length - 1] || { x: 0, top: 10, bot: 10 };
+        const t = Math.max(5, Math.min(70 - gap, last.top + (Math.random() - 0.5) * 8));
+        next.push({ x: last.x + 10, top: t, bot: 100 - t - gap });
+      }
+      // collision with current at x near player (player at x=15)
+      for (const w of next) {
+        if (w.x > 8 && w.x < 22) {
+          if (yR.current < w.top || yR.current > 100 - w.bot) { setOver(true); SFX.fail(); }
+        }
+      }
+      return next;
+    });
+    if (tR.current % 10 === 0) setScore(s => s + 1);
+  });
+  return (
+    <div onPointerDown={() => { liftR.current = true; SFX.click(); }} onPointerUp={() => { liftR.current = false; }} onPointerLeave={() => { liftR.current = false; }}>
+      <div className="flex justify-between gap-2"><HUD label="Score" value={score} /><HUD label="Hold" value="Lift" /></div>
+      <ArenaShell bg="linear-gradient(180deg,#0c4a6e,#0e7490)">
+        {walls.map((w, i) => (
+          <div key={i}>
+            <div className="absolute w-[10%]" style={{ left: `${w.x}%`, top: 0, height: `${w.top}%`, background: "linear-gradient(180deg,#451a03,#78350f)", borderBottom: "3px solid #292524" }} />
+            <div className="absolute w-[10%]" style={{ left: `${w.x}%`, bottom: 0, height: `${w.bot}%`, background: "linear-gradient(0deg,#451a03,#78350f)", borderTop: "3px solid #292524" }} />
+          </div>
+        ))}
+        <div className="absolute text-4xl" style={{ left: "15%", top: `${y}%`, transform: `translate(-50%,-50%) rotate(${Math.max(-25, Math.min(25, vR.current * 4))}deg)`, filter: "drop-shadow(0 0 6px #06b6d4)" }}>🚁</div>
+        {over && <GameOver score={score} onReplay={onReplay} onExit={onExit} />}
+      </ArenaShell>
+      <p className="mt-2 text-center text-xs text-slate-600">Hold to lift, release to drop.</p>
+    </div>
+  );
+}
+
+/* ============= 18. NINJA WALL JUMP ============= */
+function NinjaGame({ diff, onReplay, onExit }: { diff: Diff; onReplay: () => void; onExit: () => void }) {
+  const speed = diff === "easy" ? 1.5 : diff === "medium" ? 2.2 : 3;
+  const [side, setSide] = useState<0 | 1>(0); // 0 left, 1 right
+  const [y, setY] = useState(20);
+  type S = { id: number; side: 0 | 1; y: number };
+  const [spikes, setSpikes] = useState<S[]>([]);
+  const [score, setScore] = useState(0); const [over, setOver] = useState(false);
+  const idR = useRef(0); const spawnR = useRef(0); const tR = useRef(0);
+  useTick(!over, 30, () => {
+    tR.current++;
+    setY(v => Math.min(95, v + 0.4));
+    setSpikes(arr => {
+      let next = arr.map(s => ({ ...s, y: s.y + speed })).filter(s => s.y < 110);
+      for (const s of next) {
+        if (s.side === side && Math.abs(s.y - y) < 8) { setOver(true); SFX.fail(); }
+      }
+      spawnR.current--;
+      if (spawnR.current <= 0) {
+        spawnR.current = 18 + Math.floor(Math.random() * 14);
+        next.push({ id: idR.current++, side: Math.random() < 0.5 ? 0 : 1, y: -10 });
+      }
+      return next;
+    });
+    if (tR.current % 8 === 0) setScore(s => s + 1);
+  });
+  function flip() { if (!over) { setSide(s => (s === 0 ? 1 : 0)); SFX.jump(); setY(v => Math.max(8, v - 6)); } }
+  return (
+    <div onPointerDown={flip}>
+      <div className="flex justify-between gap-2"><HUD label="Score" value={score} /><HUD label="Tap" value="Jump" /></div>
+      <ArenaShell bg="linear-gradient(180deg,#1c1917,#0c0a09)">
+        {/* walls */}
+        <div className="absolute top-0 bottom-0 left-0 w-[15%]" style={{ background: "linear-gradient(90deg,#44403c,#292524)", boxShadow: "inset -3px 0 0 #000" }} />
+        <div className="absolute top-0 bottom-0 right-0 w-[15%]" style={{ background: "linear-gradient(-90deg,#44403c,#292524)", boxShadow: "inset 3px 0 0 #000" }} />
+        {spikes.map(s => (
+          <div key={s.id} className="absolute text-2xl" style={{ [s.side === 0 ? "left" : "right"]: "12%", top: `${s.y}%`, transform: s.side === 0 ? "rotate(90deg)" : "rotate(-90deg)", filter: "drop-shadow(0 0 4px #ef4444)" } as any}>🔺</div>
+        ))}
+        <div className="absolute text-4xl transition-all duration-150" style={{ [side === 0 ? "left" : "right"]: "16%", top: `${y}%`, transform: side === 1 ? "scaleX(-1)" : "none", filter: "drop-shadow(0 0 6px #f59e0b)" } as any}>🥷</div>
+        {over && <GameOver score={score} onReplay={onReplay} onExit={onExit} />}
+      </ArenaShell>
+      <p className="mt-2 text-center text-xs text-slate-600">Tap to wall-jump. Dodge the spikes!</p>
+    </div>
+  );
+}
+
+/* ============= 19. DINO RUN ============= */
+function DinoGame({ diff, onReplay, onExit }: { diff: Diff; onReplay: () => void; onExit: () => void }) {
+  const G = 0.7, JUMP = -12;
+  const speed = diff === "easy" ? 3 : diff === "medium" ? 4.5 : 6.5;
+  const [y, setY] = useState(0); const yR = useRef(0); const vR = useRef(0); const onG = useRef(true);
+  type O = { id: number; x: number };
+  const [obs, setObs] = useState<O[]>([]);
+  const [score, setScore] = useState(0); const [over, setOver] = useState(false);
+  const idR = useRef(0); const sR = useRef(0); const tR = useRef(0);
+  useTick(!over, 30, () => {
+    tR.current++;
+    vR.current += G; yR.current += vR.current;
+    if (yR.current >= 0) { yR.current = 0; vR.current = 0; onG.current = true; } else onG.current = false;
+    setY(yR.current);
+    setObs(arr => {
+      let next = arr.map(o => ({ ...o, x: o.x - speed })).filter(o => o.x > -10);
+      for (const o of next) if (o.x > 8 && o.x < 20 && yR.current > -25) { setOver(true); SFX.fail(); }
+      sR.current--;
+      if (sR.current <= 0) { sR.current = 35 + Math.floor(Math.random() * 35); next.push({ id: idR.current++, x: 105 }); }
+      return next;
+    });
+    if (tR.current % 5 === 0) setScore(s => s + 1);
+  });
+  function jump() { if (onG.current && !over) { vR.current = JUMP; SFX.jump(); } }
+  return (
+    <div onPointerDown={jump}>
+      <div className="flex justify-between gap-2"><HUD label="Score" value={score} /><HUD label="Tap" value="Jump" /></div>
+      <ArenaShell bg="linear-gradient(180deg,#fde68a,#fbbf24 70%,#a16207 71%,#78350f)">
+        <div className="absolute top-6 right-8 text-5xl">☀️</div>
+        <div className="absolute bottom-0 left-0 right-0 h-[29%]" style={{ background: "linear-gradient(180deg,#a16207,#78350f)", boxShadow: "inset 0 3px 0 #fbbf24" }} />
+        <div className="absolute text-5xl" style={{ left: "10%", bottom: `calc(29% + ${-y}px)`, filter: "drop-shadow(0 4px 4px #0006)" }}>🦖</div>
+        {obs.map(o => (
+          <div key={o.id} className="absolute text-3xl" style={{ left: `${o.x}%`, bottom: "29%", filter: "drop-shadow(0 3px 4px #0006)" }}>🌵</div>
+        ))}
+        {over && <GameOver score={score} onReplay={onReplay} onExit={onExit} />}
+      </ArenaShell>
+      <p className="mt-2 text-center text-xs text-slate-600">Tap to jump over the cactus!</p>
+    </div>
+  );
+}
+
+/* ============= 20. FROG CROSS ============= */
+function FroggerGame({ diff, onReplay, onExit }: { diff: Diff; onReplay: () => void; onExit: () => void }) {
+  const ROWS = 7;
+  const carSpeed = diff === "easy" ? 0.8 : diff === "medium" ? 1.3 : 2;
+  const [px, setPx] = useState(50); const [py, setPy] = useState(ROWS); // ROWS = bottom row
+  type C = { id: number; row: number; x: number; dir: 1 | -1; emoji: string };
+  const [cars, setCars] = useState<C[]>(() => {
+    const arr: C[] = []; let id = 0;
+    for (let r = 1; r < ROWS; r++) {
+      const dir = (r % 2 === 0 ? 1 : -1) as 1 | -1;
+      const emoji = r % 3 === 0 ? "🚚" : r % 2 === 0 ? "🚗" : "🏍️";
+      for (let i = 0; i < 2; i++) arr.push({ id: id++, row: r, x: (i * 50 + r * 13) % 100, dir, emoji });
+    }
+    return arr;
+  });
+  const [score, setScore] = useState(0); const [over, setOver] = useState(false);
+  const rowH = 100 / (ROWS + 1);
+  useTick(!over, 50, () => {
+    setCars(arr => arr.map(c => {
+      let nx = c.x + c.dir * carSpeed;
+      if (nx > 110) nx = -10; if (nx < -10) nx = 110;
+      return { ...c, x: nx };
+    }));
+  });
+  // collisions
+  useEffect(() => {
+    if (over) return;
+    for (const c of cars) {
+      if (c.row === py && Math.abs(c.x - px) < 8) { setOver(true); SFX.fail(); return; }
+    }
+  }, [cars, px, py, over]);
+  function move(dx: number, dy: number) {
+    if (over) return;
+    setPx(v => Math.max(4, Math.min(96, v + dx * 12)));
+    setPy(v => {
+      const n = Math.max(0, Math.min(ROWS, v + dy));
+      if (n === 0 && v !== 0) { setScore(s => s + 1); SFX.eat(); return ROWS; }
+      return n;
+    });
+    SFX.jump();
+  }
+  return (
+    <div>
+      <div className="flex justify-between gap-2"><HUD label="Crosses" value={score} /><HUD label="Mode" value={diff} /></div>
+      <ArenaShell bg="linear-gradient(180deg,#86efac 0 14%,#4b5563 14% 86%,#86efac 86% 100%)">
+        {/* lane lines */}
+        {Array.from({ length: ROWS - 1 }).map((_, i) => (
+          <div key={i} className="absolute left-0 right-0 h-[2px]" style={{ top: `${(i + 1) * rowH}%`, background: i === 0 || i === ROWS - 2 ? "transparent" : "repeating-linear-gradient(90deg,#fde047 0 16px,transparent 16px 32px)" }} />
+        ))}
+        {cars.map(c => (
+          <div key={c.id} className="absolute -translate-x-1/2 text-3xl" style={{ left: `${c.x}%`, top: `${c.row * rowH + rowH / 2}%`, transform: `translate(-50%,-50%) scaleX(${c.dir})`, filter: "drop-shadow(0 3px 4px #0007)" }}>{c.emoji}</div>
+        ))}
+        <div className="absolute -translate-x-1/2 text-4xl transition-all" style={{ left: `${px}%`, top: `${py * rowH + rowH / 2}%`, transform: "translate(-50%,-50%)", filter: "drop-shadow(0 3px 4px #0008)" }}>🐸</div>
+        {over && <GameOver score={score} onReplay={onReplay} onExit={onExit} label="Crosses" />}
+      </ArenaShell>
+      <div className="mt-3 grid grid-cols-3 gap-2 text-white max-w-[220px] mx-auto">
+        <div></div>
+        <button onClick={() => move(0, -1)} className="rounded-2xl bg-slate-700 py-3 font-bold shadow-lg active:scale-90">▲</button>
+        <div></div>
+        <button onClick={() => move(-1, 0)} className="rounded-2xl bg-slate-700 py-3 font-bold shadow-lg active:scale-90">◀</button>
+        <button onClick={() => move(0, 1)} className="rounded-2xl bg-slate-700 py-3 font-bold shadow-lg active:scale-90">▼</button>
+        <button onClick={() => move(1, 0)} className="rounded-2xl bg-slate-700 py-3 font-bold shadow-lg active:scale-90">▶</button>
+      </div>
+    </div>
+  );
+}
