@@ -7,7 +7,7 @@ import {
 import bgClouds from "@/assets/bg-clouds.jpg";
 import bearFace from "@/assets/bear-face.png";
 
-export const Route = createFileRoute("/games")({
+export const Route = createFileRoute("/games/")({
   head: () => ({
     meta: [
       { title: "Games — Melly Kids" },

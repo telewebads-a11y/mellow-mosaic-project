@@ -21,12 +21,12 @@ import { Route as ScribbleTraceRouteImport } from './routes/scribble-trace'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as NumberWorldRouteImport } from './routes/number-world'
 import { Route as MathsChallengeRouteImport } from './routes/maths-challenge'
-import { Route as GamesRouteImport } from './routes/games'
 import { Route as FunPhoneRouteImport } from './routes/fun-phone'
 import { Route as ColorsNameRouteImport } from './routes/colors-name'
 import { Route as BrainQuizRouteImport } from './routes/brain-quiz'
 import { Route as AbcWorldRouteImport } from './routes/abc-world'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as GamesIndexRouteImport } from './routes/games.index'
 import { Route as GamesGameIdRouteImport } from './routes/games.$gameId'
 
 const TraceWordsRoute = TraceWordsRouteImport.update({
@@ -89,11 +89,6 @@ const MathsChallengeRoute = MathsChallengeRouteImport.update({
   path: '/maths-challenge',
   getParentRoute: () => rootRouteImport,
 } as any)
-const GamesRoute = GamesRouteImport.update({
-  id: '/games',
-  path: '/games',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const FunPhoneRoute = FunPhoneRouteImport.update({
   id: '/fun-phone',
   path: '/fun-phone',
@@ -119,10 +114,15 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GamesIndexRoute = GamesIndexRouteImport.update({
+  id: '/games/',
+  path: '/games/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const GamesGameIdRoute = GamesGameIdRouteImport.update({
-  id: '/$gameId',
-  path: '/$gameId',
-  getParentRoute: () => GamesRoute,
+  id: '/games/$gameId',
+  path: '/games/$gameId',
+  getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -131,7 +131,6 @@ export interface FileRoutesByFullPath {
   '/brain-quiz': typeof BrainQuizRoute
   '/colors-name': typeof ColorsNameRoute
   '/fun-phone': typeof FunPhoneRoute
-  '/games': typeof GamesRouteWithChildren
   '/maths-challenge': typeof MathsChallengeRoute
   '/number-world': typeof NumberWorldRoute
   '/profile': typeof ProfileRoute
@@ -145,6 +144,7 @@ export interface FileRoutesByFullPath {
   '/trace-varnamala': typeof TraceVarnamalaRoute
   '/trace-words': typeof TraceWordsRoute
   '/games/$gameId': typeof GamesGameIdRoute
+  '/games/': typeof GamesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -152,7 +152,6 @@ export interface FileRoutesByTo {
   '/brain-quiz': typeof BrainQuizRoute
   '/colors-name': typeof ColorsNameRoute
   '/fun-phone': typeof FunPhoneRoute
-  '/games': typeof GamesRouteWithChildren
   '/maths-challenge': typeof MathsChallengeRoute
   '/number-world': typeof NumberWorldRoute
   '/profile': typeof ProfileRoute
@@ -166,6 +165,7 @@ export interface FileRoutesByTo {
   '/trace-varnamala': typeof TraceVarnamalaRoute
   '/trace-words': typeof TraceWordsRoute
   '/games/$gameId': typeof GamesGameIdRoute
+  '/games': typeof GamesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -174,7 +174,6 @@ export interface FileRoutesById {
   '/brain-quiz': typeof BrainQuizRoute
   '/colors-name': typeof ColorsNameRoute
   '/fun-phone': typeof FunPhoneRoute
-  '/games': typeof GamesRouteWithChildren
   '/maths-challenge': typeof MathsChallengeRoute
   '/number-world': typeof NumberWorldRoute
   '/profile': typeof ProfileRoute
@@ -188,6 +187,7 @@ export interface FileRoutesById {
   '/trace-varnamala': typeof TraceVarnamalaRoute
   '/trace-words': typeof TraceWordsRoute
   '/games/$gameId': typeof GamesGameIdRoute
+  '/games/': typeof GamesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -197,7 +197,6 @@ export interface FileRouteTypes {
     | '/brain-quiz'
     | '/colors-name'
     | '/fun-phone'
-    | '/games'
     | '/maths-challenge'
     | '/number-world'
     | '/profile'
@@ -211,6 +210,7 @@ export interface FileRouteTypes {
     | '/trace-varnamala'
     | '/trace-words'
     | '/games/$gameId'
+    | '/games/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -218,7 +218,6 @@ export interface FileRouteTypes {
     | '/brain-quiz'
     | '/colors-name'
     | '/fun-phone'
-    | '/games'
     | '/maths-challenge'
     | '/number-world'
     | '/profile'
@@ -232,6 +231,7 @@ export interface FileRouteTypes {
     | '/trace-varnamala'
     | '/trace-words'
     | '/games/$gameId'
+    | '/games'
   id:
     | '__root__'
     | '/'
@@ -239,7 +239,6 @@ export interface FileRouteTypes {
     | '/brain-quiz'
     | '/colors-name'
     | '/fun-phone'
-    | '/games'
     | '/maths-challenge'
     | '/number-world'
     | '/profile'
@@ -253,6 +252,7 @@ export interface FileRouteTypes {
     | '/trace-varnamala'
     | '/trace-words'
     | '/games/$gameId'
+    | '/games/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -261,7 +261,6 @@ export interface RootRouteChildren {
   BrainQuizRoute: typeof BrainQuizRoute
   ColorsNameRoute: typeof ColorsNameRoute
   FunPhoneRoute: typeof FunPhoneRoute
-  GamesRoute: typeof GamesRouteWithChildren
   MathsChallengeRoute: typeof MathsChallengeRoute
   NumberWorldRoute: typeof NumberWorldRoute
   ProfileRoute: typeof ProfileRoute
@@ -274,6 +273,8 @@ export interface RootRouteChildren {
   TraceSmallRoute: typeof TraceSmallRoute
   TraceVarnamalaRoute: typeof TraceVarnamalaRoute
   TraceWordsRoute: typeof TraceWordsRoute
+  GamesGameIdRoute: typeof GamesGameIdRoute
+  GamesIndexRoute: typeof GamesIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -362,13 +363,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MathsChallengeRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/games': {
-      id: '/games'
-      path: '/games'
-      fullPath: '/games'
-      preLoaderRoute: typeof GamesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/fun-phone': {
       id: '/fun-phone'
       path: '/fun-phone'
@@ -404,25 +398,22 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/games/': {
+      id: '/games/'
+      path: '/games'
+      fullPath: '/games/'
+      preLoaderRoute: typeof GamesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/games/$gameId': {
       id: '/games/$gameId'
-      path: '/$gameId'
+      path: '/games/$gameId'
       fullPath: '/games/$gameId'
       preLoaderRoute: typeof GamesGameIdRouteImport
-      parentRoute: typeof GamesRoute
+      parentRoute: typeof rootRouteImport
     }
   }
 }
-
-interface GamesRouteChildren {
-  GamesGameIdRoute: typeof GamesGameIdRoute
-}
-
-const GamesRouteChildren: GamesRouteChildren = {
-  GamesGameIdRoute: GamesGameIdRoute,
-}
-
-const GamesRouteWithChildren = GamesRoute._addFileChildren(GamesRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -430,7 +421,6 @@ const rootRouteChildren: RootRouteChildren = {
   BrainQuizRoute: BrainQuizRoute,
   ColorsNameRoute: ColorsNameRoute,
   FunPhoneRoute: FunPhoneRoute,
-  GamesRoute: GamesRouteWithChildren,
   MathsChallengeRoute: MathsChallengeRoute,
   NumberWorldRoute: NumberWorldRoute,
   ProfileRoute: ProfileRoute,
@@ -443,6 +433,8 @@ const rootRouteChildren: RootRouteChildren = {
   TraceSmallRoute: TraceSmallRoute,
   TraceVarnamalaRoute: TraceVarnamalaRoute,
   TraceWordsRoute: TraceWordsRoute,
+  GamesGameIdRoute: GamesGameIdRoute,
+  GamesIndexRoute: GamesIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
