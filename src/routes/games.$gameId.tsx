@@ -506,28 +506,40 @@ function SnakeGame({ diff, onReplay, onExit }: { diff: Diff; onReplay: () => voi
             </div>
           );
         })}
-        {/* snake head with bear face */}
+        {/* realistic snake head */}
         <div className="absolute flex items-center justify-center transition-all"
           style={{ left: `${head.x * cellPct}%`, top: `${head.y * cellPct}%`, width: `${cellPct}%`, height: `${cellPct}%` }}>
           <div className="relative" style={{ width: "100%", height: "100%", transform: `rotate(${angle}deg)` }}>
-            <div className="absolute inset-[5%] rounded-full"
+            {/* head shape (diamond / oval) */}
+            <div className="absolute inset-[2%]"
               style={{
-                background: "radial-gradient(circle at 30% 30%, #fef3c7, #f59e0b 50%, #92400e)",
-                boxShadow: "inset -4px -6px 10px #00000055, 0 4px 8px #0004",
+                background: "radial-gradient(ellipse at 30% 30%, #bbf7d0, #16a34a 55%, #052e16)",
+                boxShadow: "inset -5px -7px 12px #00000066, 0 4px 8px #0005",
+                borderRadius: "55% 70% 55% 70% / 55% 55% 70% 70%",
               }}>
-              {/* eyes */}
-              <div className="absolute right-[15%] top-[20%] size-2 rounded-full bg-white">
-                <div className="absolute right-0 top-0 size-1 rounded-full bg-black" />
+              {/* scale pattern */}
+              <div className="absolute inset-0 opacity-30"
+                style={{ background: "repeating-radial-gradient(circle at 50% 50%, transparent 0 3px, #0003 3px 4px)", borderRadius: "inherit" }} />
+              {/* nostrils */}
+              <div className="absolute right-[8%] top-[38%] size-1 rounded-full bg-black/70" />
+              <div className="absolute right-[8%] bottom-[38%] size-1 rounded-full bg-black/70" />
+              {/* eyes — yellow with slit pupils */}
+              <div className="absolute right-[22%] top-[15%] h-2.5 w-3 rounded-full bg-yellow-300 shadow-inner">
+                <div className="absolute left-1/2 top-0 h-full w-[2px] -translate-x-1/2 rounded-full bg-black" />
               </div>
-              <div className="absolute right-[15%] bottom-[20%] size-2 rounded-full bg-white">
-                <div className="absolute right-0 top-0 size-1 rounded-full bg-black" />
+              <div className="absolute right-[22%] bottom-[15%] h-2.5 w-3 rounded-full bg-yellow-300 shadow-inner">
+                <div className="absolute left-1/2 top-0 h-full w-[2px] -translate-x-1/2 rounded-full bg-black" />
               </div>
-              {/* tongue */}
-              <div className="absolute right-[-25%] top-1/2 h-1 w-3 -translate-y-1/2 bg-rose-500 rounded-full" style={{ animation: "tongue 0.5s ease-in-out infinite" }} />
+              {/* forked tongue */}
+              <div className="absolute right-[-35%] top-1/2 -translate-y-1/2" style={{ animation: "tongue 0.4s ease-in-out infinite" }}>
+                <div className="h-[3px] w-4 bg-rose-500 rounded-full" />
+                <div className="absolute right-0 -top-1 h-[3px] w-2 bg-rose-500 rounded-full rotate-[20deg] origin-left" />
+                <div className="absolute right-0 top-1 h-[3px] w-2 bg-rose-500 rounded-full -rotate-[20deg] origin-left" />
+              </div>
             </div>
           </div>
         </div>
-        <style>{`@keyframes tongue { 0%,100%{transform:translateY(-50%) scaleX(1)} 50%{transform:translateY(-50%) scaleX(1.6)} }`}</style>
+        <style>{`@keyframes tongue { 0%,100%{transform:translateY(-50%) scaleX(0.8)} 50%{transform:translateY(-50%) scaleX(1.3)} }`}</style>
       </div>
       <div className="mt-3 grid grid-cols-3 gap-2 text-white max-w-[220px] mx-auto">
         <div></div>
