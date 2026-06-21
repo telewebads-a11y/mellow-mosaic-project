@@ -1227,7 +1227,7 @@ function RocketGame({ diff, onReplay, onExit }: { diff: Diff; onReplay: () => vo
         {bullets.map(b => (
           <div key={b.id} className="absolute -translate-x-1/2 h-3 w-1 rounded-full bg-yellow-300" style={{ left: `${b.x}%`, top: `${b.y}%`, boxShadow: "0 0 8px #fde047" }} />
         ))}
-        <div className="absolute bottom-3 -translate-x-1/2 text-5xl" style={{ left: `${px}%`, filter: "drop-shadow(0 0 8px #60a5fa)" }}>🚀</div>
+        <div className="absolute bottom-3 -translate-x-1/2 text-5xl" style={{ left: `${px}%`, filter: "drop-shadow(0 0 8px #60a5fa)", transform: "translateX(-50%) rotate(-45deg)" }}>🚀</div>
         <div className="absolute inset-0" onPointerMove={(e) => {
           const r = (e.currentTarget as HTMLDivElement).getBoundingClientRect();
           setPx(Math.max(6, Math.min(94, ((e.clientX - r.left) / r.width) * 100)));
@@ -1276,9 +1276,9 @@ function RaceCarGame({ diff, onReplay, onExit }: { diff: Diff; onReplay: () => v
           <div key={i} className="absolute top-0 bottom-0 w-1" style={{ left: `${p}%`, background: "repeating-linear-gradient(180deg,#fde047 0 14px,transparent 14px 28px)", animation: `roadDash 0.4s linear infinite` }} />
         ))}
         {cars.map(c => (
-          <div key={c.id} className="absolute -translate-x-1/2 text-4xl" style={{ left: `${lanes[c.lane]}%`, top: `${c.y}%`, filter: "drop-shadow(0 4px 6px #000a)" }}>🚙</div>
+          <div key={c.id} className="absolute text-4xl" style={{ left: `${lanes[c.lane]}%`, top: `${c.y}%`, filter: "drop-shadow(0 4px 6px #000a)", transform: "translateX(-50%) rotate(-90deg) scaleX(-1)" }}>🚙</div>
         ))}
-        <div className="absolute -translate-x-1/2 text-5xl transition-all" style={{ left: `${lanes[lane]}%`, bottom: "8%", filter: "drop-shadow(0 4px 6px #0008)" }}>🏎️</div>
+        <div className="absolute text-5xl transition-all" style={{ left: `${lanes[lane]}%`, bottom: "8%", filter: "drop-shadow(0 4px 6px #0008)", transform: "translateX(-50%) rotate(-90deg)" }}>🏎️</div>
         {/* controls */}
         <div className="absolute inset-y-0 left-0 w-1/2" onPointerDown={() => setLane(l => Math.max(0, l - 1))} />
         <div className="absolute inset-y-0 right-0 w-1/2" onPointerDown={() => setLane(l => Math.min(2, l + 1))} />
