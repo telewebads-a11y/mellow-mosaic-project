@@ -111,11 +111,13 @@ function ColorsName() {
       </div>
 
       <main className="grid grid-cols-2 gap-3 px-4 pb-24 sm:grid-cols-3">
-        {COLORS.map((c) => {
+        {COLORS.map((c, i) => {
           const isLight =
             c.hex.toLowerCase() === "#ffffff" ||
             c.hex.toLowerCase() === "#fffff0" ||
             c.hex.toLowerCase() === "#f5f5dc";
+          const dur = 2.6 + ((i * 7) % 18) / 10; // 2.6s - 4.4s
+          const delay = ((i * 13) % 20) / 10;    // 0 - 2s
           return (
             <button
               key={c.en}
@@ -123,24 +125,41 @@ function ColorsName() {
               className="group flex flex-col items-center gap-2 rounded-2xl bg-white/90 p-3 shadow-md ring-2 ring-white transition active:scale-95"
             >
               <div
-                className="flex h-20 w-full items-center justify-center rounded-xl shadow-inner"
+                className="h-20 w-full rounded-xl shadow-inner color-float"
                 style={{
                   backgroundColor: c.hex,
                   border: isLight ? "2px solid #e5e7eb" : "none",
+                  animationDuration: `${dur}s`,
+                  animationDelay: `${delay}s`,
                 }}
-              >
-                <Volume2
-                  className="size-6 opacity-70"
-                  style={{ color: isLight ? "#475569" : "#ffffff" }}
-                />
-              </div>
+              />
               <div className="text-center font-extrabold text-slate-800">
                 {lang === "hi" ? c.hi : c.en}
               </div>
+              <Volume2 className="size-5 text-slate-500 opacity-80" />
             </button>
           );
         })}
       </main>
     </div>
   );
+}
+
+const _styles = `
+@keyframes colorFloat {
+  0%   { transform: translateY(0) scale(1); }
+  50%  { transform: translateY(-8px) scale(1.04); }
+  100% { transform: translateY(0) scale(1); }
+}
+.color-float {
+  animation-name: colorFloat;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+`;
+if (typeof document !== "undefined" && !document.getElementById("colors-name-styles")) {
+  const s = document.createElement("style");
+  s.id = "colors-name-styles";
+  s.textContent = _styles;
+  document.head.appendChild(s);
 }
