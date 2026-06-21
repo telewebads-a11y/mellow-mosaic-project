@@ -74,6 +74,9 @@ function BrainQuiz() {
         {TILES.map((t, i) => (
           <button
             key={i}
+            onClick={() => {
+              if (t.title === "Maths Challenge") navigate({ to: "/maths-challenge" });
+            }}
             className={`tile ${t.color} flex-col items-center justify-center text-center`}
             style={{ minHeight: 200 }}
           >
