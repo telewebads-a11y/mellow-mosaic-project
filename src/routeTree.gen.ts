@@ -20,7 +20,9 @@ import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ScribbleTraceRouteImport } from './routes/scribble-trace'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as NumberWorldRouteImport } from './routes/number-world'
+import { Route as MathsChallengeRouteImport } from './routes/maths-challenge'
 import { Route as FunPhoneRouteImport } from './routes/fun-phone'
+import { Route as MathsChallengeRouteImport } from './routes/maths-challenge'
 import { Route as BrainQuizRouteImport } from './routes/brain-quiz'
 import { Route as AbcWorldRouteImport } from './routes/abc-world'
 import { Route as IndexRouteImport } from './routes/index'
@@ -80,9 +82,19 @@ const NumberWorldRoute = NumberWorldRouteImport.update({
   path: '/number-world',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MathsChallengeRoute = MathsChallengeRouteImport.update({
+  id: '/maths-challenge',
+  path: '/maths-challenge',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const FunPhoneRoute = FunPhoneRouteImport.update({
   id: '/fun-phone',
   path: '/fun-phone',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MathsChallengeRoute = MathsChallengeRouteImport.update({
+  id: '/maths-challenge',
+  path: '/maths-challenge',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BrainQuizRoute = BrainQuizRouteImport.update({
@@ -106,6 +118,8 @@ export interface FileRoutesByFullPath {
   '/abc-world': typeof AbcWorldRoute
   '/brain-quiz': typeof BrainQuizRoute
   '/fun-phone': typeof FunPhoneRoute
+  '/maths-challenge': typeof MathsChallengeRoute
+  '/maths-challenge': typeof MathsChallengeRoute
   '/number-world': typeof NumberWorldRoute
   '/profile': typeof ProfileRoute
   '/scribble-trace': typeof ScribbleTraceRoute
@@ -123,6 +137,8 @@ export interface FileRoutesByTo {
   '/abc-world': typeof AbcWorldRoute
   '/brain-quiz': typeof BrainQuizRoute
   '/fun-phone': typeof FunPhoneRoute
+  '/maths-challenge': typeof MathsChallengeRoute
+  '/maths-challenge': typeof MathsChallengeRoute
   '/number-world': typeof NumberWorldRoute
   '/profile': typeof ProfileRoute
   '/scribble-trace': typeof ScribbleTraceRoute
@@ -141,6 +157,8 @@ export interface FileRoutesById {
   '/abc-world': typeof AbcWorldRoute
   '/brain-quiz': typeof BrainQuizRoute
   '/fun-phone': typeof FunPhoneRoute
+  '/maths-challenge': typeof MathsChallengeRoute
+  '/maths-challenge': typeof MathsChallengeRoute
   '/number-world': typeof NumberWorldRoute
   '/profile': typeof ProfileRoute
   '/scribble-trace': typeof ScribbleTraceRoute
@@ -160,6 +178,9 @@ export interface FileRouteTypes {
     | '/abc-world'
     | '/brain-quiz'
     | '/fun-phone'
+    | '/maths-challenge'
+    | '/maths-challenge'
+    | '/maths-challenge'
     | '/number-world'
     | '/profile'
     | '/scribble-trace'
@@ -177,6 +198,8 @@ export interface FileRouteTypes {
     | '/abc-world'
     | '/brain-quiz'
     | '/fun-phone'
+    | '/maths-challenge'
+    | '/maths-challenge'
     | '/number-world'
     | '/profile'
     | '/scribble-trace'
@@ -194,6 +217,7 @@ export interface FileRouteTypes {
     | '/abc-world'
     | '/brain-quiz'
     | '/fun-phone'
+    | '/maths-challenge'
     | '/number-world'
     | '/profile'
     | '/scribble-trace'
@@ -212,6 +236,8 @@ export interface RootRouteChildren {
   AbcWorldRoute: typeof AbcWorldRoute
   BrainQuizRoute: typeof BrainQuizRoute
   FunPhoneRoute: typeof FunPhoneRoute
+  MathsChallengeRoute: typeof MathsChallengeRoute
+  MathsChallengeRoute: typeof MathsChallengeRoute
   NumberWorldRoute: typeof NumberWorldRoute
   ProfileRoute: typeof ProfileRoute
   ScribbleTraceRoute: typeof ScribbleTraceRoute
@@ -304,11 +330,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NumberWorldRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/maths-challenge': {
+      id: '/maths-challenge'
+      path: '/maths-challenge'
+      fullPath: '/maths-challenge'
+      preLoaderRoute: typeof MathsChallengeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/fun-phone': {
       id: '/fun-phone'
       path: '/fun-phone'
       fullPath: '/fun-phone'
       preLoaderRoute: typeof FunPhoneRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/maths-challenge': {
+      id: '/maths-challenge'
+      path: '/maths-challenge'
+      fullPath: '/maths-challenge'
+      preLoaderRoute: typeof MathsChallengeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/brain-quiz': {
@@ -340,6 +380,8 @@ const rootRouteChildren: RootRouteChildren = {
   AbcWorldRoute: AbcWorldRoute,
   BrainQuizRoute: BrainQuizRoute,
   FunPhoneRoute: FunPhoneRoute,
+  MathsChallengeRoute: MathsChallengeRoute,
+  MathsChallengeRoute: MathsChallengeRoute,
   NumberWorldRoute: NumberWorldRoute,
   ProfileRoute: ProfileRoute,
   ScribbleTraceRoute: ScribbleTraceRoute,
@@ -355,13 +397,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
