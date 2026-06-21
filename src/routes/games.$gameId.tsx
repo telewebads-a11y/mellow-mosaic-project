@@ -159,6 +159,16 @@ function GameSwitch(props: { gameId: string; diff: Diff; onExit: () => void; onR
     case "maze":      return <MazeGame {...props} />;
     case "bubble":    return <BubbleGame {...props} />;
     case "colorsort": return <ColorSortGame {...props} />;
+    case "fruitcut":  return <FruitCutGame {...props} />;
+    case "bomber":    return <BomberGame {...props} />;
+    case "mario":     return <MarioGame {...props} />;
+    case "fly":       return <FlyGame {...props} />;
+    case "rocket":    return <RocketGame {...props} />;
+    case "racecar":   return <RaceCarGame {...props} />;
+    case "helicopter":return <HelicopterGame {...props} />;
+    case "ninja":     return <NinjaGame {...props} />;
+    case "dino":      return <DinoGame {...props} />;
+    case "frogger":   return <FroggerGame {...props} />;
     default: return <div className="mt-6 rounded-2xl bg-white p-6 text-center">Coming soon!</div>;
   }
 }
