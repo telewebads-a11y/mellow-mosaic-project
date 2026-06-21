@@ -22,7 +22,6 @@ import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as NumberWorldRouteImport } from './routes/number-world'
 import { Route as MathsChallengeRouteImport } from './routes/maths-challenge'
 import { Route as FunPhoneRouteImport } from './routes/fun-phone'
-import { Route as MathsChallengeRouteImport } from './routes/maths-challenge'
 import { Route as BrainQuizRouteImport } from './routes/brain-quiz'
 import { Route as AbcWorldRouteImport } from './routes/abc-world'
 import { Route as IndexRouteImport } from './routes/index'
@@ -92,11 +91,6 @@ const FunPhoneRoute = FunPhoneRouteImport.update({
   path: '/fun-phone',
   getParentRoute: () => rootRouteImport,
 } as any)
-const MathsChallengeRoute = MathsChallengeRouteImport.update({
-  id: '/maths-challenge',
-  path: '/maths-challenge',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const BrainQuizRoute = BrainQuizRouteImport.update({
   id: '/brain-quiz',
   path: '/brain-quiz',
@@ -119,7 +113,6 @@ export interface FileRoutesByFullPath {
   '/brain-quiz': typeof BrainQuizRoute
   '/fun-phone': typeof FunPhoneRoute
   '/maths-challenge': typeof MathsChallengeRoute
-  '/maths-challenge': typeof MathsChallengeRoute
   '/number-world': typeof NumberWorldRoute
   '/profile': typeof ProfileRoute
   '/scribble-trace': typeof ScribbleTraceRoute
@@ -137,7 +130,6 @@ export interface FileRoutesByTo {
   '/abc-world': typeof AbcWorldRoute
   '/brain-quiz': typeof BrainQuizRoute
   '/fun-phone': typeof FunPhoneRoute
-  '/maths-challenge': typeof MathsChallengeRoute
   '/maths-challenge': typeof MathsChallengeRoute
   '/number-world': typeof NumberWorldRoute
   '/profile': typeof ProfileRoute
@@ -157,7 +149,6 @@ export interface FileRoutesById {
   '/abc-world': typeof AbcWorldRoute
   '/brain-quiz': typeof BrainQuizRoute
   '/fun-phone': typeof FunPhoneRoute
-  '/maths-challenge': typeof MathsChallengeRoute
   '/maths-challenge': typeof MathsChallengeRoute
   '/number-world': typeof NumberWorldRoute
   '/profile': typeof ProfileRoute
@@ -179,8 +170,6 @@ export interface FileRouteTypes {
     | '/brain-quiz'
     | '/fun-phone'
     | '/maths-challenge'
-    | '/maths-challenge'
-    | '/maths-challenge'
     | '/number-world'
     | '/profile'
     | '/scribble-trace'
@@ -198,7 +187,6 @@ export interface FileRouteTypes {
     | '/abc-world'
     | '/brain-quiz'
     | '/fun-phone'
-    | '/maths-challenge'
     | '/maths-challenge'
     | '/number-world'
     | '/profile'
@@ -236,7 +224,6 @@ export interface RootRouteChildren {
   AbcWorldRoute: typeof AbcWorldRoute
   BrainQuizRoute: typeof BrainQuizRoute
   FunPhoneRoute: typeof FunPhoneRoute
-  MathsChallengeRoute: typeof MathsChallengeRoute
   MathsChallengeRoute: typeof MathsChallengeRoute
   NumberWorldRoute: typeof NumberWorldRoute
   ProfileRoute: typeof ProfileRoute
@@ -344,13 +331,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FunPhoneRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/maths-challenge': {
-      id: '/maths-challenge'
-      path: '/maths-challenge'
-      fullPath: '/maths-challenge'
-      preLoaderRoute: typeof MathsChallengeRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/brain-quiz': {
       id: '/brain-quiz'
       path: '/brain-quiz'
@@ -380,7 +360,6 @@ const rootRouteChildren: RootRouteChildren = {
   AbcWorldRoute: AbcWorldRoute,
   BrainQuizRoute: BrainQuizRoute,
   FunPhoneRoute: FunPhoneRoute,
-  MathsChallengeRoute: MathsChallengeRoute,
   MathsChallengeRoute: MathsChallengeRoute,
   NumberWorldRoute: NumberWorldRoute,
   ProfileRoute: ProfileRoute,
