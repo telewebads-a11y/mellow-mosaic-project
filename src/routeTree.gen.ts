@@ -26,6 +26,8 @@ import { Route as ColorsNameRouteImport } from './routes/colors-name'
 import { Route as BrainQuizRouteImport } from './routes/brain-quiz'
 import { Route as AbcWorldRouteImport } from './routes/abc-world'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as GamesIndexRouteImport } from './routes/games.index'
+import { Route as GamesGameIdRouteImport } from './routes/games.$gameId'
 
 const TraceWordsRoute = TraceWordsRouteImport.update({
   id: '/trace-words',
@@ -112,6 +114,16 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GamesIndexRoute = GamesIndexRouteImport.update({
+  id: '/games/',
+  path: '/games/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GamesGameIdRoute = GamesGameIdRouteImport.update({
+  id: '/games/$gameId',
+  path: '/games/$gameId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -131,6 +143,8 @@ export interface FileRoutesByFullPath {
   '/trace-small': typeof TraceSmallRoute
   '/trace-varnamala': typeof TraceVarnamalaRoute
   '/trace-words': typeof TraceWordsRoute
+  '/games/$gameId': typeof GamesGameIdRoute
+  '/games/': typeof GamesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -150,6 +164,8 @@ export interface FileRoutesByTo {
   '/trace-small': typeof TraceSmallRoute
   '/trace-varnamala': typeof TraceVarnamalaRoute
   '/trace-words': typeof TraceWordsRoute
+  '/games/$gameId': typeof GamesGameIdRoute
+  '/games': typeof GamesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -170,6 +186,8 @@ export interface FileRoutesById {
   '/trace-small': typeof TraceSmallRoute
   '/trace-varnamala': typeof TraceVarnamalaRoute
   '/trace-words': typeof TraceWordsRoute
+  '/games/$gameId': typeof GamesGameIdRoute
+  '/games/': typeof GamesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -191,6 +209,8 @@ export interface FileRouteTypes {
     | '/trace-small'
     | '/trace-varnamala'
     | '/trace-words'
+    | '/games/$gameId'
+    | '/games/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -210,6 +230,8 @@ export interface FileRouteTypes {
     | '/trace-small'
     | '/trace-varnamala'
     | '/trace-words'
+    | '/games/$gameId'
+    | '/games'
   id:
     | '__root__'
     | '/'
@@ -229,6 +251,8 @@ export interface FileRouteTypes {
     | '/trace-small'
     | '/trace-varnamala'
     | '/trace-words'
+    | '/games/$gameId'
+    | '/games/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -249,6 +273,8 @@ export interface RootRouteChildren {
   TraceSmallRoute: typeof TraceSmallRoute
   TraceVarnamalaRoute: typeof TraceVarnamalaRoute
   TraceWordsRoute: typeof TraceWordsRoute
+  GamesGameIdRoute: typeof GamesGameIdRoute
+  GamesIndexRoute: typeof GamesIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -372,6 +398,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/games/': {
+      id: '/games/'
+      path: '/games'
+      fullPath: '/games/'
+      preLoaderRoute: typeof GamesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/games/$gameId': {
+      id: '/games/$gameId'
+      path: '/games/$gameId'
+      fullPath: '/games/$gameId'
+      preLoaderRoute: typeof GamesGameIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -393,6 +433,8 @@ const rootRouteChildren: RootRouteChildren = {
   TraceSmallRoute: TraceSmallRoute,
   TraceVarnamalaRoute: TraceVarnamalaRoute,
   TraceWordsRoute: TraceWordsRoute,
+  GamesGameIdRoute: GamesGameIdRoute,
+  GamesIndexRoute: GamesIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
