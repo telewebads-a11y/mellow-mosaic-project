@@ -275,16 +275,27 @@ function Index() {
             {/* Mascot Back Glow */}
             <div className="absolute size-56 animate-pulse rounded-full bg-white/50 blur-3xl" />
 
-            {/* Two parrots flanking the bear */}
-            <div className="relative flex w-full items-center justify-center">
+            {/* Jungle Birds in Upper Left and Upper Right */}
+            <div className="absolute top-4 left-6 z-10">
               <span
                 aria-hidden
-                className="absolute left-2 top-1/2 -translate-y-1/2 text-5xl drop-shadow-lg"
-                style={{ animation: "bearBounce 2.2s ease-in-out infinite" }}
+                className="block text-5xl drop-shadow-[0_4px_6px_rgba(0,0,0,0.3)] animate-[bounce_3s_infinite_alternate]"
               >
                 🦜
               </span>
+            </div>
 
+            <div className="absolute top-4 right-6 z-10">
+              <span
+                aria-hidden
+                className="block text-5xl drop-shadow-[0_4px_6px_rgba(0,0,0,0.3)] animate-[bounce_3.5s_infinite_alternate]"
+                style={{ transform: "scaleX(-1)" }}
+              >
+                🦜
+              </span>
+            </div>
+
+            <div className="relative flex w-full items-center justify-center">
               {/* Melly Bear Mascot — cutout, no frame */}
               <img
                 src={bearFace}
@@ -292,14 +303,6 @@ function Index() {
                 className="relative z-10 size-56 drop-shadow-[0_15px_25px_rgba(0,0,0,0.35)] animate-[bounce_2.5s_infinite_alternate] cursor-pointer transition-transform hover:scale-110 active:scale-95"
                 onClick={(e) => { e.stopPropagation(); }}
               />
-
-              <span
-                aria-hidden
-                className="absolute right-2 top-1/2 -translate-y-1/2 text-5xl drop-shadow-lg"
-                style={{ animation: "bearBounce 2.6s ease-in-out infinite", transform: "scaleX(-1)" }}
-              >
-                🦜
-              </span>
             </div>
 
             {/* App Branding Text with 3D Pop Layer */}
