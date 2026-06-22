@@ -281,7 +281,7 @@ function Index() {
                 src={bearFace}
                 alt="Melly Bear Mascot"
                 className="size-36 drop-shadow-2xl transition-transform hover:scale-110 active:scale-95 cursor-pointer"
-                onClick={() => playSound("welcome")}
+                onClick={(e) => { e.stopPropagation(); }}
               />
               <span className="absolute -right-2 -top-2 flex size-10 animate-[pulse_1.5s_infinite] items-center justify-center rounded-full bg-yellow-400 text-lg shadow-lg ring-2 ring-white">
                 👋
