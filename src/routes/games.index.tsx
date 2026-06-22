@@ -3,7 +3,7 @@ import { ArrowLeft, Home, Play } from "lucide-react";
 import bgClouds from "@/assets/bg-clouds.jpg";
 import bearFace from "@/assets/icons/bear-face.png";
 
-export const Route = createFileRoute("/games/")({
+export const Route = createFileRoute("/games")({
   head: () => ({
     meta: [
       { title: "Games — Melly Kids" },
