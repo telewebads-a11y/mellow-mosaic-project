@@ -275,26 +275,6 @@ function Index() {
             {/* Mascot Back Glow */}
             <div className="absolute size-56 animate-pulse rounded-full bg-white/50 blur-3xl" />
 
-            {/* Jungle Birds in Upper Left and Upper Right */}
-            <div className="absolute top-4 left-6 z-10">
-              <span
-                aria-hidden
-                className="block text-5xl drop-shadow-[0_4px_6px_rgba(0,0,0,0.3)] animate-[bounce_3s_infinite_alternate]"
-              >
-                🦜
-              </span>
-            </div>
-
-            <div className="absolute top-4 right-6 z-10">
-              <span
-                aria-hidden
-                className="block text-5xl drop-shadow-[0_4px_6px_rgba(0,0,0,0.3)] animate-[bounce_3.5s_infinite_alternate]"
-                style={{ transform: "scaleX(-1)" }}
-              >
-                🦜
-              </span>
-            </div>
-
             <div className="relative flex w-full items-center justify-center">
               {/* Melly Bear Mascot — cutout, no frame */}
               <img
