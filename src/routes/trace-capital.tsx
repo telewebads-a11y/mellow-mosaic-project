@@ -135,7 +135,7 @@ function TraceCapital() {
         </button>
         <img src={bearFace} alt="" width={56} height={56} className="size-14 drop-shadow-lg bear-bounce" />
         <Link
-          to="/games"
+          to="/"
           aria-label="Home"
           className="flex size-11 items-center justify-center rounded-full bg-white/90 text-slate-700 shadow-md ring-2 ring-white"
         >
