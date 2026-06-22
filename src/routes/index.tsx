@@ -206,6 +206,11 @@ function Index() {
 
   // Start jungle audio on mount + show button after 2s
   useEffect(() => {
+    if (window.sessionStorage.getItem("mellyWelcomeSeen") === "true") {
+      setShowWelcome(false);
+      setShowWelcomeButton(true);
+      return;
+    }
     if (!showWelcome) return;
     const audioTimer = setTimeout(() => startJungleLoop(), 150);
     const btnTimer = setTimeout(() => setShowWelcomeButton(true), 2000);
@@ -218,6 +223,7 @@ function Index() {
   }, []);
 
   const handleStart = () => {
+    window.sessionStorage.setItem("mellyWelcomeSeen", "true");
     stopJungleAudio();
     playStartSound();
     setIsExiting(true);
