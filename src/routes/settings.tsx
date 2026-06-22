@@ -46,7 +46,7 @@ function SettingsPage() {
       {/* Header */}
       <header className="flex items-center gap-3 px-5 pt-6 pb-4">
         <Link
-          to="/games"
+          to="/"
           aria-label="Back"
           className="flex size-14 items-center justify-center rounded-2xl bg-gradient-to-b from-amber-300 to-amber-500 shadow-lg ring-4 ring-white active:translate-y-[2px] transition"
         >

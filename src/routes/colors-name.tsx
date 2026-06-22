@@ -90,7 +90,7 @@ function ColorsName() {
       <header className="flex items-center justify-between gap-3 px-4 pt-5 pb-3">
         <button
           aria-label="Back"
-          onClick={() => navigate({ to: "/games" })}
+          onClick={() => navigate({ to: "/" })}
           className="flex size-11 items-center justify-center rounded-full bg-white/90 text-slate-700 shadow-md ring-2 ring-white"
         >
           <ArrowLeft className="size-6" />

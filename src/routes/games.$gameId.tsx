@@ -83,7 +83,7 @@ function GameRunner() {
       <SkyBackdrop />
 
       <header className="mx-auto flex max-w-md items-center justify-between px-4 pt-5">
-        <button onClick={() => { SFX.click(); playing ? setPlaying(false) : nav({ to: "/games" }); }}
+        <button aria-label="Back" onClick={() => { SFX.click(); playing ? setPlaying(false) : nav({ to: "/games" }); }}
           className="rounded-full bg-white/90 p-2 shadow-lg active:scale-90">
           <ArrowLeft className="size-5" />
         </button>
@@ -92,7 +92,7 @@ function GameRunner() {
           <button onClick={() => setMuted((m) => !m)} className="rounded-full bg-white/90 p-2 shadow-lg active:scale-90">
             {muted ? <VolumeX className="size-5" /> : <Volume2 className="size-5" />}
           </button>
-          <button onClick={() => nav({ to: "/games" })} className="rounded-full bg-white/90 p-2 shadow-lg active:scale-90">
+          <button aria-label="Home" onClick={() => nav({ to: "/" })} className="rounded-full bg-white/90 p-2 shadow-lg active:scale-90">
             <Home className="size-5" />
           </button>
         </div>

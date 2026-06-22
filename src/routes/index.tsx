@@ -71,7 +71,7 @@ const themes: { id: ThemeId; label: string; img: string; icon: ReactNode; tint: 
 function Index() {
   const [themeId, setThemeId] = useState<ThemeId>("jungle");
   const [pickerOpen, setPickerOpen] = useState(false);
-  const [showWelcome, setShowWelcome] = useState(true);
+  const [showWelcome, setShowWelcome] = useState(false);
   const [showButton, setShowWelcomeButton] = useState(false);
   const [isExiting, setIsExiting] = useState(false);
   const activeTheme = themes.find((t) => t.id === themeId)!;
@@ -206,7 +206,12 @@ function Index() {
 
   // Start jungle audio on mount + show button after 2s
   useEffect(() => {
-    if (!showWelcome) return;
+    if (window.sessionStorage.getItem("mellyWelcomeSeen") === "true") {
+      setShowWelcome(false);
+      setShowWelcomeButton(true);
+      return;
+    }
+    setShowWelcome(true);
     const audioTimer = setTimeout(() => startJungleLoop(), 150);
     const btnTimer = setTimeout(() => setShowWelcomeButton(true), 2000);
     return () => {
@@ -218,6 +223,7 @@ function Index() {
   }, []);
 
   const handleStart = () => {
+    window.sessionStorage.setItem("mellyWelcomeSeen", "true");
     stopJungleAudio();
     playStartSound();
     setIsExiting(true);
@@ -281,7 +287,6 @@ function Index() {
                 src={bearFace}
                 alt="Melly Bear Mascot"
                 className="relative z-10 size-56 drop-shadow-[0_15px_25px_rgba(0,0,0,0.35)] animate-[bounce_2.5s_infinite_alternate] cursor-pointer transition-transform hover:scale-110 active:scale-95"
-                onClick={(e) => { e.stopPropagation(); }}
               />
             </div>
 
