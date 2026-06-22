@@ -56,7 +56,7 @@ function GamesHub() {
       <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 bg-gradient-to-b from-sky-200/40 to-pink-200/40" />
 
       <header className="mx-auto flex max-w-md items-center justify-between px-4 pt-5">
-        <button onClick={() => nav({ to: "/" })} className="rounded-full bg-white/80 p-2 shadow">
+        <button onClick={() => nav({ to: "/games" })} className="rounded-full bg-white/80 p-2 shadow">
           <ArrowLeft className="size-5" />
         </button>
         <div className="flex items-center gap-2">
@@ -69,7 +69,7 @@ function GamesHub() {
             <span className="text-violet-500">s</span>
           </h1>
         </div>
-        <button onClick={() => nav({ to: "/" })} className="rounded-full bg-white/80 p-2 shadow">
+        <button onClick={() => nav({ to: "/games" })} className="rounded-full bg-white/80 p-2 shadow">
           <Home className="size-5" />
         </button>
       </header>

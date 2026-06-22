@@ -72,7 +72,7 @@ function MathsChallenge() {
           </h1>
         </div>
         <Link
-          to="/"
+          to="/games"
           aria-label="Home"
           className="flex size-11 items-center justify-center rounded-full bg-white/90 text-slate-700 shadow-md ring-2 ring-white"
         >

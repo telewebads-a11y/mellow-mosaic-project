@@ -125,7 +125,7 @@ function TraceNumbers() {
           <ArrowLeft className="size-6" />
         </button>
         <img src={bearFace} alt="" width={56} height={56} className="size-14 drop-shadow-lg bear-bounce" />
-        <Link to="/" aria-label="Home" className="flex size-11 items-center justify-center rounded-full bg-white/90 text-slate-700 shadow-md ring-2 ring-white">
+        <Link to="/games" aria-label="Home" className="flex size-11 items-center justify-center rounded-full bg-white/90 text-slate-700 shadow-md ring-2 ring-white">
           <Home className="size-6" />
         </Link>
       </header>

@@ -72,14 +72,14 @@ function FunPhone() {
       <header className="flex items-center justify-between px-5 pt-6 pb-3">
         <button
           aria-label="Back"
-          onClick={() => navigate({ to: "/" })}
+          onClick={() => navigate({ to: "/games" })}
           className="flex size-11 items-center justify-center rounded-full bg-white/90 text-slate-700 shadow-md ring-2 ring-white"
         >
           <ArrowLeft className="size-6" />
         </button>
         <img src={bearFace} alt="" width={64} height={64} className="size-16 drop-shadow-lg bear-bounce" />
         <Link
-          to="/"
+          to="/games"
           aria-label="Home"
           className="flex size-11 items-center justify-center rounded-full bg-white/90 text-slate-700 shadow-md ring-2 ring-white"
         >

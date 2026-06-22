@@ -135,7 +135,7 @@ function NumberWorld() {
       <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 bg-white/40" />
 
       <header className="flex items-center justify-between px-4 pt-5 pb-3">
-        <Link to="/" aria-label="Back" className="flex size-11 items-center justify-center rounded-full bg-white/90 text-sky-500 shadow-md ring-2 ring-white transition hover:scale-105">
+        <Link to="/games" aria-label="Back" className="flex size-11 items-center justify-center rounded-full bg-white/90 text-sky-500 shadow-md ring-2 ring-white transition hover:scale-105">
           <ArrowLeft className="size-6" />
         </Link>
         <h1 className="nw-title">Number World</h1>
@@ -263,7 +263,7 @@ function NumberWorld() {
               </p>
 
               <div className="flex w-full items-center justify-center gap-3">
-                <Link to="/" className="flex items-center gap-2 rounded-full bg-white px-4 py-3 font-extrabold text-amber-600 shadow-[0_5px_0_rgba(0,0,0,0.15)]">
+                <Link to="/games" className="flex items-center gap-2 rounded-full bg-white px-4 py-3 font-extrabold text-amber-600 shadow-[0_5px_0_rgba(0,0,0,0.15)]">
                   <Home className="size-5" /> Back to Menu
                 </Link>
                 {milestone < 100 && (

@@ -92,7 +92,7 @@ function GameRunner() {
           <button onClick={() => setMuted((m) => !m)} className="rounded-full bg-white/90 p-2 shadow-lg active:scale-90">
             {muted ? <VolumeX className="size-5" /> : <Volume2 className="size-5" />}
           </button>
-          <button onClick={() => nav({ to: "/" })} className="rounded-full bg-white/90 p-2 shadow-lg active:scale-90">
+          <button onClick={() => nav({ to: "/games" })} className="rounded-full bg-white/90 p-2 shadow-lg active:scale-90">
             <Home className="size-5" />
           </button>
         </div>
