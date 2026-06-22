@@ -46,7 +46,7 @@ function ScribbleTrace() {
       <header className="flex items-center justify-between px-5 pt-6 pb-4">
         <button
           aria-label="Back"
-          onClick={() => navigate({ to: "/" })}
+          onClick={() => navigate({ to: "/games" })}
           className="flex size-11 items-center justify-center rounded-full bg-white/90 text-slate-700 shadow-md ring-2 ring-white"
         >
           <ArrowLeft className="size-6" />

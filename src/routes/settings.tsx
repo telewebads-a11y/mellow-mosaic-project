@@ -136,7 +136,7 @@ function SettingsPage() {
         {/* Logout */}
         <div className="mt-6 flex justify-center">
           <button
-            onClick={() => navigate({ to: "/" })}
+            onClick={() => navigate({ to: "/games" })}
             className="flex items-center gap-2 rounded-full bg-gradient-to-b from-rose-400 to-rose-600 px-10 py-3 text-xl font-extrabold text-white shadow-lg ring-4 ring-white active:translate-y-[2px] transition"
           >
             <LogOut className="size-5" />
