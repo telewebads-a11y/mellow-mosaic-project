@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Home, Gamepad2, Music, User, Palette, Trees, Waves, Rainbow, Rocket, Check, Settings } from "lucide-react";
-import { useState, type ReactNode } from "react";
+import { useState, useEffect, useRef, type ReactNode } from "react";
+
 
 import phonics from "@/assets/icons/phonics.png";
 import scribble from "@/assets/icons/scribble.png";
@@ -75,83 +76,175 @@ function Index() {
   const [isExiting, setIsExiting] = useState(false);
   const activeTheme = themes.find((t) => t.id === themeId)!;
 
-  // Sound generator
-  const playSound = (type: "welcome" | "start") => {
-    try {
-      const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
-      const now = ctx.currentTime;
-      if (type === "welcome") {
-        // High quality sweet chord arpeggio
-        const notes = [261.63, 329.63, 392.00, 523.25, 659.25]; // C4, E4, G4, C5, E5
-        notes.forEach((freq, index) => {
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          osc.type = "sine";
-          osc.frequency.setValueAtTime(freq, now + index * 0.08);
-          gain.gain.setValueAtTime(0, now + index * 0.08);
-          gain.gain.linearRampToValueAtTime(0.15, now + index * 0.08 + 0.04);
-          gain.gain.exponentialRampToValueAtTime(0.0001, now + index * 0.08 + 0.5);
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-          osc.start(now + index * 0.08);
-          osc.stop(now + index * 0.08 + 0.6);
-        });
-      } else if (type === "start") {
-        // High-pitched magical sparkle / success sound
-        const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
-        notes.forEach((freq, index) => {
-          const osc = ctx.createOscillator();
-          const gain = ctx.createGain();
-          osc.type = "triangle";
-          osc.frequency.setValueAtTime(freq, now + index * 0.05);
-          gain.gain.setValueAtTime(0, now + index * 0.05);
-          gain.gain.linearRampToValueAtTime(0.2, now + index * 0.05 + 0.03);
-          gain.gain.exponentialRampToValueAtTime(0.0001, now + index * 0.05 + 0.4);
-          osc.connect(gain);
-          gain.connect(ctx.destination);
-          osc.start(now + index * 0.05);
-          osc.stop(now + index * 0.05 + 0.55);
-        });
+  // Audio context for jungle ambience (persistent across loops)
+  const audioCtxRef = useRef<AudioContext | null>(null);
+  const masterGainRef = useRef<GainNode | null>(null);
+  const loopTimersRef = useRef<number[]>([]);
+  const playCountRef = useRef(0);
+
+  // Stop any playing audio
+  const stopJungleAudio = () => {
+    loopTimersRef.current.forEach((id) => clearTimeout(id));
+    loopTimersRef.current = [];
+    if (masterGainRef.current && audioCtxRef.current) {
+      try {
+        masterGainRef.current.gain.cancelScheduledValues(audioCtxRef.current.currentTime);
+        masterGainRef.current.gain.linearRampToValueAtTime(0, audioCtxRef.current.currentTime + 0.2);
+      } catch {}
+    }
+    if (audioCtxRef.current) {
+      const ctx = audioCtxRef.current;
+      setTimeout(() => { try { ctx.close(); } catch {} }, 300);
+      audioCtxRef.current = null;
+      masterGainRef.current = null;
+    }
+  };
+
+  // Schedule one 5-second jungle ambience segment
+  const scheduleJungleSegment = (ctx: AudioContext, master: GainNode, startAt: number) => {
+    const DURATION = 5;
+
+    // Low ambient pad (jungle hum)
+    const pad = ctx.createOscillator();
+    const padGain = ctx.createGain();
+    pad.type = "sine";
+    pad.frequency.setValueAtTime(110, startAt);
+    padGain.gain.setValueAtTime(0, startAt);
+    padGain.gain.linearRampToValueAtTime(0.04, startAt + 0.3);
+    padGain.gain.linearRampToValueAtTime(0.04, startAt + DURATION - 0.5);
+    padGain.gain.linearRampToValueAtTime(0, startAt + DURATION);
+    pad.connect(padGain);
+    padGain.connect(master);
+    pad.start(startAt);
+    pad.stop(startAt + DURATION);
+
+    // Bird chirps scattered across the 5 seconds
+    const chirpTimes = [0.2, 0.8, 1.4, 2.1, 2.7, 3.3, 3.9, 4.5];
+    chirpTimes.forEach((t, i) => {
+      const baseFreq = 1400 + Math.random() * 1200;
+      const chirpStart = startAt + t;
+      // Each chirp = quick frequency sweep (whistle)
+      const osc = ctx.createOscillator();
+      const g = ctx.createGain();
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(baseFreq, chirpStart);
+      osc.frequency.exponentialRampToValueAtTime(baseFreq * (1.3 + Math.random() * 0.4), chirpStart + 0.08);
+      osc.frequency.exponentialRampToValueAtTime(baseFreq * 0.9, chirpStart + 0.16);
+      g.gain.setValueAtTime(0, chirpStart);
+      g.gain.linearRampToValueAtTime(0.18, chirpStart + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, chirpStart + 0.18);
+      osc.connect(g);
+      g.connect(master);
+      osc.start(chirpStart);
+      osc.stop(chirpStart + 0.2);
+
+      // Occasional second little tweet right after
+      if (i % 2 === 0) {
+        const o2 = ctx.createOscillator();
+        const g2 = ctx.createGain();
+        o2.type = "triangle";
+        o2.frequency.setValueAtTime(baseFreq * 1.15, chirpStart + 0.22);
+        o2.frequency.exponentialRampToValueAtTime(baseFreq * 0.95, chirpStart + 0.32);
+        g2.gain.setValueAtTime(0, chirpStart + 0.22);
+        g2.gain.linearRampToValueAtTime(0.12, chirpStart + 0.24);
+        g2.gain.exponentialRampToValueAtTime(0.0001, chirpStart + 0.34);
+        o2.connect(g2);
+        g2.connect(master);
+        o2.start(chirpStart + 0.22);
+        o2.stop(chirpStart + 0.36);
       }
+    });
+  };
+
+  // Start jungle ambience and repeat 3 times
+  const startJungleLoop = () => {
+    try {
+      const Ctor = window.AudioContext || (window as any).webkitAudioContext;
+      const ctx = new Ctor();
+      const master = ctx.createGain();
+      master.gain.value = 0.9;
+      master.connect(ctx.destination);
+      audioCtxRef.current = ctx;
+      masterGainRef.current = master;
+
+      const SEGMENT = 5;
+      const REPEATS = 3;
+      for (let i = 0; i < REPEATS; i++) {
+        scheduleJungleSegment(ctx, master, ctx.currentTime + i * SEGMENT);
+      }
+      // Auto-stop after 3 loops
+      const stopId = window.setTimeout(() => stopJungleAudio(), SEGMENT * REPEATS * 1000 + 200);
+      loopTimersRef.current.push(stopId);
+      playCountRef.current = REPEATS;
     } catch (e) {
       console.log("Audio failed to play", e);
     }
   };
 
-  // Play chime on launch
-  useState(() => {
-    // Wait a brief moment to allow user interaction context if possible, or play on mount
-    const timer = setTimeout(() => {
-      playSound("welcome");
-    }, 100);
-    return () => clearTimeout(timer);
-  });
+  const playStartSound = () => {
+    try {
+      const Ctor = window.AudioContext || (window as any).webkitAudioContext;
+      const ctx = new Ctor();
+      const now = ctx.currentTime;
+      const notes = [523.25, 659.25, 783.99, 1046.50];
+      notes.forEach((freq, index) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "triangle";
+        osc.frequency.setValueAtTime(freq, now + index * 0.05);
+        gain.gain.setValueAtTime(0, now + index * 0.05);
+        gain.gain.linearRampToValueAtTime(0.2, now + index * 0.05 + 0.03);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + index * 0.05 + 0.4);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now + index * 0.05);
+        osc.stop(now + index * 0.05 + 0.55);
+      });
+      setTimeout(() => { try { ctx.close(); } catch {} }, 800);
+    } catch {}
+  };
 
-  // Activate "Let's Go" button after 2 seconds
-  useState(() => {
-    const timer = setTimeout(() => {
-      setShowWelcomeButton(true);
-    }, 2000);
-    return () => clearTimeout(timer);
-  });
+  // Start jungle audio on mount + show button after 2s
+  useEffect(() => {
+    if (!showWelcome) return;
+    const audioTimer = setTimeout(() => startJungleLoop(), 150);
+    const btnTimer = setTimeout(() => setShowWelcomeButton(true), 2000);
+    return () => {
+      clearTimeout(audioTimer);
+      clearTimeout(btnTimer);
+      stopJungleAudio();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleStart = () => {
-    playSound("start");
+    stopJungleAudio();
+    playStartSound();
     setIsExiting(true);
     setTimeout(() => {
       setShowWelcome(false);
-    }, 800); // match fade-out animation length
+    }, 800);
   };
 
   return (
     <div className="relative mx-auto flex min-h-screen max-w-md flex-col overflow-hidden">
-      {/* 3D-feel Welcome Page Overlay */}
+      {/* Jungle-themed Welcome Page Overlay — tap anywhere to enter */}
       {showWelcome && (
         <div
-          className={`fixed inset-x-0 top-0 z-50 mx-auto flex h-full max-w-md flex-col items-center justify-between bg-gradient-to-b from-[#bbeeff] via-[#d6efff] to-[#ffdaeb] px-6 py-12 transition-all duration-700 ease-out ${
+          role="button"
+          tabIndex={0}
+          onClick={handleStart}
+          onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") handleStart(); }}
+          className={`fixed inset-x-0 top-0 z-50 mx-auto flex h-full max-w-md flex-col items-center justify-between px-6 py-12 transition-all duration-700 ease-out cursor-pointer ${
             isExiting ? "pointer-events-none scale-150 opacity-0 blur-md" : "scale-100 opacity-100"
           }`}
+          style={{
+            backgroundImage: `linear-gradient(180deg, rgba(20,80,40,0.35), rgba(10,60,30,0.55)), url(${bgJungle})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
         >
+
           {/* Animated Ray Sunburst Background */}
           <div className="absolute inset-0 -z-10 overflow-hidden">
             <div className="absolute left-1/2 top-[40%] size-[800px] -translate-x-1/2 -translate-y-1/2 animate-[spin_60s_linear_infinite] opacity-25">
@@ -188,7 +281,7 @@ function Index() {
                 src={bearFace}
                 alt="Melly Bear Mascot"
                 className="size-36 drop-shadow-2xl transition-transform hover:scale-110 active:scale-95 cursor-pointer"
-                onClick={() => playSound("welcome")}
+                onClick={(e) => { e.stopPropagation(); }}
               />
               <span className="absolute -right-2 -top-2 flex size-10 animate-[pulse_1.5s_infinite] items-center justify-center rounded-full bg-yellow-400 text-lg shadow-lg ring-2 ring-white">
                 👋
