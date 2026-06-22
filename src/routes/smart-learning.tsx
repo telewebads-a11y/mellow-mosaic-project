@@ -50,7 +50,7 @@ function SmartLearning() {
         </button>
         <img src={bearFace} alt="" width={64} height={64} className="size-16 drop-shadow-lg bear-bounce" />
         <Link
-          to="/"
+          to="/games"
           aria-label="Home"
           className="flex size-11 items-center justify-center rounded-full bg-white/90 text-slate-700 shadow-md ring-2 ring-white"
         >
