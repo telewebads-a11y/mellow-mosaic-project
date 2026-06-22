@@ -265,32 +265,46 @@ function Index() {
 
           {/* Top Header Section of Welcome */}
           <div className="text-center">
-            <span className="inline-block animate-bounce rounded-full bg-white/70 px-4 py-1.5 text-xs font-extrabold uppercase tracking-widest text-[#ff6b6b] shadow-md ring-2 ring-white/50 backdrop-blur-sm">
+            <span className="inline-block animate-bounce rounded-full bg-white/80 px-6 py-2.5 text-base font-extrabold uppercase tracking-widest text-[#ff6b6b] shadow-md ring-2 ring-white/50 backdrop-blur-sm">
               🌟 Welcome to the Fun! 🌟
             </span>
           </div>
 
           {/* Central 3D Mascot & Logo Box */}
-          <div className="relative flex flex-1 flex-col items-center justify-center gap-6 py-4">
+          <div className="relative flex flex-1 flex-col items-center justify-center gap-8 py-4">
             {/* Mascot Back Glow */}
-            <div className="absolute size-48 animate-pulse rounded-full bg-white/60 blur-3xl" />
+            <div className="absolute size-56 animate-pulse rounded-full bg-white/50 blur-3xl" />
 
-            {/* Melly Bear Mascot in 3D frame */}
-            <div className="relative z-10 flex size-44 items-center justify-center rounded-full bg-gradient-to-br from-amber-100 to-amber-200 p-2 shadow-[0_15px_30px_-5px_rgba(235,160,50,0.4)] ring-4 ring-white animate-[bounce_2.5s_infinite_alternate]">
+            {/* Two parrots flanking the bear */}
+            <div className="relative flex w-full items-center justify-center">
+              <span
+                aria-hidden
+                className="absolute left-2 top-1/2 -translate-y-1/2 text-5xl drop-shadow-lg"
+                style={{ animation: "bearBounce 2.2s ease-in-out infinite" }}
+              >
+                🦜
+              </span>
+
+              {/* Melly Bear Mascot — cutout, no frame */}
               <img
                 src={bearFace}
                 alt="Melly Bear Mascot"
-                className="size-36 drop-shadow-2xl transition-transform hover:scale-110 active:scale-95 cursor-pointer"
+                className="relative z-10 size-56 drop-shadow-[0_15px_25px_rgba(0,0,0,0.35)] animate-[bounce_2.5s_infinite_alternate] cursor-pointer transition-transform hover:scale-110 active:scale-95"
                 onClick={(e) => { e.stopPropagation(); }}
               />
-              <span className="absolute -right-2 -top-2 flex size-10 animate-[pulse_1.5s_infinite] items-center justify-center rounded-full bg-yellow-400 text-lg shadow-lg ring-2 ring-white">
-                👋
+
+              <span
+                aria-hidden
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-5xl drop-shadow-lg"
+                style={{ animation: "bearBounce 2.6s ease-in-out infinite", transform: "scaleX(-1)" }}
+              >
+                🦜
               </span>
             </div>
 
             {/* App Branding Text with 3D Pop Layer */}
             <div className="z-10 text-center">
-              <h1 className="melly-title text-4xl leading-none drop-shadow-[0_4px_6px_rgba(0,0,0,0.1)]">
+              <h1 className="melly-title text-6xl leading-none drop-shadow-[0_4px_8px_rgba(0,0,0,0.35)]">
                 <span style={{ color: "#ff6b6b" }}>M</span>
                 <span style={{ color: "#ffb347" }}>e</span>
                 <span style={{ color: "#ffd23f" }}>l</span>
@@ -303,11 +317,12 @@ function Index() {
                 <span style={{ color: "#4ac6e8" }}>T</span>
                 <span style={{ color: "#b78ce8" }}>V</span>
               </h1>
-              <p className="mt-3 max-w-[280px] text-sm font-black tracking-wide text-slate-500 uppercase leading-relaxed [text-shadow:0_1px_0_white]">
+              <p className="mt-4 max-w-[320px] text-lg font-black tracking-wide text-white uppercase leading-snug [text-shadow:0_2px_4px_rgba(0,0,0,0.6)]">
                 Play, Learn & Discover with Melly! 🎈
               </p>
             </div>
           </div>
+
 
           {/* Let's Go Button Section (after 2 seconds) */}
           <div className="h-20 w-full flex items-center justify-center">
