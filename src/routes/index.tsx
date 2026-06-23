@@ -53,7 +53,7 @@ const tiles: Tile[] = [
   { title: "Coloring\nWorld",    img: colors,   color: "tile-orange", to: "/colors-name" },
   { title: "Shapes",             img: shapes,   color: "tile-teal" },
   { title: "Colors\nName",       img: coloring, color: "tile-grey" },
-  { title: "Animal\nKingdom",    img: animals,  color: "tile-teal" },
+  { title: "Animal\nKingdom",    img: animals,  color: "tile-teal", to: "/animal-kingdom" },
   { title: "Games",              img: games,    color: "tile-red", to: "/games" },
   { title: "Quiz",               img: quiz,     color: "tile-magenta" },
   { title: "Fun\nphone",         img: phone,    color: "tile-coral", to: "/fun-phone" },
