@@ -79,6 +79,7 @@ function SmartLearning() {
         {TILES.map((t, i) => (
           <button
             key={i}
+            onClick={() => t.to && navigate({ to: t.to })}
             className={`tile ${t.color} flex-col items-center justify-center text-center`}
             style={{ minHeight: 200 }}
           >
