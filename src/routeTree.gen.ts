@@ -25,6 +25,7 @@ import { Route as LearnClockRouteImport } from './routes/learn-clock'
 import { Route as FunPhoneRouteImport } from './routes/fun-phone'
 import { Route as ColorsNameRouteImport } from './routes/colors-name'
 import { Route as BrainQuizRouteImport } from './routes/brain-quiz'
+import { Route as AnimalKingdomRouteImport } from './routes/animal-kingdom'
 import { Route as AbcWorldRouteImport } from './routes/abc-world'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as GamesIndexRouteImport } from './routes/games.index'
@@ -110,6 +111,11 @@ const BrainQuizRoute = BrainQuizRouteImport.update({
   path: '/brain-quiz',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AnimalKingdomRoute = AnimalKingdomRouteImport.update({
+  id: '/animal-kingdom',
+  path: '/animal-kingdom',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AbcWorldRoute = AbcWorldRouteImport.update({
   id: '/abc-world',
   path: '/abc-world',
@@ -134,6 +140,7 @@ const GamesGameIdRoute = GamesGameIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/abc-world': typeof AbcWorldRoute
+  '/animal-kingdom': typeof AnimalKingdomRoute
   '/brain-quiz': typeof BrainQuizRoute
   '/colors-name': typeof ColorsNameRoute
   '/fun-phone': typeof FunPhoneRoute
@@ -156,6 +163,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/abc-world': typeof AbcWorldRoute
+  '/animal-kingdom': typeof AnimalKingdomRoute
   '/brain-quiz': typeof BrainQuizRoute
   '/colors-name': typeof ColorsNameRoute
   '/fun-phone': typeof FunPhoneRoute
@@ -179,6 +187,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/abc-world': typeof AbcWorldRoute
+  '/animal-kingdom': typeof AnimalKingdomRoute
   '/brain-quiz': typeof BrainQuizRoute
   '/colors-name': typeof ColorsNameRoute
   '/fun-phone': typeof FunPhoneRoute
@@ -203,6 +212,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/abc-world'
+    | '/animal-kingdom'
     | '/brain-quiz'
     | '/colors-name'
     | '/fun-phone'
@@ -225,6 +235,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/abc-world'
+    | '/animal-kingdom'
     | '/brain-quiz'
     | '/colors-name'
     | '/fun-phone'
@@ -247,6 +258,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/abc-world'
+    | '/animal-kingdom'
     | '/brain-quiz'
     | '/colors-name'
     | '/fun-phone'
@@ -270,6 +282,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AbcWorldRoute: typeof AbcWorldRoute
+  AnimalKingdomRoute: typeof AnimalKingdomRoute
   BrainQuizRoute: typeof BrainQuizRoute
   ColorsNameRoute: typeof ColorsNameRoute
   FunPhoneRoute: typeof FunPhoneRoute
@@ -404,6 +417,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BrainQuizRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/animal-kingdom': {
+      id: '/animal-kingdom'
+      path: '/animal-kingdom'
+      fullPath: '/animal-kingdom'
+      preLoaderRoute: typeof AnimalKingdomRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/abc-world': {
       id: '/abc-world'
       path: '/abc-world'
@@ -438,6 +458,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AbcWorldRoute: AbcWorldRoute,
+  AnimalKingdomRoute: AnimalKingdomRoute,
   BrainQuizRoute: BrainQuizRoute,
   ColorsNameRoute: ColorsNameRoute,
   FunPhoneRoute: FunPhoneRoute,
