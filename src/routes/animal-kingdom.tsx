@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { ArrowLeft, Home, BookOpen } from "lucide-react";
+import { ArrowLeft, Home, BookOpen, Volume2, VolumeX } from "lucide-react";
 import { useMemo, useState } from "react";
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
