@@ -20,11 +20,12 @@ type SubTile = {
   icon: string;
   iconStyle?: React.CSSProperties;
   color: string;
+  to?: string;
 };
 
 const TILES: SubTile[] = [
   { title: "Learn Tables",      subtitle: "Tricks, Practice & Certificate", icon: "×",   color: "tile-blue",    iconStyle: { color: "#fff", WebkitTextStroke: "2px #1d4ed8" } },
-  { title: "Learn the Clock",   subtitle: "Tell the time, Easy lessons",    icon: "🕒",  color: "tile-green",   iconStyle: { color: "#fff", WebkitTextStroke: "1.5px #166534" } },
+  { title: "Learn the Clock",   subtitle: "Tell the time, Easy lessons",    icon: "🕒",  color: "tile-green",   iconStyle: { color: "#fff", WebkitTextStroke: "1.5px #166534" }, to: "/learn-clock" },
   { title: "Explore India",     subtitle: "States, Cities, Food, Oceans",   icon: "🇮🇳",  color: "tile-coral" },
   { title: "Explore the World", subtitle: "Countries, Food, Monuments",     icon: "🌍",  color: "tile-mustard" },
 ];
