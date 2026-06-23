@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { ArrowLeft, Home, BookOpen } from "lucide-react";
+import { ArrowLeft, Home, BookOpen, Volume2, VolumeX } from "lucide-react";
 import { useMemo, useState } from "react";
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -181,13 +181,48 @@ function AnimalKingdom() {
   const [catId, setCatId] = useState<string>("land");
   const [selected, setSelected] = useState<Animal | null>(null);
   const [showFacts, setShowFacts] = useState(false);
+  const [speaking, setSpeaking] = useState(false);
 
   const current = useMemo(() => CATEGORIES.find((c) => c.id === catId)!, [catId]);
 
+  const stopSpeak = () => {
+    if (typeof window !== "undefined" && "speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+    }
+    setSpeaking(false);
+  };
+
+  const speakFacts = (a: Animal) => {
+    if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
+    window.speechSynthesis.cancel();
+    const text = `${a.name}. ${a.facts.join(" ")}`;
+    const u = new SpeechSynthesisUtterance(text);
+    u.rate = 0.95;
+    u.pitch = 1.15;
+    u.lang = "en-US";
+    u.onend = () => setSpeaking(false);
+    u.onerror = () => setSpeaking(false);
+    setSpeaking(true);
+    window.speechSynthesis.speak(u);
+  };
+
   const openAnimal = (a: Animal) => {
+    stopSpeak();
     setSelected(a);
     setShowFacts(false);
   };
+
+  const handleToggleFacts = () => {
+    if (!selected) return;
+    if (showFacts) {
+      stopSpeak();
+      setShowFacts(false);
+    } else {
+      setShowFacts(true);
+      speakFacts(selected);
+    }
+  };
+
 
   return (
     <div className="relative mx-auto flex min-h-screen max-w-md flex-col">
@@ -276,7 +311,15 @@ function AnimalKingdom() {
       </main>
 
       {/* Popup */}
-      <Dialog open={!!selected} onOpenChange={(o) => !o && setSelected(null)}>
+      <Dialog
+        open={!!selected}
+        onOpenChange={(o) => {
+          if (!o) {
+            stopSpeak();
+            setSelected(null);
+          }
+        }}
+      >
         <DialogContent className="max-w-xs rounded-3xl border-4 border-white bg-gradient-to-b from-white to-sky-50 p-5">
           <DialogHeader>
             <DialogTitle asChild>
@@ -292,13 +335,29 @@ function AnimalKingdom() {
                 <AnimalImage animal={selected} size={140} />
               </div>
 
-              <button
-                onClick={() => setShowFacts((s) => !s)}
-                className="flex items-center gap-2 rounded-full bg-gradient-to-r from-[#ff6b6b] via-[#ff8e53] to-[#ffb347] px-5 py-2.5 text-sm font-black uppercase tracking-wider text-white shadow-md ring-2 ring-white transition-all hover:scale-105 active:scale-95"
-              >
-                <BookOpen className="size-4" />
-                {showFacts ? "Hide the Facts" : "Read the Facts"}
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={handleToggleFacts}
+                  className="flex items-center gap-2 rounded-full bg-gradient-to-r from-[#ff6b6b] via-[#ff8e53] to-[#ffb347] px-5 py-2.5 text-sm font-black uppercase tracking-wider text-white shadow-md ring-2 ring-white transition-all hover:scale-105 active:scale-95"
+                >
+                  <BookOpen className="size-4" />
+                  {showFacts ? "Hide the Facts" : "Read the Facts"}
+                </button>
+
+                {showFacts && (
+                  <button
+                    aria-label={speaking ? "Stop speaking" : "Listen to facts"}
+                    onClick={() => (speaking ? stopSpeak() : speakFacts(selected))}
+                    className={`flex size-11 items-center justify-center rounded-full text-white shadow-md ring-2 ring-white transition-all hover:scale-105 active:scale-95 ${
+                      speaking
+                        ? "bg-gradient-to-br from-rose-500 to-red-500 animate-pulse"
+                        : "bg-gradient-to-br from-sky-400 to-blue-500"
+                    }`}
+                  >
+                    {speaking ? <VolumeX className="size-5" /> : <Volume2 className="size-5" />}
+                  </button>
+                )}
+              </div>
 
               {showFacts && (
                 <div className="w-full rounded-2xl border-2 border-dashed border-amber-300 bg-amber-50 p-3 text-sm font-semibold text-slate-700 shadow-inner">
@@ -313,6 +372,7 @@ function AnimalKingdom() {
           )}
         </DialogContent>
       </Dialog>
+
     </div>
   );
 }
