@@ -181,13 +181,48 @@ function AnimalKingdom() {
   const [catId, setCatId] = useState<string>("land");
   const [selected, setSelected] = useState<Animal | null>(null);
   const [showFacts, setShowFacts] = useState(false);
+  const [speaking, setSpeaking] = useState(false);
 
   const current = useMemo(() => CATEGORIES.find((c) => c.id === catId)!, [catId]);
 
+  const stopSpeak = () => {
+    if (typeof window !== "undefined" && "speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+    }
+    setSpeaking(false);
+  };
+
+  const speakFacts = (a: Animal) => {
+    if (typeof window === "undefined" || !("speechSynthesis" in window)) return;
+    window.speechSynthesis.cancel();
+    const text = `${a.name}. ${a.facts.join(" ")}`;
+    const u = new SpeechSynthesisUtterance(text);
+    u.rate = 0.95;
+    u.pitch = 1.15;
+    u.lang = "en-US";
+    u.onend = () => setSpeaking(false);
+    u.onerror = () => setSpeaking(false);
+    setSpeaking(true);
+    window.speechSynthesis.speak(u);
+  };
+
   const openAnimal = (a: Animal) => {
+    stopSpeak();
     setSelected(a);
     setShowFacts(false);
   };
+
+  const handleToggleFacts = () => {
+    if (!selected) return;
+    if (showFacts) {
+      stopSpeak();
+      setShowFacts(false);
+    } else {
+      setShowFacts(true);
+      speakFacts(selected);
+    }
+  };
+
 
   return (
     <div className="relative mx-auto flex min-h-screen max-w-md flex-col">
