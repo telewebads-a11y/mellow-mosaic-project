@@ -1,93 +1,47 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
-import { ArrowLeft, Volume2 } from "lucide-react";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { ArrowLeft, Home, Brush, PawPrint, Sparkles, Bird, House } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+
 import bearFace from "@/assets/icons/bear-face.png";
 import bgClouds from "@/assets/bg-clouds.jpg";
 
 export const Route = createFileRoute("/colors-name")({
   head: () => ({
     meta: [
-      { title: "Colors Name — Melly Kids TV" },
-      { name: "description", content: "Learn 36 color names in English and Hindi with Melly the bear." },
+      { title: "Coloring World — Melly Kids TV" },
+      { name: "description", content: "Coloring World — Draw, color animals, unicorns, birds and houses with Melly the bear." },
     ],
   }),
-  component: ColorsName,
+  component: ColoringWorld,
 });
 
-type Lang = "en" | "hi";
-
-type Color = { hex: string; en: string; hi: string };
-
-const COLORS: Color[] = [
-  { hex: "#FF0000", en: "Red",          hi: "लाल" },
-  { hex: "#008000", en: "Green",        hi: "हरा" },
-  { hex: "#FFFF00", en: "Yellow",       hi: "पीला" },
-  { hex: "#FFA500", en: "Orange",       hi: "नारंगी" },
-  { hex: "#0000FF", en: "Blue",         hi: "नीला" },
-  { hex: "#000080", en: "Dark Blue",    hi: "गहरा नीला" },
-  { hex: "#800080", en: "Purple",       hi: "बैंगनी" },
-  { hex: "#FFC0CB", en: "Pink",         hi: "गुलाबी" },
-  { hex: "#A52A2A", en: "Brown",        hi: "भूरा" },
-  { hex: "#000000", en: "Black",        hi: "काला" },
-  { hex: "#FFFFFF", en: "White",        hi: "सफ़ेद" },
-  { hex: "#808080", en: "Grey",         hi: "स्लेटी" },
-  { hex: "#87CEEB", en: "Sky Blue",     hi: "आसमानी" },
-  { hex: "#FFD700", en: "Gold",         hi: "सुनहरा" },
-  { hex: "#C0C0C0", en: "Silver",       hi: "चाँदी" },
-  { hex: "#00FFFF", en: "Cyan",         hi: "सियान" },
-  { hex: "#FF00FF", en: "Magenta",      hi: "मैजेंटा" },
-  { hex: "#00FF00", en: "Lime",         hi: "नींबू हरा" },
-  { hex: "#008080", en: "Teal",         hi: "हरित नीला" },
-  { hex: "#4B0082", en: "Indigo",       hi: "जामुनी" },
-  { hex: "#EE82EE", en: "Violet",       hi: "बैंगनी" },
-  { hex: "#FFDAB9", en: "Peach",        hi: "आड़ू" },
-  { hex: "#F5F5DC", en: "Beige",        hi: "बेज" },
-  { hex: "#800000", en: "Maroon",       hi: "मैरून" },
-  { hex: "#808000", en: "Olive",        hi: "जैतूनी" },
-  { hex: "#40E0D0", en: "Turquoise",    hi: "फ़िरोज़ी" },
-  { hex: "#FA8072", en: "Salmon",       hi: "सैल्मन" },
-  { hex: "#DC143C", en: "Crimson",      hi: "किरमिजी" },
-  { hex: "#E6E6FA", en: "Lavender",     hi: "लैवेंडर" },
-  { hex: "#FF7F50", en: "Coral",        hi: "मूँगा" },
-  { hex: "#DAA520", en: "Mustard",      hi: "सरसों" },
-  { hex: "#7FFF00", en: "Chartreuse",   hi: "हल्का हरा" },
-  { hex: "#F0E68C", en: "Khaki",        hi: "खाकी" },
-  { hex: "#FFFFF0", en: "Ivory",        hi: "हाथीदाँत" },
-  { hex: "#CD7F32", en: "Bronze",       hi: "काँस्य" },
-  { hex: "#36454F", en: "Charcoal",     hi: "कोयला" },
-];
-
-const T = {
-  en: { title: "Colors Name", switch: "हिंदी" },
-  hi: { title: "रंगों के नाम", switch: "English" },
+type SubTile = {
+  title: string;
+  subtitle: string;
+  Icon: LucideIcon;
+  color: string;
 };
 
-function speak(text: string, lang: Lang) {
-  try {
-    window.speechSynthesis?.cancel();
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang = lang === "hi" ? "hi-IN" : "en-US";
-    u.rate = 0.9;
-    u.pitch = 1.2;
-    window.speechSynthesis?.speak(u);
-  } catch {}
-}
+const TILES: SubTile[] = [
+  { title: "Draw Your Own", subtitle: "Free Drawing Canvas — Unlimited Creativity", Icon: Brush,    color: "tile-blue" },
+  { title: "Animals",       subtitle: "Color Cute Animals",                          Icon: PawPrint, color: "tile-green" },
+  { title: "Unicorn",       subtitle: "Magical Coloring Fun",                        Icon: Sparkles, color: "tile-coral" },
+  { title: "Birds",         subtitle: "Color Beautiful Birds",                       Icon: Bird,     color: "tile-mustard" },
+  { title: "House",         subtitle: "Color Lovely Houses",                         Icon: House,    color: "tile-purple" },
+];
 
-function ColorsName() {
+function ColoringWorld() {
   const navigate = useNavigate();
-  const [lang, setLang] = useState<Lang>("en");
-  const t = T[lang];
-
   return (
     <div className="relative mx-auto flex min-h-screen max-w-md flex-col">
       <div
         aria-hidden
-        className="pointer-events-none fixed inset-0 -z-10 bg-cover bg-top"
+        className="pointer-events-none fixed inset-0 -z-10 bg-cover bg-top bg-no-repeat"
         style={{ backgroundImage: `url(${bgClouds})` }}
       />
-      <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 bg-white/50" />
+      <div aria-hidden className="pointer-events-none fixed inset-0 -z-10 bg-white/40" />
 
-      <header className="flex items-center justify-between gap-3 px-4 pt-5 pb-3">
+      <header className="flex items-center justify-between px-5 pt-6 pb-2">
         <button
           aria-label="Back"
           onClick={() => navigate({ to: "/" })}
@@ -95,71 +49,64 @@ function ColorsName() {
         >
           <ArrowLeft className="size-6" />
         </button>
-        <button
-          onClick={() => setLang((l) => (l === "en" ? "hi" : "en"))}
-          className="rounded-full bg-white/95 px-4 py-2 text-sm font-bold text-slate-700 shadow-md ring-2 ring-white"
+        <img src={bearFace} alt="" width={72} height={72} className="size-18 drop-shadow-lg bear-bounce" />
+        <Link
+          to="/"
+          aria-label="Home"
+          className="flex size-11 items-center justify-center rounded-full bg-white/90 text-slate-700 shadow-md ring-2 ring-white"
         >
-          {t.switch}
-        </button>
+          <Home className="size-6" />
+        </Link>
       </header>
 
-      <div className="flex items-center justify-center gap-3 px-5 pb-4">
-        <img src={bearFace} alt="Bear" className="size-14 bear-bounce drop-shadow-lg" />
-        <h1 className="melly-title text-3xl leading-tight">
-          <span style={{ color: "#ff6b6b" }}>{t.title}</span>
-        </h1>
-      </div>
+      <h1 className="melly-title px-5 pb-4 text-center leading-tight" style={{ fontSize: "2.25rem" }}>
+        <span style={{ color: "#ff6b6b" }}>C</span>
+        <span style={{ color: "#ffb347" }}>o</span>
+        <span style={{ color: "#ffd23f" }}>l</span>
+        <span style={{ color: "#6dd47e" }}>o</span>
+        <span style={{ color: "#4ac6e8" }}>r</span>
+        <span style={{ color: "#b78ce8" }}>i</span>
+        <span style={{ color: "#ff6b6b" }}>n</span>
+        <span style={{ color: "#ffb347" }}>g </span>
+        <span style={{ color: "#6dd47e" }}>W</span>
+        <span style={{ color: "#4ac6e8" }}>o</span>
+        <span style={{ color: "#b78ce8" }}>r</span>
+        <span style={{ color: "#ff6b6b" }}>l</span>
+        <span style={{ color: "#ffd23f" }}>d</span>
+      </h1>
 
-      <main className="grid grid-cols-2 gap-3 px-4 pb-24 sm:grid-cols-3">
-        {COLORS.map((c, i) => {
-          const isLight =
-            c.hex.toLowerCase() === "#ffffff" ||
-            c.hex.toLowerCase() === "#fffff0" ||
-            c.hex.toLowerCase() === "#f5f5dc";
-          const dur = 2.6 + ((i * 7) % 18) / 10; // 2.6s - 4.4s
-          const delay = ((i * 13) % 20) / 10;    // 0 - 2s
+      <main className="grid flex-1 grid-cols-2 gap-4 px-4 pb-10">
+        {TILES.map((t, i) => {
+          const Icon = t.Icon;
           return (
             <button
-              key={c.en}
-              onClick={() => speak(lang === "hi" ? c.hi : c.en, lang)}
-              className="group flex flex-col items-center gap-2 rounded-2xl bg-white/90 p-3 shadow-md ring-2 ring-white transition active:scale-95"
+              key={t.title}
+              className={`tile ${t.color} flex-col items-center justify-center text-center`}
+              style={{ minHeight: 180 }}
             >
-              <div
-                className="h-20 w-full rounded-xl shadow-inner color-float"
+              <Icon
+                className="icon-wiggle drop-shadow-lg"
                 style={{
-                  backgroundColor: c.hex,
-                  border: isLight ? "2px solid #e5e7eb" : "none",
-                  animationDuration: `${dur}s`,
-                  animationDelay: `${delay}s`,
+                  width: "4.5rem",
+                  height: "4.5rem",
+                  color: "#fff",
+                  animationDelay: `${i * 0.15}s`,
+                  filter: "drop-shadow(0 4px 0 rgba(0,0,0,0.2))",
                 }}
+                strokeWidth={2.4}
+                aria-hidden
               />
-              <div className="text-center font-extrabold text-slate-800">
-                {lang === "hi" ? c.hi : c.en}
-              </div>
-              <Volume2 className="size-5 text-slate-500 opacity-80" />
+              <span
+                className="melly-title mt-2 leading-tight"
+                style={{ fontSize: "1.25rem", color: "#fff", textShadow: "0 2px 2px rgba(0,0,0,0.25)" }}
+              >
+                {t.title}
+              </span>
+              <span className="mt-1 text-xs font-bold text-white/95 leading-tight px-2">{t.subtitle}</span>
             </button>
           );
         })}
       </main>
     </div>
   );
-}
-
-const _styles = `
-@keyframes colorFloat {
-  0%   { transform: translateY(0) scale(1); }
-  50%  { transform: translateY(-8px) scale(1.04); }
-  100% { transform: translateY(0) scale(1); }
-}
-.color-float {
-  animation-name: colorFloat;
-  animation-timing-function: ease-in-out;
-  animation-iteration-count: infinite;
-}
-`;
-if (typeof document !== "undefined" && !document.getElementById("colors-name-styles")) {
-  const s = document.createElement("style");
-  s.id = "colors-name-styles";
-  s.textContent = _styles;
-  document.head.appendChild(s);
 }
