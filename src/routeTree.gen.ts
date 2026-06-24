@@ -15,6 +15,7 @@ import { Route as TraceSmallRouteImport } from './routes/trace-small'
 import { Route as TraceShabadRouteImport } from './routes/trace-shabad'
 import { Route as TraceNumbersRouteImport } from './routes/trace-numbers'
 import { Route as TraceCapitalRouteImport } from './routes/trace-capital'
+import { Route as TestKnowledgeRouteImport } from './routes/test-knowledge'
 import { Route as SmartLearningRouteImport } from './routes/smart-learning'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as ScribbleTraceRouteImport } from './routes/scribble-trace'
@@ -59,6 +60,11 @@ const TraceNumbersRoute = TraceNumbersRouteImport.update({
 const TraceCapitalRoute = TraceCapitalRouteImport.update({
   id: '/trace-capital',
   path: '/trace-capital',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TestKnowledgeRoute = TestKnowledgeRouteImport.update({
+  id: '/test-knowledge',
+  path: '/test-knowledge',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SmartLearningRoute = SmartLearningRouteImport.update({
@@ -151,6 +157,7 @@ export interface FileRoutesByFullPath {
   '/scribble-trace': typeof ScribbleTraceRoute
   '/settings': typeof SettingsRoute
   '/smart-learning': typeof SmartLearningRoute
+  '/test-knowledge': typeof TestKnowledgeRoute
   '/trace-capital': typeof TraceCapitalRoute
   '/trace-numbers': typeof TraceNumbersRoute
   '/trace-shabad': typeof TraceShabadRoute
@@ -174,6 +181,7 @@ export interface FileRoutesByTo {
   '/scribble-trace': typeof ScribbleTraceRoute
   '/settings': typeof SettingsRoute
   '/smart-learning': typeof SmartLearningRoute
+  '/test-knowledge': typeof TestKnowledgeRoute
   '/trace-capital': typeof TraceCapitalRoute
   '/trace-numbers': typeof TraceNumbersRoute
   '/trace-shabad': typeof TraceShabadRoute
@@ -198,6 +206,7 @@ export interface FileRoutesById {
   '/scribble-trace': typeof ScribbleTraceRoute
   '/settings': typeof SettingsRoute
   '/smart-learning': typeof SmartLearningRoute
+  '/test-knowledge': typeof TestKnowledgeRoute
   '/trace-capital': typeof TraceCapitalRoute
   '/trace-numbers': typeof TraceNumbersRoute
   '/trace-shabad': typeof TraceShabadRoute
@@ -223,6 +232,7 @@ export interface FileRouteTypes {
     | '/scribble-trace'
     | '/settings'
     | '/smart-learning'
+    | '/test-knowledge'
     | '/trace-capital'
     | '/trace-numbers'
     | '/trace-shabad'
@@ -246,6 +256,7 @@ export interface FileRouteTypes {
     | '/scribble-trace'
     | '/settings'
     | '/smart-learning'
+    | '/test-knowledge'
     | '/trace-capital'
     | '/trace-numbers'
     | '/trace-shabad'
@@ -269,6 +280,7 @@ export interface FileRouteTypes {
     | '/scribble-trace'
     | '/settings'
     | '/smart-learning'
+    | '/test-knowledge'
     | '/trace-capital'
     | '/trace-numbers'
     | '/trace-shabad'
@@ -293,6 +305,7 @@ export interface RootRouteChildren {
   ScribbleTraceRoute: typeof ScribbleTraceRoute
   SettingsRoute: typeof SettingsRoute
   SmartLearningRoute: typeof SmartLearningRoute
+  TestKnowledgeRoute: typeof TestKnowledgeRoute
   TraceCapitalRoute: typeof TraceCapitalRoute
   TraceNumbersRoute: typeof TraceNumbersRoute
   TraceShabadRoute: typeof TraceShabadRoute
@@ -345,6 +358,13 @@ declare module '@tanstack/react-router' {
       path: '/trace-capital'
       fullPath: '/trace-capital'
       preLoaderRoute: typeof TraceCapitalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/test-knowledge': {
+      id: '/test-knowledge'
+      path: '/test-knowledge'
+      fullPath: '/test-knowledge'
+      preLoaderRoute: typeof TestKnowledgeRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/smart-learning': {
@@ -469,6 +489,7 @@ const rootRouteChildren: RootRouteChildren = {
   ScribbleTraceRoute: ScribbleTraceRoute,
   SettingsRoute: SettingsRoute,
   SmartLearningRoute: SmartLearningRoute,
+  TestKnowledgeRoute: TestKnowledgeRoute,
   TraceCapitalRoute: TraceCapitalRoute,
   TraceNumbersRoute: TraceNumbersRoute,
   TraceShabadRoute: TraceShabadRoute,
