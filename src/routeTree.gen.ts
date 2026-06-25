@@ -25,6 +25,7 @@ import { Route as MathsChallengeRouteImport } from './routes/maths-challenge'
 import { Route as LearnClockRouteImport } from './routes/learn-clock'
 import { Route as FunPhoneRouteImport } from './routes/fun-phone'
 import { Route as ColorsNameRouteImport } from './routes/colors-name'
+import { Route as ColorsListRouteImport } from './routes/colors-list'
 import { Route as BrainQuizRouteImport } from './routes/brain-quiz'
 import { Route as AnimalKingdomRouteImport } from './routes/animal-kingdom'
 import { Route as AbcWorldRouteImport } from './routes/abc-world'
@@ -112,6 +113,11 @@ const ColorsNameRoute = ColorsNameRouteImport.update({
   path: '/colors-name',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ColorsListRoute = ColorsListRouteImport.update({
+  id: '/colors-list',
+  path: '/colors-list',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BrainQuizRoute = BrainQuizRouteImport.update({
   id: '/brain-quiz',
   path: '/brain-quiz',
@@ -148,6 +154,7 @@ export interface FileRoutesByFullPath {
   '/abc-world': typeof AbcWorldRoute
   '/animal-kingdom': typeof AnimalKingdomRoute
   '/brain-quiz': typeof BrainQuizRoute
+  '/colors-list': typeof ColorsListRoute
   '/colors-name': typeof ColorsNameRoute
   '/fun-phone': typeof FunPhoneRoute
   '/learn-clock': typeof LearnClockRoute
@@ -172,6 +179,7 @@ export interface FileRoutesByTo {
   '/abc-world': typeof AbcWorldRoute
   '/animal-kingdom': typeof AnimalKingdomRoute
   '/brain-quiz': typeof BrainQuizRoute
+  '/colors-list': typeof ColorsListRoute
   '/colors-name': typeof ColorsNameRoute
   '/fun-phone': typeof FunPhoneRoute
   '/learn-clock': typeof LearnClockRoute
@@ -197,6 +205,7 @@ export interface FileRoutesById {
   '/abc-world': typeof AbcWorldRoute
   '/animal-kingdom': typeof AnimalKingdomRoute
   '/brain-quiz': typeof BrainQuizRoute
+  '/colors-list': typeof ColorsListRoute
   '/colors-name': typeof ColorsNameRoute
   '/fun-phone': typeof FunPhoneRoute
   '/learn-clock': typeof LearnClockRoute
@@ -223,6 +232,7 @@ export interface FileRouteTypes {
     | '/abc-world'
     | '/animal-kingdom'
     | '/brain-quiz'
+    | '/colors-list'
     | '/colors-name'
     | '/fun-phone'
     | '/learn-clock'
@@ -247,6 +257,7 @@ export interface FileRouteTypes {
     | '/abc-world'
     | '/animal-kingdom'
     | '/brain-quiz'
+    | '/colors-list'
     | '/colors-name'
     | '/fun-phone'
     | '/learn-clock'
@@ -271,6 +282,7 @@ export interface FileRouteTypes {
     | '/abc-world'
     | '/animal-kingdom'
     | '/brain-quiz'
+    | '/colors-list'
     | '/colors-name'
     | '/fun-phone'
     | '/learn-clock'
@@ -296,6 +308,7 @@ export interface RootRouteChildren {
   AbcWorldRoute: typeof AbcWorldRoute
   AnimalKingdomRoute: typeof AnimalKingdomRoute
   BrainQuizRoute: typeof BrainQuizRoute
+  ColorsListRoute: typeof ColorsListRoute
   ColorsNameRoute: typeof ColorsNameRoute
   FunPhoneRoute: typeof FunPhoneRoute
   LearnClockRoute: typeof LearnClockRoute
@@ -430,6 +443,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ColorsNameRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/colors-list': {
+      id: '/colors-list'
+      path: '/colors-list'
+      fullPath: '/colors-list'
+      preLoaderRoute: typeof ColorsListRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/brain-quiz': {
       id: '/brain-quiz'
       path: '/brain-quiz'
@@ -480,6 +500,7 @@ const rootRouteChildren: RootRouteChildren = {
   AbcWorldRoute: AbcWorldRoute,
   AnimalKingdomRoute: AnimalKingdomRoute,
   BrainQuizRoute: BrainQuizRoute,
+  ColorsListRoute: ColorsListRoute,
   ColorsNameRoute: ColorsNameRoute,
   FunPhoneRoute: FunPhoneRoute,
   LearnClockRoute: LearnClockRoute,
@@ -502,13 +523,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
