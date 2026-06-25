@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { ArrowLeft, Home, Brush, PawPrint, Sparkles, Bird, House } from "lucide-react";
+import { ArrowLeft, Home, Brush, PawPrint, Sparkles, Bird, House, Palette } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 import bearFace from "@/assets/icons/bear-face.png";
@@ -20,14 +20,16 @@ type SubTile = {
   subtitle: string;
   Icon: LucideIcon;
   color: string;
+  to?: string;
 };
 
 const TILES: SubTile[] = [
-  { title: "Draw Your Own", subtitle: "Free Drawing Canvas — Unlimited Creativity", Icon: Brush,    color: "tile-blue" },
-  { title: "Animals",       subtitle: "Color Cute Animals",                          Icon: PawPrint, color: "tile-green" },
-  { title: "Unicorn",       subtitle: "Magical Coloring Fun",                        Icon: Sparkles, color: "tile-coral" },
-  { title: "Birds",         subtitle: "Color Beautiful Birds",                       Icon: Bird,     color: "tile-mustard" },
-  { title: "House",         subtitle: "Color Lovely Houses",                         Icon: House,    color: "tile-purple" },
+  { title: "Colors Name",   subtitle: "Learn 36 Colors — English & Hindi",            Icon: Palette,  color: "tile-pink",    to: "/colors-list" },
+  { title: "Draw Your Own", subtitle: "Free Drawing Canvas — Unlimited Creativity",   Icon: Brush,    color: "tile-blue" },
+  { title: "Animals",       subtitle: "Color Cute Animals",                           Icon: PawPrint, color: "tile-green" },
+  { title: "Unicorn",       subtitle: "Magical Coloring Fun",                         Icon: Sparkles, color: "tile-coral" },
+  { title: "Birds",         subtitle: "Color Beautiful Birds",                        Icon: Bird,     color: "tile-mustard" },
+  { title: "House",         subtitle: "Color Lovely Houses",                          Icon: House,    color: "tile-purple" },
 ];
 
 function ColoringWorld() {
@@ -81,6 +83,7 @@ function ColoringWorld() {
           return (
             <button
               key={t.title}
+              onClick={() => t.to && navigate({ to: t.to })}
               className={`tile ${t.color} flex-col items-center justify-center text-center`}
               style={{ minHeight: 180 }}
             >
