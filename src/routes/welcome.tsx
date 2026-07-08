@@ -1,8 +1,16 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState, type ReactNode } from "react";
-import { ArrowLeft, ArrowRight, Rocket, Sparkles, Rainbow, Brain, Baby, PartyPopper } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, Rocket, Sparkles } from "lucide-react";
 import bearFace from "@/assets/icons/bear-face.png";
-import bgClouds from "@/assets/bg-clouds.jpg";
+
+import favAnimals from "@/assets/onboarding/fav-animals.png";
+import favStories from "@/assets/onboarding/fav-stories.png";
+import favColors from "@/assets/onboarding/fav-colors.png";
+import favMusic from "@/assets/onboarding/fav-music.png";
+import favGames from "@/assets/onboarding/fav-games.png";
+import favScience from "@/assets/onboarding/fav-science.png";
+import favSports from "@/assets/onboarding/fav-sports.png";
+import favSpace from "@/assets/onboarding/fav-space.png";
 
 export const Route = createFileRoute("/welcome")({
   head: () => ({
@@ -23,109 +31,121 @@ const AGE_GROUPS: {
   range: string;
   subtitle: string;
   emoji: string;
-  bg: string;
-  text: string;
+  glow: string;
 }[] = [
-  { id: "tiny",   title: "Tiny Tots",       range: "2 – 3 Years",  subtitle: "Colors, Shapes & Animals",   emoji: "🌟", bg: "#ffd1dc", text: "#c2185b" },
-  { id: "little", title: "Little Learners", range: "3 – 5 Years",  subtitle: "ABC, Numbers & Phonics",     emoji: "🌈", bg: "#b8e6f0", text: "#0277a8" },
-  { id: "smart",  title: "Smart Kids",      range: "5 – 8 Years",  subtitle: "Stories, Science & Games",   emoji: "🧠", bg: "#c4ebb0", text: "#2e7d32" },
-  { id: "young",  title: "Young Explorers", range: "8 – 10 Years", subtitle: "Quiz, AI Tutor & Explore World", emoji: "🚀", bg: "#ffd76a", text: "#a86b00" },
+  { id: "tiny",   title: "Tiny Tots",       range: "2 – 3 yrs",  subtitle: "Colors • Shapes • Animals",      emoji: "🌟", glow: "#ffb84a" },
+  { id: "little", title: "Little Learners", range: "3 – 5 yrs",  subtitle: "ABC • Numbers • Phonics",        emoji: "🌈", glow: "#4dd4c4" },
+  { id: "smart",  title: "Smart Kids",      range: "5 – 8 yrs",  subtitle: "Stories • Science • Games",      emoji: "🧠", glow: "#ff6ea8" },
+  { id: "young",  title: "Young Explorers", range: "8 – 10 yrs", subtitle: "Quiz • AI Tutor • Explore",      emoji: "🚀", glow: "#8b6bff" },
 ];
 
-const FAVOURITES: { id: Fav; label: string; emoji: string }[] = [
-  { id: "animals", label: "Animals", emoji: "🦁" },
-  { id: "stories", label: "Stories", emoji: "📖" },
-  { id: "colors",  label: "Colors",  emoji: "🎨" },
-  { id: "music",   label: "Music",   emoji: "🎵" },
-  { id: "games",   label: "Games",   emoji: "🎮" },
-  { id: "science", label: "Science", emoji: "🔬" },
-  { id: "sports",  label: "Sports",  emoji: "⚽" },
-  { id: "space",   label: "Space",   emoji: "🚀" },
+const FAVOURITES: { id: Fav; label: string; img: string; glow: string }[] = [
+  { id: "animals", label: "Animals", img: favAnimals, glow: "#ffa833" },
+  { id: "stories", label: "Stories", img: favStories, glow: "#c48bff" },
+  { id: "colors",  label: "Colors",  img: favColors,  glow: "#ff7ab8" },
+  { id: "music",   label: "Music",   img: favMusic,   glow: "#ff5c9e" },
+  { id: "games",   label: "Games",   img: favGames,   glow: "#ff6b5b" },
+  { id: "science", label: "Science", img: favScience, glow: "#4dd4c4" },
+  { id: "sports",  label: "Sports",  img: favSports,  glow: "#ffd23f" },
+  { id: "space",   label: "Space",   img: favSpace,   glow: "#8b6bff" },
 ];
 
-function RainbowTitle({ text, className = "" }: { text: string; className?: string }) {
-  const palette = ["#ff6b6b", "#ffb347", "#ffd23f", "#6dd47e", "#4ac6e8", "#b78ce8"];
+// -------- Shared UI --------
+
+const BG = "linear-gradient(160deg,#1a0b3d 0%,#4a1466 35%,#a01f6b 65%,#ff8a4c 100%)";
+
+function Shell({ children }: { children: ReactNode }) {
   return (
-    <h1 className={`melly-title leading-tight ${className}`}>
-      {text.split("").map((ch, i) => (
-        <span key={i} style={{ color: ch === " " ? undefined : palette[i % palette.length] }}>
-          {ch}
-        </span>
+    <div className="relative mx-auto flex min-h-screen max-w-md flex-col overflow-hidden" style={{ background: BG }}>
+      {/* aurora glows */}
+      <div className="pointer-events-none absolute -top-24 -left-24 size-72 rounded-full bg-[#ff5c9e] opacity-40 blur-3xl" />
+      <div className="pointer-events-none absolute top-1/3 -right-24 size-80 rounded-full bg-[#4dd4c4] opacity-25 blur-3xl" />
+      <div className="pointer-events-none absolute bottom-0 left-1/4 size-72 rounded-full bg-[#ffb84a] opacity-30 blur-3xl" />
+      {/* twinkles */}
+      {[
+        [12, 18], [78, 10], [30, 40], [88, 55], [8, 62], [55, 78], [70, 88], [22, 88],
+      ].map(([x, y], i) => (
+        <span
+          key={i}
+          className="pointer-events-none absolute size-1.5 rounded-full bg-white/80 animate-pulse"
+          style={{ left: `${x}%`, top: `${y}%`, animationDelay: `${i * 300}ms`, boxShadow: "0 0 8px rgba(255,255,255,0.9)" }}
+        />
       ))}
-    </h1>
+      <div className="relative flex flex-1 flex-col">{children}</div>
+    </div>
   );
 }
 
 function StepDots({ step, total }: { step: number; total: number }) {
   return (
-    <div className="flex items-center justify-center gap-2 py-2">
+    <div className="flex items-center justify-center gap-1.5">
       {Array.from({ length: total }).map((_, i) => (
         <span
           key={i}
-          className={`h-2 rounded-full transition-all ${i === step ? "w-8 bg-[#4ac6e8]" : "w-2 bg-white/70 ring-1 ring-slate-300"}`}
+          className={`h-1.5 rounded-full transition-all ${
+            i === step ? "w-8 bg-[#4dd4c4] shadow-[0_0_10px_#4dd4c4]" : i < step ? "w-3 bg-white/70" : "w-3 bg-white/25"
+          }`}
         />
       ))}
     </div>
   );
 }
 
-function Shell({ children }: { children: ReactNode }) {
+function Heading({ children }: { children: ReactNode }) {
   return (
-    <div
-      className="relative mx-auto flex min-h-screen max-w-md flex-col overflow-hidden"
-      style={{
-        backgroundImage: `url(${bgClouds})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
-    >
-      {/* soft overlay */}
-      <div className="pointer-events-none absolute inset-0 bg-white/10" />
-      {/* floating deco */}
-      <div className="pointer-events-none absolute -left-10 top-24 size-32 rounded-full bg-white/40 blur-2xl" />
-      <div className="pointer-events-none absolute -right-8 top-48 size-24 rounded-full bg-white/50 blur-xl" />
-      <div className="pointer-events-none absolute left-8 bottom-40 size-28 rounded-full bg-white/40 blur-2xl" />
-      <div className="relative flex flex-1 flex-col">{children}</div>
-    </div>
+    <h1 className="text-center text-3xl font-black leading-tight text-white [text-shadow:0_2px_10px_rgba(0,0,0,0.35)]">
+      {children}
+    </h1>
   );
 }
 
-function PrimaryButton({
+function GlowButton({
   onClick,
   disabled,
   children,
-  color = "#ff8e3c",
+  tone = "mint",
+  full,
 }: {
   onClick: () => void;
   disabled?: boolean;
   children: ReactNode;
-  color?: string;
+  tone?: "mint" | "peach" | "ghost";
+  full?: boolean;
 }) {
+  const tones = {
+    mint:  { bg: "linear-gradient(180deg,#5ee8d3,#2ab19a)", glow: "rgba(77,212,196,0.55)", text: "#062a25" },
+    peach: { bg: "linear-gradient(180deg,#ffb27a,#ff6a4c)", glow: "rgba(255,138,76,0.55)",  text: "#3a0f00" },
+    ghost: { bg: "rgba(255,255,255,0.12)", glow: "rgba(255,255,255,0.15)", text: "#ffffff" },
+  }[tone];
   return (
     <button
       onClick={onClick}
       disabled={disabled}
-      className="group relative flex h-14 flex-1 items-center justify-center rounded-full px-6 font-black uppercase tracking-wider text-white ring-4 ring-white transition-all active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
+      className={`relative flex h-14 items-center justify-center gap-2 rounded-2xl px-6 font-black uppercase tracking-wider transition-all active:scale-95 disabled:cursor-not-allowed disabled:opacity-40 ${
+        full ? "w-full" : ""
+      }`}
       style={{
-        background: `linear-gradient(180deg, ${color}, color-mix(in oklab, ${color} 70%, black))`,
-        boxShadow: `0 10px 24px -6px ${color}80`,
+        background: tones.bg,
+        color: tones.text,
+        boxShadow: `0 10px 30px -6px ${tones.glow}, inset 0 1px 0 rgba(255,255,255,0.35)`,
+        border: tone === "ghost" ? "1px solid rgba(255,255,255,0.25)" : "none",
       }}
     >
-      <span className="text-lg drop-shadow-[0_2px_2px_rgba(0,0,0,0.25)]">{children}</span>
+      {children}
     </button>
   );
 }
 
-function BackButton({ onClick }: { onClick: () => void }) {
+function BearHeader() {
   return (
-    <button
-      onClick={onClick}
-      className="flex h-14 items-center justify-center gap-1 rounded-full bg-white px-5 font-black text-slate-600 shadow-md ring-2 ring-slate-200 transition active:scale-95"
-    >
-      <ArrowLeft className="size-4" /> Back
-    </button>
+    <div className="relative flex justify-center">
+      <div className="absolute inset-0 -z-10 mx-auto size-24 rounded-full bg-[#4dd4c4]/40 blur-2xl" />
+      <img src={bearFace} alt="Melly" className="size-20 drop-shadow-[0_10px_20px_rgba(0,0,0,0.45)] bear-bounce" />
+    </div>
   );
 }
+
+// -------- Flow --------
 
 function WelcomeFlow() {
   const navigate = useNavigate();
@@ -136,7 +156,7 @@ function WelcomeFlow() {
   const [parent, setParent] = useState("");
   const [phone, setPhone] = useState("");
 
-  const displayName = name.trim() || "Friend";
+  const displayName = name.trim() || "your child";
   const activeAge = AGE_GROUPS.find((a) => a.id === age);
 
   const finish = () => {
@@ -152,225 +172,316 @@ function WelcomeFlow() {
   const toggleFav = (id: Fav) =>
     setFavs((f) => (f.includes(id) ? f.filter((x) => x !== id) : [...f, id]));
 
-  // Step 1 — Intro
+  // ---- Step 0: Intro ----
   if (step === 0) {
     return (
       <Shell>
-        <div className="flex flex-1 flex-col items-center justify-between px-6 pt-10 pb-10">
-          <div className="flex flex-col items-center gap-4">
-            <img
-              src={bearFace}
-              alt="Melly Bear"
-              className="size-32 drop-shadow-[0_15px_25px_rgba(0,0,0,0.25)] bear-bounce"
-            />
-            <RainbowTitle text="Welcome to" className="text-4xl text-center" />
-            <RainbowTitle text="Melly Kids TV!" className="text-5xl text-center" />
-            <p className="mt-1 flex items-center gap-2 text-base font-extrabold text-slate-700">
-              <Sparkles className="size-5 text-amber-500" /> Learn, Play &amp; Grow Every Day!{" "}
-              <Sparkles className="size-5 text-amber-500" />
+        <div className="flex flex-1 flex-col items-center justify-between px-6 pt-14 pb-10 text-white">
+          <div className="flex flex-col items-center gap-5">
+            <BearHeader />
+            <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-xs font-black uppercase tracking-[0.2em] text-[#4dd4c4] ring-1 ring-white/20 backdrop-blur">
+              <Sparkles className="size-3.5" /> Melly Kids TV
+            </span>
+            <Heading>
+              A tiny universe of<br />
+              <span className="bg-gradient-to-r from-[#4dd4c4] via-[#ffd23f] to-[#ff7ab8] bg-clip-text text-transparent">
+                learning, made playful.
+              </span>
+            </Heading>
+            <p className="max-w-xs text-center text-sm font-semibold text-white/80">
+              Tell us about your little explorer and we'll shape everything just for them.
             </p>
           </div>
 
-          <div className="w-full rounded-3xl bg-white/85 p-5 shadow-xl ring-2 ring-white backdrop-blur">
-            <ul className="space-y-3 text-lg font-extrabold text-slate-800">
-              <li className="flex items-center gap-3"><span className="text-2xl">👶</span> Tiny Tots <span className="text-slate-500">(2-3)</span></li>
-              <li className="flex items-center gap-3"><span className="text-2xl">🌈</span> Little Learners <span className="text-slate-500">(3-5)</span></li>
-              <li className="flex items-center gap-3"><span className="text-2xl">🧠</span> Smart Kids <span className="text-slate-500">(5-8)</span></li>
-              <li className="flex items-center gap-3"><span className="text-2xl">🚀</span> Young Explorers <span className="text-slate-500">(8-10)</span></li>
-            </ul>
-            <p className="mt-4 text-center text-sm font-bold text-slate-600">
-              Tell us about your child and we'll personalise everything just for them!
+          <div className="w-full rounded-3xl bg-white/10 p-5 ring-1 ring-white/20 backdrop-blur-xl">
+            <p className="mb-3 text-center text-[11px] font-black uppercase tracking-[0.25em] text-white/60">
+              Made for ages 2 – 10
             </p>
+            <div className="grid grid-cols-2 gap-2">
+              {AGE_GROUPS.map((g) => (
+                <div
+                  key={g.id}
+                  className="flex items-center gap-2 rounded-2xl bg-white/8 px-3 py-2 ring-1 ring-white/15"
+                  style={{ boxShadow: `inset 0 0 0 1px ${g.glow}22` }}
+                >
+                  <span className="text-xl">{g.emoji}</span>
+                  <div className="flex flex-col leading-tight">
+                    <span className="text-[13px] font-black text-white">{g.title}</span>
+                    <span className="text-[10px] font-bold text-white/60">{g.range}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
 
-          <PrimaryButton onClick={() => setStep(1)}>
-            Let's Get Started! 🚀
-          </PrimaryButton>
+          <GlowButton onClick={() => setStep(1)} tone="mint" full>
+            Begin the Journey <Rocket className="size-5" />
+          </GlowButton>
         </div>
       </Shell>
     );
   }
 
-  // Step 2 — Name
+  // ---- Step 1: Name ----
   if (step === 1) {
     return (
       <Shell>
-        <div className="flex flex-1 flex-col px-6 pt-10 pb-10">
-          <div className="flex flex-col items-center gap-3">
-            <img src={bearFace} alt="Bear" className="size-24 bear-bounce drop-shadow-lg" />
+        <div className="flex flex-1 flex-col px-6 pt-12 pb-10 text-white">
+          <div className="flex flex-col items-center gap-4">
+            <BearHeader />
             <StepDots step={0} total={4} />
-            <div className="text-6xl animate-bounce">👶</div>
-            <RainbowTitle text="What's your child's name?" className="text-3xl text-center mt-2" />
-            <p className="text-base font-bold text-slate-700">We'll use this to personalise the app!</p>
+            <Heading>What should we call your little one?</Heading>
+            <p className="text-sm font-semibold text-white/75">We'll personalise everything with their name.</p>
           </div>
 
-          <div className="mt-8 w-full">
-            <input
-              autoFocus
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Type your name…"
-              className="h-16 w-full rounded-full bg-white px-6 text-xl font-extrabold text-slate-800 placeholder:text-slate-400 shadow-lg ring-2 ring-white outline-none focus:ring-4 focus:ring-[#4ac6e8]"
-            />
+          <div className="mt-10">
+            <label className="mb-2 block px-2 text-[11px] font-black uppercase tracking-[0.25em] text-white/60">
+              Child's name
+            </label>
+            <div
+              className="rounded-3xl bg-white/10 p-1 ring-1 ring-white/20 backdrop-blur-xl"
+              style={{ boxShadow: "0 20px 40px -20px rgba(77,212,196,0.5)" }}
+            >
+              <input
+                autoFocus
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="e.g. Sunny"
+                className="h-14 w-full rounded-[20px] bg-transparent px-5 text-xl font-black text-white placeholder:text-white/40 outline-none"
+              />
+            </div>
           </div>
 
-          <div className="mt-auto flex items-center gap-3 pt-8">
-            <BackButton onClick={() => setStep(0)} />
-            <PrimaryButton color="#3ba9e0" disabled={!name.trim()} onClick={() => setStep(2)}>
-              Next <ArrowRight className="ml-1 inline size-5" />
-            </PrimaryButton>
+          <div className="mt-auto flex items-center gap-3 pt-10">
+            <GlowButton onClick={() => setStep(0)} tone="ghost">
+              <ArrowLeft className="size-5" /> Back
+            </GlowButton>
+            <div className="flex-1">
+              <GlowButton onClick={() => setStep(2)} tone="mint" disabled={!name.trim()} full>
+                Next <ArrowRight className="size-5" />
+              </GlowButton>
+            </div>
           </div>
         </div>
       </Shell>
     );
   }
 
-  // Step 3 — Age
+  // ---- Step 2: Age ----
   if (step === 2) {
     return (
       <Shell>
-        <div className="flex flex-1 flex-col px-6 pt-10 pb-8">
+        <div className="flex flex-1 flex-col px-6 pt-12 pb-8 text-white">
           <div className="flex flex-col items-center gap-3">
-            <img src={bearFace} alt="Bear" className="size-24 bear-bounce drop-shadow-lg" />
+            <BearHeader />
             <StepDots step={1} total={4} />
-            <RainbowTitle text={`How old is ${displayName}?`} className="text-3xl text-center mt-2" />
-            <p className="text-base font-bold text-slate-700">We'll show the right content for their age!</p>
+            <Heading>How old is {name.trim() || "your star"}?</Heading>
+            <p className="text-sm font-semibold text-white/75">We'll tune the content for their age.</p>
           </div>
 
-          <div className="mt-6 grid grid-cols-2 gap-4">
+          <div className="mt-7 grid grid-cols-1 gap-3">
             {AGE_GROUPS.map((g) => {
               const selected = age === g.id;
               return (
                 <button
                   key={g.id}
                   onClick={() => setAge(g.id)}
-                  className={`flex flex-col items-center gap-2 rounded-3xl p-4 text-center shadow-lg ring-2 transition-all active:scale-95 ${
-                    selected ? "ring-4 ring-[#4ac6e8] scale-[1.02]" : "ring-white"
-                  }`}
-                  style={{ background: g.bg, color: g.text }}
+                  className="group relative flex items-center gap-4 rounded-3xl bg-white/10 p-4 text-left ring-1 ring-white/15 backdrop-blur-xl transition-all active:scale-[0.98]"
+                  style={{
+                    boxShadow: selected
+                      ? `0 0 0 2px ${g.glow}, 0 15px 40px -10px ${g.glow}90`
+                      : "0 10px 30px -20px rgba(0,0,0,0.5)",
+                  }}
                 >
-                  <span className="text-4xl">{g.emoji}</span>
-                  <span className="melly-title text-xl leading-none">{g.title}</span>
-                  <span className="text-sm font-black">{g.range}</span>
-                  <span className="text-[11px] font-bold opacity-80">{g.subtitle}</span>
+                  <div
+                    className="flex size-14 items-center justify-center rounded-2xl text-3xl"
+                    style={{
+                      background: `radial-gradient(circle at 30% 30%, ${g.glow}, ${g.glow}66)`,
+                      boxShadow: `0 8px 20px -6px ${g.glow}90, inset 0 1px 0 rgba(255,255,255,0.4)`,
+                    }}
+                  >
+                    {g.emoji}
+                  </div>
+                  <div className="flex flex-1 flex-col leading-tight">
+                    <span className="text-lg font-black text-white">{g.title}</span>
+                    <span className="text-xs font-bold text-white/60">{g.range}</span>
+                    <span className="mt-0.5 text-[11px] font-semibold text-white/70">{g.subtitle}</span>
+                  </div>
+                  <div
+                    className={`flex size-7 items-center justify-center rounded-full border-2 transition ${
+                      selected ? "border-white bg-white text-slate-900" : "border-white/40"
+                    }`}
+                  >
+                    {selected && <Check className="size-4" strokeWidth={3} />}
+                  </div>
                 </button>
               );
             })}
           </div>
 
           <div className="mt-auto flex items-center gap-3 pt-6">
-            <BackButton onClick={() => setStep(1)} />
-            <PrimaryButton color="#4ac95a" disabled={!age} onClick={() => setStep(3)}>
-              Next <ArrowRight className="ml-1 inline size-5" />
-            </PrimaryButton>
+            <GlowButton onClick={() => setStep(1)} tone="ghost">
+              <ArrowLeft className="size-5" /> Back
+            </GlowButton>
+            <div className="flex-1">
+              <GlowButton onClick={() => setStep(3)} tone="mint" disabled={!age} full>
+                Next <ArrowRight className="size-5" />
+              </GlowButton>
+            </div>
           </div>
         </div>
       </Shell>
     );
   }
 
-  // Step 4 — Favourites
+  // ---- Step 3: Favourites (3D images) ----
   if (step === 3) {
     return (
       <Shell>
-        <div className="flex flex-1 flex-col px-6 pt-10 pb-8">
+        <div className="flex flex-1 flex-col px-5 pt-12 pb-8 text-white">
           <div className="flex flex-col items-center gap-3">
-            <img src={bearFace} alt="Bear" className="size-24 bear-bounce drop-shadow-lg" />
+            <BearHeader />
             <StepDots step={2} total={4} />
-            <div className="text-5xl animate-pulse">❤️</div>
-            <RainbowTitle text={`What does ${displayName} love most?`} className="text-2xl text-center mt-1" />
-            <p className="text-sm font-bold text-slate-700">Pick any favourites! (optional)</p>
+            <Heading>What does {name.trim() || "your child"} love most?</Heading>
+            <p className="text-sm font-semibold text-white/75">Tap any favourites — pick a few or all!</p>
           </div>
 
-          <div className="mt-6 grid grid-cols-3 gap-3">
+          <div className="mt-6 grid grid-cols-2 gap-3">
             {FAVOURITES.map((f) => {
               const selected = favs.includes(f.id);
               return (
                 <button
                   key={f.id}
                   onClick={() => toggleFav(f.id)}
-                  className={`flex aspect-square flex-col items-center justify-center gap-1 rounded-2xl bg-white/90 p-2 shadow-md ring-2 transition active:scale-95 ${
-                    selected ? "ring-4 ring-[#b78ce8] bg-[#f3ebff]" : "ring-white"
-                  }`}
+                  className="group relative flex flex-col items-center gap-2 rounded-3xl bg-white/10 p-3 pt-4 ring-1 ring-white/15 backdrop-blur-xl transition-all active:scale-95"
+                  style={{
+                    boxShadow: selected
+                      ? `0 0 0 2px ${f.glow}, 0 18px 40px -10px ${f.glow}aa`
+                      : "0 10px 30px -20px rgba(0,0,0,0.5)",
+                  }}
                 >
-                  <span className="text-3xl">{f.emoji}</span>
-                  <span className="text-xs font-black text-slate-700">{f.label}</span>
+                  <div className="relative flex size-24 items-center justify-center">
+                    <div
+                      className="absolute inset-2 rounded-full blur-2xl transition-opacity"
+                      style={{ background: f.glow, opacity: selected ? 0.75 : 0.35 }}
+                    />
+                    <img
+                      src={f.img}
+                      alt={f.label}
+                      loading="lazy"
+                      width={512}
+                      height={512}
+                      className={`relative size-24 object-contain drop-shadow-[0_10px_20px_rgba(0,0,0,0.45)] transition-transform ${
+                        selected ? "scale-110" : "group-active:scale-95"
+                      }`}
+                    />
+                  </div>
+                  <span className="text-sm font-black text-white">{f.label}</span>
+                  {selected && (
+                    <span
+                      className="absolute right-3 top-3 flex size-6 items-center justify-center rounded-full bg-white text-slate-900"
+                      style={{ boxShadow: `0 4px 12px ${f.glow}` }}
+                    >
+                      <Check className="size-4" strokeWidth={3} />
+                    </span>
+                  )}
                 </button>
               );
             })}
           </div>
 
           <div className="mt-auto flex items-center gap-3 pt-6">
-            <BackButton onClick={() => setStep(2)} />
-            <PrimaryButton color="#8a5cd6" onClick={() => setStep(4)}>
-              Next <ArrowRight className="ml-1 inline size-5" />
-            </PrimaryButton>
+            <GlowButton onClick={() => setStep(2)} tone="ghost">
+              <ArrowLeft className="size-5" /> Back
+            </GlowButton>
+            <div className="flex-1">
+              <GlowButton onClick={() => setStep(4)} tone="mint" full>
+                Next <ArrowRight className="size-5" />
+              </GlowButton>
+            </div>
           </div>
         </div>
       </Shell>
     );
   }
 
-  // Step 5 — All Set
+  // ---- Step 4: All set ----
   return (
     <Shell>
-      <div className="flex flex-1 flex-col px-6 pt-10 pb-8">
+      <div className="flex flex-1 flex-col px-6 pt-12 pb-8 text-white">
         <div className="flex flex-col items-center gap-3">
-          <img src={bearFace} alt="Bear" className="size-24 bear-bounce drop-shadow-lg" />
-          <div className="relative">
-            <PartyPopper className="absolute -left-8 -top-2 size-8 text-amber-500 animate-bounce" />
-            <RainbowTitle text="All Set!" className="text-5xl text-center" />
-            <PartyPopper className="absolute -right-8 -top-2 size-8 text-pink-500 animate-bounce" />
-          </div>
-          <p className="text-xl font-black text-slate-800">
-            Welcome, <span className="text-[#ff6b6b]">{displayName}</span>! 🐻
-          </p>
+          <BearHeader />
+          <StepDots step={3} total={4} />
+          <span className="inline-flex items-center gap-2 rounded-full bg-[#4dd4c4]/20 px-4 py-1.5 text-xs font-black uppercase tracking-[0.25em] text-[#4dd4c4] ring-1 ring-[#4dd4c4]/40">
+            <Sparkles className="size-3.5" /> All Set!
+          </span>
+          <Heading>
+            Welcome,{" "}
+            <span className="bg-gradient-to-r from-[#ffd23f] via-[#ff7ab8] to-[#4dd4c4] bg-clip-text text-transparent">
+              {displayName}
+            </span>
+            !
+          </Heading>
         </div>
 
-        <div className="mt-5 rounded-3xl bg-white/90 p-4 shadow-lg ring-2 ring-[#ffd76a] backdrop-blur">
-          <p className="text-center text-base font-black text-[#7c5cd6]">Your Profile</p>
-          <ul className="mt-2 space-y-1.5 text-sm font-bold text-slate-800">
-            <li className="flex items-center gap-2"><Baby className="size-4 text-amber-500" /> Name: <span className="font-black">{displayName}</span></li>
-            <li className="flex items-center gap-2"><Brain className="size-4 text-emerald-500" /> Age Group: <span className="font-black">{activeAge?.title ?? "—"}</span></li>
-            <li className="flex items-center gap-2"><Rainbow className="size-4 text-pink-500" /> Favourites:{" "}
-              <span className="font-black">
-                {favs.length === 0 ? "All topics!" : favs.map((f) => FAVOURITES.find((x) => x.id === f)!.label).join(", ")}
+        <div
+          className="mt-5 rounded-3xl bg-white/10 p-5 ring-1 ring-white/20 backdrop-blur-xl"
+          style={{ boxShadow: "0 20px 50px -20px rgba(77,212,196,0.35)" }}
+        >
+          <p className="mb-3 text-[11px] font-black uppercase tracking-[0.25em] text-[#4dd4c4]">Profile</p>
+          <div className="space-y-2 text-sm">
+            <div className="flex justify-between gap-3 border-b border-white/10 pb-2">
+              <span className="font-semibold text-white/60">Name</span>
+              <span className="font-black text-white">{displayName}</span>
+            </div>
+            <div className="flex justify-between gap-3 border-b border-white/10 pb-2">
+              <span className="font-semibold text-white/60">Age Group</span>
+              <span className="font-black text-white">{activeAge?.title ?? "—"}</span>
+            </div>
+            <div className="flex justify-between gap-3">
+              <span className="font-semibold text-white/60">Loves</span>
+              <span className="text-right font-black text-white">
+                {favs.length === 0
+                  ? "Everything!"
+                  : favs.map((f) => FAVOURITES.find((x) => x.id === f)!.label).join(" • ")}
               </span>
-            </li>
-          </ul>
+            </div>
+          </div>
         </div>
 
         <div className="mt-5">
-          <p className="text-center text-base font-black text-slate-800">Parent Details (Optional)</p>
-          <p className="text-center text-xs font-bold text-slate-500">For weekly progress reports</p>
-          <div className="mt-3 space-y-3">
+          <p className="mb-1 text-center text-[11px] font-black uppercase tracking-[0.25em] text-white/60">
+            Parent Details · Optional
+          </p>
+          <p className="mb-3 text-center text-xs font-semibold text-white/50">For weekly progress reports</p>
+          <div className="space-y-2">
             <input
               value={parent}
               onChange={(e) => setParent(e.target.value)}
-              placeholder="Parent's name 👨‍👩‍👧"
-              className="h-12 w-full rounded-full bg-white px-5 text-base font-bold text-slate-800 placeholder:text-slate-400 shadow ring-2 ring-white outline-none focus:ring-4 focus:ring-[#4ac6e8]"
+              placeholder="Parent's name"
+              className="h-12 w-full rounded-2xl bg-white/10 px-5 text-base font-bold text-white placeholder:text-white/40 ring-1 ring-white/20 outline-none backdrop-blur focus:ring-2 focus:ring-[#4dd4c4]"
             />
             <input
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              placeholder="WhatsApp number 📱"
+              placeholder="WhatsApp number"
               inputMode="tel"
-              className="h-12 w-full rounded-full bg-white px-5 text-base font-bold text-slate-800 placeholder:text-slate-400 shadow ring-2 ring-white outline-none focus:ring-4 focus:ring-[#4ac6e8]"
+              className="h-12 w-full rounded-2xl bg-white/10 px-5 text-base font-bold text-white placeholder:text-white/40 ring-1 ring-white/20 outline-none backdrop-blur focus:ring-2 focus:ring-[#4dd4c4]"
             />
           </div>
         </div>
 
         <div className="mt-6 flex flex-col items-center gap-2">
-          <PrimaryButton onClick={finish}>
-            <Rocket className="mr-2 inline size-5" /> Let's Start Learning!
-          </PrimaryButton>
+          <GlowButton onClick={finish} tone="peach" full>
+            <Rocket className="size-5" /> Let's Start Learning
+          </GlowButton>
           <button
             onClick={() => {
               setParent("");
               setPhone("");
               finish();
             }}
-            className="text-sm font-black text-slate-600 underline underline-offset-4"
+            className="text-xs font-black uppercase tracking-[0.2em] text-white/60 underline underline-offset-4"
           >
             Skip parent details →
           </button>
