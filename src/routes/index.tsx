@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { Home, Gamepad2, Music, User, Palette, Trees, Waves, Rainbow, Rocket, Check, Settings } from "lucide-react";
 import { useState, useEffect, useRef, type ReactNode } from "react";
 
@@ -69,274 +69,24 @@ const themes: { id: ThemeId; label: string; img: string; icon: ReactNode; tint: 
 ];
 
 function Index() {
+  const navigate = useNavigate();
   const [themeId, setThemeId] = useState<ThemeId>("jungle");
   const [pickerOpen, setPickerOpen] = useState(false);
-  const [showWelcome, setShowWelcome] = useState(false);
-  const [showButton, setShowWelcomeButton] = useState(false);
-  const [isExiting, setIsExiting] = useState(false);
   const activeTheme = themes.find((t) => t.id === themeId)!;
 
-  // Audio context for jungle ambience (persistent across loops)
-  const audioCtxRef = useRef<AudioContext | null>(null);
-  const masterGainRef = useRef<GainNode | null>(null);
-  const loopTimersRef = useRef<number[]>([]);
-  const playCountRef = useRef(0);
-
-  // Stop any playing audio
-  const stopJungleAudio = () => {
-    loopTimersRef.current.forEach((id) => clearTimeout(id));
-    loopTimersRef.current = [];
-    if (masterGainRef.current && audioCtxRef.current) {
-      try {
-        masterGainRef.current.gain.cancelScheduledValues(audioCtxRef.current.currentTime);
-        masterGainRef.current.gain.linearRampToValueAtTime(0, audioCtxRef.current.currentTime + 0.2);
-      } catch {}
-    }
-    if (audioCtxRef.current) {
-      const ctx = audioCtxRef.current;
-      setTimeout(() => { try { ctx.close(); } catch {} }, 300);
-      audioCtxRef.current = null;
-      masterGainRef.current = null;
-    }
-  };
-
-  // Schedule one 5-second jungle ambience segment
-  const scheduleJungleSegment = (ctx: AudioContext, master: GainNode, startAt: number) => {
-    const DURATION = 5;
-
-    // Low ambient pad (jungle hum)
-    const pad = ctx.createOscillator();
-    const padGain = ctx.createGain();
-    pad.type = "sine";
-    pad.frequency.setValueAtTime(110, startAt);
-    padGain.gain.setValueAtTime(0, startAt);
-    padGain.gain.linearRampToValueAtTime(0.04, startAt + 0.3);
-    padGain.gain.linearRampToValueAtTime(0.04, startAt + DURATION - 0.5);
-    padGain.gain.linearRampToValueAtTime(0, startAt + DURATION);
-    pad.connect(padGain);
-    padGain.connect(master);
-    pad.start(startAt);
-    pad.stop(startAt + DURATION);
-
-    // Bird chirps scattered across the 5 seconds
-    const chirpTimes = [0.2, 0.8, 1.4, 2.1, 2.7, 3.3, 3.9, 4.5];
-    chirpTimes.forEach((t, i) => {
-      const baseFreq = 1400 + Math.random() * 1200;
-      const chirpStart = startAt + t;
-      // Each chirp = quick frequency sweep (whistle)
-      const osc = ctx.createOscillator();
-      const g = ctx.createGain();
-      osc.type = "sine";
-      osc.frequency.setValueAtTime(baseFreq, chirpStart);
-      osc.frequency.exponentialRampToValueAtTime(baseFreq * (1.3 + Math.random() * 0.4), chirpStart + 0.08);
-      osc.frequency.exponentialRampToValueAtTime(baseFreq * 0.9, chirpStart + 0.16);
-      g.gain.setValueAtTime(0, chirpStart);
-      g.gain.linearRampToValueAtTime(0.18, chirpStart + 0.02);
-      g.gain.exponentialRampToValueAtTime(0.0001, chirpStart + 0.18);
-      osc.connect(g);
-      g.connect(master);
-      osc.start(chirpStart);
-      osc.stop(chirpStart + 0.2);
-
-      // Occasional second little tweet right after
-      if (i % 2 === 0) {
-        const o2 = ctx.createOscillator();
-        const g2 = ctx.createGain();
-        o2.type = "triangle";
-        o2.frequency.setValueAtTime(baseFreq * 1.15, chirpStart + 0.22);
-        o2.frequency.exponentialRampToValueAtTime(baseFreq * 0.95, chirpStart + 0.32);
-        g2.gain.setValueAtTime(0, chirpStart + 0.22);
-        g2.gain.linearRampToValueAtTime(0.12, chirpStart + 0.24);
-        g2.gain.exponentialRampToValueAtTime(0.0001, chirpStart + 0.34);
-        o2.connect(g2);
-        g2.connect(master);
-        o2.start(chirpStart + 0.22);
-        o2.stop(chirpStart + 0.36);
-      }
-    });
-  };
-
-  // Start jungle ambience and repeat 3 times
-  const startJungleLoop = () => {
-    try {
-      const Ctor = window.AudioContext || (window as any).webkitAudioContext;
-      const ctx = new Ctor();
-      const master = ctx.createGain();
-      master.gain.value = 0.9;
-      master.connect(ctx.destination);
-      audioCtxRef.current = ctx;
-      masterGainRef.current = master;
-
-      const SEGMENT = 5;
-      const REPEATS = 3;
-      for (let i = 0; i < REPEATS; i++) {
-        scheduleJungleSegment(ctx, master, ctx.currentTime + i * SEGMENT);
-      }
-      // Auto-stop after 3 loops
-      const stopId = window.setTimeout(() => stopJungleAudio(), SEGMENT * REPEATS * 1000 + 200);
-      loopTimersRef.current.push(stopId);
-      playCountRef.current = REPEATS;
-    } catch (e) {
-      console.log("Audio failed to play", e);
-    }
-  };
-
-  const playStartSound = () => {
-    try {
-      const Ctor = window.AudioContext || (window as any).webkitAudioContext;
-      const ctx = new Ctor();
-      const now = ctx.currentTime;
-      const notes = [523.25, 659.25, 783.99, 1046.50];
-      notes.forEach((freq, index) => {
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = "triangle";
-        osc.frequency.setValueAtTime(freq, now + index * 0.05);
-        gain.gain.setValueAtTime(0, now + index * 0.05);
-        gain.gain.linearRampToValueAtTime(0.2, now + index * 0.05 + 0.03);
-        gain.gain.exponentialRampToValueAtTime(0.0001, now + index * 0.05 + 0.4);
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start(now + index * 0.05);
-        osc.stop(now + index * 0.05 + 0.55);
-      });
-      setTimeout(() => { try { ctx.close(); } catch {} }, 800);
-    } catch {}
-  };
-
-  // Start jungle audio on mount + show button after 2s
+  // Redirect to onboarding when no profile exists yet
   useEffect(() => {
-    if (window.sessionStorage.getItem("mellyWelcomeSeen") === "true") {
-      setShowWelcome(false);
-      setShowWelcomeButton(true);
-      return;
-    }
-    setShowWelcome(true);
-    const audioTimer = setTimeout(() => startJungleLoop(), 150);
-    const btnTimer = setTimeout(() => setShowWelcomeButton(true), 2000);
-    return () => {
-      clearTimeout(audioTimer);
-      clearTimeout(btnTimer);
-      stopJungleAudio();
-    };
+    try {
+      if (!window.localStorage.getItem("mellyProfile")) {
+        navigate({ to: "/welcome" });
+      }
+    } catch {}
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleStart = () => {
-    window.sessionStorage.setItem("mellyWelcomeSeen", "true");
-    stopJungleAudio();
-    playStartSound();
-    setIsExiting(true);
-    setTimeout(() => {
-      setShowWelcome(false);
-    }, 800);
-  };
-
   return (
     <div className="relative mx-auto flex min-h-screen max-w-md flex-col overflow-hidden">
-      {/* Jungle-themed Welcome Page Overlay — tap anywhere to enter */}
-      {showWelcome && (
-        <div
-          role="button"
-          tabIndex={0}
-          onClick={handleStart}
-          onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") handleStart(); }}
-          className={`fixed inset-x-0 top-0 z-50 mx-auto flex h-full max-w-md flex-col items-center justify-between px-6 py-12 transition-all duration-700 ease-out cursor-pointer ${
-            isExiting ? "pointer-events-none scale-150 opacity-0 blur-md" : "scale-100 opacity-100"
-          }`}
-          style={{
-            backgroundImage: `linear-gradient(180deg, rgba(20,80,40,0.35), rgba(10,60,30,0.55)), url(${bgJungle})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        >
 
-          {/* Animated Ray Sunburst Background */}
-          <div className="absolute inset-0 -z-10 overflow-hidden">
-            <div className="absolute left-1/2 top-[40%] size-[800px] -translate-x-1/2 -translate-y-1/2 animate-[spin_60s_linear_infinite] opacity-25">
-              {[...Array(12)].map((_, i) => (
-                <div
-                  key={i}
-                  className="absolute left-1/2 top-1/2 h-[400px] w-16 origin-bottom -translate-x-1/2 -translate-y-full bg-gradient-to-t from-transparent to-white"
-                  style={{ transform: `rotate(${i * 30}deg) translateX(-50%)` }}
-                />
-              ))}
-            </div>
-            {/* Drifting Sparkly Stars / Bubbles */}
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-white/40 via-transparent to-transparent" />
-            <div className="absolute left-5 top-10 size-16 animate-bounce rounded-full bg-white/20 blur-md duration-[3000ms]" />
-            <div className="absolute right-10 top-24 size-24 animate-pulse rounded-full bg-white/30 blur-lg duration-[4000ms]" />
-            <div className="absolute left-16 bottom-32 size-20 animate-pulse rounded-full bg-white/25 blur-md duration-[5000ms]" />
-          </div>
-
-          {/* Top Header Section of Welcome */}
-          <div className="text-center">
-            <span className="inline-block animate-bounce rounded-full bg-white/80 px-6 py-2.5 text-base font-extrabold uppercase tracking-widest text-[#ff6b6b] shadow-md ring-2 ring-white/50 backdrop-blur-sm">
-              🌟 Welcome to the Fun! 🌟
-            </span>
-          </div>
-
-          {/* Central 3D Mascot & Logo Box */}
-          <div className="relative flex flex-1 flex-col items-center justify-center gap-8 py-4">
-            {/* Mascot Back Glow */}
-            <div className="absolute size-56 animate-pulse rounded-full bg-white/50 blur-3xl" />
-
-            <div className="relative flex w-full items-center justify-center">
-              {/* Melly Bear Mascot — cutout, no frame */}
-              <img
-                src={bearFace}
-                alt="Melly Bear Mascot"
-                className="relative z-10 size-56 drop-shadow-[0_15px_25px_rgba(0,0,0,0.35)] animate-[bounce_2.5s_infinite_alternate] cursor-pointer transition-transform hover:scale-110 active:scale-95"
-              />
-            </div>
-
-            {/* App Branding Text with 3D Pop Layer */}
-            <div className="z-10 text-center">
-              <h1 className="melly-title text-6xl leading-none drop-shadow-[0_4px_8px_rgba(0,0,0,0.35)]">
-                <span style={{ color: "#ff6b6b" }}>M</span>
-                <span style={{ color: "#ffb347" }}>e</span>
-                <span style={{ color: "#ffd23f" }}>l</span>
-                <span style={{ color: "#6dd47e" }}>l</span>
-                <span style={{ color: "#4ac6e8" }}>y </span>
-                <span style={{ color: "#ff6b6b" }}>K</span>
-                <span style={{ color: "#ffb347" }}>i</span>
-                <span style={{ color: "#ffd23f" }}>d</span>
-                <span style={{ color: "#6dd47e" }}>s </span>
-                <span style={{ color: "#4ac6e8" }}>T</span>
-                <span style={{ color: "#b78ce8" }}>V</span>
-              </h1>
-              <p className="mt-4 max-w-[320px] text-lg font-black tracking-wide text-white uppercase leading-snug [text-shadow:0_2px_4px_rgba(0,0,0,0.6)]">
-                Play, Learn & Discover with Melly! 🎈
-              </p>
-            </div>
-          </div>
-
-
-          {/* Let's Go Button Section (after 2 seconds) */}
-          <div className="h-20 w-full flex items-center justify-center">
-            {showButton ? (
-              <button
-                onClick={handleStart}
-                className="group relative flex h-14 w-full max-w-[240px] items-center justify-center rounded-full bg-gradient-to-r from-[#ff6b6b] via-[#ff8e53] to-[#ffb347] font-black uppercase tracking-wider text-white shadow-[0_10px_25px_-3px_rgba(255,107,107,0.5)] ring-4 ring-white transition-all duration-300 hover:scale-105 active:scale-95 animate-[pulse_2s_infinite]"
-              >
-                <span className="absolute inset-0 rounded-full bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity" />
-                <span className="flex items-center gap-2 text-xl drop-shadow-[0_2px_2px_rgba(0,0,0,0.2)]">
-                  Let's Go! 🚀
-                </span>
-              </button>
-            ) : (
-              <div className="flex flex-col items-center gap-2">
-                <div className="flex gap-1.5">
-                  <span className="size-3 animate-bounce rounded-full bg-[#ff6b6b]" style={{ animationDelay: "0ms" }} />
-                  <span className="size-3 animate-bounce rounded-full bg-[#ffd23f]" style={{ animationDelay: "150ms" }} />
-                  <span className="size-3 animate-bounce rounded-full bg-[#4ac6e8]" style={{ animationDelay: "300ms" }} />
-                </div>
-                <span className="text-xs font-extrabold uppercase tracking-widest text-slate-400">Loading magic...</span>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
 
       <div
         aria-hidden

@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as WelcomeRouteImport } from './routes/welcome'
 import { Route as TraceWordsRouteImport } from './routes/trace-words'
 import { Route as TraceVarnamalaRouteImport } from './routes/trace-varnamala'
 import { Route as TraceSmallRouteImport } from './routes/trace-small'
@@ -33,6 +34,11 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as GamesIndexRouteImport } from './routes/games.index'
 import { Route as GamesGameIdRouteImport } from './routes/games.$gameId'
 
+const WelcomeRoute = WelcomeRouteImport.update({
+  id: '/welcome',
+  path: '/welcome',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TraceWordsRoute = TraceWordsRouteImport.update({
   id: '/trace-words',
   path: '/trace-words',
@@ -171,6 +177,7 @@ export interface FileRoutesByFullPath {
   '/trace-small': typeof TraceSmallRoute
   '/trace-varnamala': typeof TraceVarnamalaRoute
   '/trace-words': typeof TraceWordsRoute
+  '/welcome': typeof WelcomeRoute
   '/games/$gameId': typeof GamesGameIdRoute
   '/games/': typeof GamesIndexRoute
 }
@@ -196,6 +203,7 @@ export interface FileRoutesByTo {
   '/trace-small': typeof TraceSmallRoute
   '/trace-varnamala': typeof TraceVarnamalaRoute
   '/trace-words': typeof TraceWordsRoute
+  '/welcome': typeof WelcomeRoute
   '/games/$gameId': typeof GamesGameIdRoute
   '/games': typeof GamesIndexRoute
 }
@@ -222,6 +230,7 @@ export interface FileRoutesById {
   '/trace-small': typeof TraceSmallRoute
   '/trace-varnamala': typeof TraceVarnamalaRoute
   '/trace-words': typeof TraceWordsRoute
+  '/welcome': typeof WelcomeRoute
   '/games/$gameId': typeof GamesGameIdRoute
   '/games/': typeof GamesIndexRoute
 }
@@ -249,6 +258,7 @@ export interface FileRouteTypes {
     | '/trace-small'
     | '/trace-varnamala'
     | '/trace-words'
+    | '/welcome'
     | '/games/$gameId'
     | '/games/'
   fileRoutesByTo: FileRoutesByTo
@@ -274,6 +284,7 @@ export interface FileRouteTypes {
     | '/trace-small'
     | '/trace-varnamala'
     | '/trace-words'
+    | '/welcome'
     | '/games/$gameId'
     | '/games'
   id:
@@ -299,6 +310,7 @@ export interface FileRouteTypes {
     | '/trace-small'
     | '/trace-varnamala'
     | '/trace-words'
+    | '/welcome'
     | '/games/$gameId'
     | '/games/'
   fileRoutesById: FileRoutesById
@@ -325,12 +337,20 @@ export interface RootRouteChildren {
   TraceSmallRoute: typeof TraceSmallRoute
   TraceVarnamalaRoute: typeof TraceVarnamalaRoute
   TraceWordsRoute: typeof TraceWordsRoute
+  WelcomeRoute: typeof WelcomeRoute
   GamesGameIdRoute: typeof GamesGameIdRoute
   GamesIndexRoute: typeof GamesIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/welcome': {
+      id: '/welcome'
+      path: '/welcome'
+      fullPath: '/welcome'
+      preLoaderRoute: typeof WelcomeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/trace-words': {
       id: '/trace-words'
       path: '/trace-words'
@@ -517,6 +537,7 @@ const rootRouteChildren: RootRouteChildren = {
   TraceSmallRoute: TraceSmallRoute,
   TraceVarnamalaRoute: TraceVarnamalaRoute,
   TraceWordsRoute: TraceWordsRoute,
+  WelcomeRoute: WelcomeRoute,
   GamesGameIdRoute: GamesGameIdRoute,
   GamesIndexRoute: GamesIndexRoute,
 }
