@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { Home, Gamepad2, Music, User, Palette, Trees, Waves, Rainbow, Rocket, Check, Settings } from "lucide-react";
 import { useState, useEffect, useRef, type ReactNode } from "react";
 
